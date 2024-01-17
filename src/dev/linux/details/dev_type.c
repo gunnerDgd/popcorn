@@ -142,9 +142,9 @@ struct file_operations dev_type_ops   = {
 
 bool_t
     po_dev_type_new
-        (po_dev_type* par_type, u32_t par_count, va_list par)                            {
-            const char* name  = NULL; if (par_count > 0) name  = va_arg(par, const char*);
-            u64_t       count = 1 MB; if (par_count > 1) count = va_arg(par, u64_t)      ;
+        (po_dev_type* par_type, u32_t par_count, va_list par)                                {
+            const char* name  = NULL    ; if (par_count > 0) name  = va_arg(par, const char*);
+            u64_t       count = 1 MB - 1; if (par_count > 1) count = va_arg(par, u64_t)      ;
 
             cdev_init(&par_type->hnd, &dev_type_ops);
             if (alloc_chrdev_region(&par_type->id, 0, count, name)       < 0) goto new_failed;
