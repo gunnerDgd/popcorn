@@ -187,8 +187,8 @@ void
                 del(dev);
             }
 
-            unregister_chrdev_region(par->id, 1 MB);
-            class_destroy           (par->cls)     ;
+            unregister_chrdev_region(par->id, (1 MB - 1));
+            class_destroy           (par->cls)           ;
 
             del(&par->active);
             del(&par->free)  ;
