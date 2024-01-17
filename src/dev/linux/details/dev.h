@@ -20,9 +20,9 @@ typedef struct po_dev_ops                      {
     i64_t  (*on_read)   (po_obj*, po_buf*)     ;
 }   po_dev_ops;
 
-#define              po_dev_state_free   0
-#define              po_dev_state_active 1
-#define              po_dev_state_busy   2
+#define              po_dev_free   0
+#define              po_dev_active 1
+#define              po_dev_busy   2
 extern po_obj_trait* po_dev_t  ;
 typedef struct       po_dev    {
     po_obj              head   ;

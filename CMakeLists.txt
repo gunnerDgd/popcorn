@@ -6,3 +6,5 @@ if (UNIX AND NOT APPLE)
 endif()
 
 add_subdirectory(src)
+add_subdirectory(include/popcorn)
+add_subdirectory(example)

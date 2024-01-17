@@ -49,9 +49,12 @@ static int
             po_dev_type *ret_type = dev_type[pos_type]                        ;
             po_dev      *ret      = po_list_get_as(par->private_data, po_dev*);
 
-            if (!ret)                          return -EINVAL;
-            if (trait_of(ret) != po_dev_t)     return -EINVAL;
-            if (ret != ret_type->dev.all[pos]) return -EINVAL;
+            if (!ret)                                    return -EINVAL;
+            if (!ret_type)                               return -EINVAL;
+
+            if (trait_of(ret_type)     != po_dev_type_t) return -EINVAL;
+            if (trait_of(ret)          != po_dev_t)      return -EINVAL;
+            if (ret_type->dev.all[pos] != ret)           return -EINVAL;
 
             ret->ops->on_del(ret->dev);
             return 0;
@@ -59,67 +62,71 @@ static int
 
 static ssize_t
     po_dev_do_read
-        (struct file* par, char* __user par_buf, size_t par_len, loff_t* par_off) {
-            if (!par)               return -EINVAL;
-            if (!par->private_data) return -EINVAL;
+        (struct file* par, char* __user par_buf, size_t par_len, loff_t* par_off)        {
+            if (!par)               return -EINVAL; u64_t pos_type = imajor(par->f_inode);
+            if (!par->private_data) return -EINVAL; u64_t pos      = iminor(par->f_inode);
             if (!par_buf)           return -EINVAL;
 
-            po_dev_type *dev_type = NULL                                      ;
-            po_dev      *dev      = po_list_get_as(par->private_data, po_dev*);
-            if (!dev)                                return -EINVAL;
-            if (trait_of(dev) != po_dev_t)           return -EINVAL; dev_type = dev->type;
+            po_dev_type *ret_type = dev_type[pos_type];
+            po_dev      *ret      = po_list_get_as(par->private_data, po_dev*);
 
-            if (!dev_type)                           return -EINVAL;
-            if (trait_of(dev_type) != po_dev_type_t) return -EINVAL;
+            if (!ret)                                    return -EINVAL;
+            if (!ret_type)                               return -EINVAL;
 
-            dev->state = po_dev_state_busy;
+            if (trait_of(ret_type)     != po_dev_type_t) return -EINVAL;
+            if (trait_of(ret)          != po_dev_t)      return -EINVAL;
+            if (ret_type->dev.all[pos] != ret)           return -EINVAL;
+
+            ret->state = po_dev_busy;
             po_buf *ret_buf = (po_buf*) make (po_buf_t) from (3, par_buf, par_len, par_off);
-            i64_t   ret     = dev->ops->on_read    (dev->dev, ret_buf)                     ;
+            i64_t   res     = ret->ops->on_read (ret->dev, ret_buf)                        ;
 
-            del   (ret_buf); dev->state = po_dev_state_active;
-            return ret     ;
+            del   (ret_buf); ret->state = po_dev_active;
+            return res     ;
 }
 
 static ssize_t
     po_dev_do_write
-        (struct file* par, const char* __user par_buf, size_t par_len, loff_t* par_off) {
-            if (!par)               return -EINVAL;
-            if (!par->private_data) return -EINVAL;
+        (struct file* par, const char* __user par_buf, size_t par_len, loff_t* par_off)  {
+            if (!par)               return -EINVAL; u64_t pos_type = imajor(par->f_inode);
+            if (!par->private_data) return -EINVAL; u64_t pos      = iminor(par->f_inode);
             if (!par_buf)           return -EINVAL;
 
-            po_dev_type *dev_type = NULL                                      ;
-            po_dev      *dev      = po_list_get_as(par->private_data, po_dev*);
-            if (!dev)                                return -EINVAL;
-            if (trait_of(dev) != po_dev_t)           return -EINVAL; dev_type = dev->type;
+            po_dev_type *ret_type = dev_type[pos_type];
+            po_dev      *ret      = po_list_get_as(par->private_data, po_dev*);
 
-            if (!dev_type)                           return -EINVAL;
-            if (trait_of(dev_type) != po_dev_type_t) return -EINVAL;
+            if (!ret)                                    return -EINVAL;
+            if (!ret_type)                               return -EINVAL;
 
-            dev->state = po_dev_state_busy;
+            if (trait_of(ret_type)     != po_dev_type_t) return -EINVAL;
+            if (trait_of(ret)          != po_dev_t)      return -EINVAL;
+            if (ret_type->dev.all[pos] != ret)           return -EINVAL;
+
+            ret->state = po_dev_busy;
             po_buf *ret_buf = (po_buf*) make (po_buf_t) from (3, par_buf, par_len, par_off);
-            i64_t   ret     = dev->ops->on_write   (dev->dev, ret_buf)                     ;
+            i64_t   res     = ret->ops->on_write (ret->dev, ret_buf)                       ;
 
-            del   (ret_buf); dev->state = po_dev_state_active;
-            return ret     ;
+            del   (ret_buf); ret->state = po_dev_active;
+            return res     ;
 }
 
 static long
     po_dev_do_control
-        (struct file* par, u32 par_code, unsigned long par_arg) {
-            if (!par)               return -EINVAL;
-            if (!par->private_data) return -EINVAL;
+        (struct file* par, u32 par_code, unsigned long par_arg)                          {
+            if (!par)               return -EINVAL; u64_t pos_type = imajor(par->f_inode);
+            if (!par->private_data) return -EINVAL; u64_t pos      = iminor(par->f_inode);
 
-            po_dev_type *dev_type = NULL                                      ;
-            po_dev      *dev      = po_list_get_as(par->private_data, po_dev*);
-            if (!dev)                                return -EINVAL;
-            if (trait_of(dev) != po_dev_t)           return -EINVAL; dev_type = dev->type;
+            po_dev_type *ret_type = dev_type[pos_type]                        ;
+            po_dev      *ret      = po_list_get_as(par->private_data, po_dev*);
+            if (!ret)                                return -EINVAL;
+            if (trait_of(ret) != po_dev_t)           return -EINVAL;
 
-            if (!dev_type)                           return -EINVAL;
-            if (trait_of(dev_type) != po_dev_type_t) return -EINVAL;
+            if (!ret_type)                           return -EINVAL;
+            if (trait_of(ret_type) != po_dev_type_t) return -EINVAL;
 
-            dev->state = po_dev_state_busy  ; i64_t ret = dev->ops->on_control (dev->dev, par_code, (void*)par_arg);
-            dev->state = po_dev_state_active;
-            return ret;
+            ret->state = po_dev_busy  ; i64_t res = ret->ops->on_control (ret->dev, par_code, (void*)par_arg);
+            ret->state = po_dev_active;
+            return res;
 }
 
 po_dev_type           *dev_type[4096] = { NULL,  };

@@ -31,6 +31,11 @@ bool_t
             if (!ops->on_new)                    return false_t;
             if (!ops->on_ref)                    return false_t;
             if (!ops->on_del)                    return false_t;
+
+            if (!ops->on_read)                   return false_t;
+            if (!ops->on_write)                  return false_t;
+            if (!ops->on_control)                return false_t;
+
             if (id >= 1 MB)                      return false_t;
             if (type->dev.all[id])               return false_t;
 
@@ -70,7 +75,7 @@ bool_t
 void
     po_dev_del
         (po_dev* par)                              {
-            po_dev_wait   (par, po_dev_state_free) ;
+            po_dev_wait   (par, po_dev_free)       ;
             device_destroy(par->type->cls, par->id);
 
             par->type->dev.all[par->id] = NULL;
@@ -87,10 +92,10 @@ po_str*
 }
 void
     po_dev_wait
-        (po_dev* par, u64_t par_state)               {
-            if (!par)                          return;
-            if (trait_of(par) != po_dev_t)     return;
-            if (par_state > po_dev_state_busy) return;
+        (po_dev* par, u64_t par_state)           {
+            if (!par)                      return;
+            if (trait_of(par) != po_dev_t) return;
+            if (par_state > po_dev_busy)   return;
 
             while (par->state != par_state) schedule();
 }

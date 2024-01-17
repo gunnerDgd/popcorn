@@ -1,5 +1,5 @@
-#ifndef __PO_MAP_H__
-#define __PO_MAP_H__
+#ifndef __PO_CORE_MAP_H__
+#define __PO_CORE_MAP_H__
 
 #include "obj.h"
 #include "list.h"
@@ -13,15 +13,15 @@ typedef struct       po_map_key      {
     bool_t (*gt)(po_obj*, po_obj*);
 }   po_map_key;
 
-po_map_elem po_map_push   (po_map*, po_obj*)    ;
-void        po_map_pop    (po_map*, po_map_elem);
-po_map_elem po_map_find   (po_map*, po_obj*)    ;
+po_mod po_map_elem po_map_push   (po_map*, po_obj*)    ;
+po_mod void        po_map_pop    (po_map*, po_map_elem);
+po_mod po_map_elem po_map_find   (po_map*, po_obj*)    ;
 
-bool_t      po_map_empty  (po_map*)             ;
-po_map_elem po_map_begin  (po_map*)             ;
-po_map_elem po_map_end    (po_map*)             ;
-po_map_elem po_map_next   (po_map_elem)         ;
-po_map_elem po_map_prev   (po_map_elem)         ;
-po_obj*     po_map_get    (po_map_elem)         ;
+po_mod bool_t      po_map_empty  (po_map*)             ;
+po_mod po_map_elem po_map_begin  (po_map*)             ;
+po_mod po_map_elem po_map_end    (po_map*)             ;
+po_mod po_map_elem po_map_next   (po_map_elem)         ;
+po_mod po_map_elem po_map_prev   (po_map_elem)         ;
+po_mod po_obj*     po_map_get    (po_map_elem)         ;
 
 #endif

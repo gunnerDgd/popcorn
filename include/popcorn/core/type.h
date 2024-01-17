@@ -1,5 +1,5 @@
-#ifndef __TYPE_H__
-#define __TYPE_H__
+#ifndef __CORE_TYPE_H__
+#define __CORE_TYPE_H__
 
 #include <stdarg.h>
 

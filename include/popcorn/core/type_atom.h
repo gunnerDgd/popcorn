@@ -1,5 +1,5 @@
-#ifndef __TYPE_ATOM_H__
-#define __TYPE_ATOM_H__
+#ifndef __CORE_TYPE_ATOM_H__
+#define __CORE_TYPE_ATOM_H__
 
 #include "type.h"
 

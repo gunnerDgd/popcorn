@@ -20,7 +20,7 @@ void*
 
             po_list_pop(&par_type->dev.free, dev->hnd)                            ;
             dev->hnd     = po_list_push_back(&par_type->dev.active, (po_obj*) dev);
-            dev->state   = po_dev_state_active                                    ;
+            dev->state   = po_dev_active                                          ;
             dev->dev_hnd = device_create (
                 par_type->cls        ,
                 NULL                 ,
@@ -33,24 +33,24 @@ void*
             return dev->hnd;
     create_failed:
             po_list_pop(&par_type->dev.active, dev->hnd)                      ;
-            dev->state = po_dev_state_free                                    ;
+            dev->state = po_dev_free                                          ;
             dev->hnd   = po_list_push_back(&par_type->dev.free, (po_obj*) dev);
             return NULL;
 }
 
 void
     po_del_dev
-        (void* par)                                    {
-            po_dev *dev = po_list_get_as(par, po_dev*) ;
-            if (!dev)                            return;
-            if (trait_of(dev) != po_dev_t)       return;
-            if (dev->state == po_dev_state_free) return;
+        (void* par)                                   {
+            po_dev *dev = po_list_get_as(par, po_dev*);
+            if (!dev)                           return;
+            if (trait_of(dev) != po_dev_t)      return;
+            if (dev->state == po_dev_free)      return;
 
-            po_dev_wait   (dev, po_dev_state_busy)                 ;
+            po_dev_wait   (dev, po_dev_free)                       ;
             device_destroy(dev->type->cls, dev->type->id + dev->id);
             po_list_pop   (&dev->type->dev.active, dev->hnd)       ;
 
-            dev->state                  = po_dev_state_free                                     ;
+            dev->state                  = po_dev_free                                           ;
             dev->hnd                    = po_list_push_back(&dev->type->dev.free, (po_obj*) dev);
             dev->dev_hnd                = NULL                                                  ;
             dev->type->dev.all[dev->id] = NULL                                                  ;
@@ -81,3 +81,5 @@ EXPORT_SYMBOL(po_del_dev) ;
 
 EXPORT_SYMBOL(po_wait_dev);
 EXPORT_SYMBOL(po_name_dev);
+
+EXPORT_SYMBOL(po_dev_t)   ;
