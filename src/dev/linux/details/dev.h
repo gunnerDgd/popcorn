@@ -43,9 +43,8 @@ bool_t  po_dev_new  (po_dev*, u32_t, va_list);
 bool_t  po_dev_clone(po_dev*, po_dev*)       ;
 void    po_dev_del  (po_dev*)                ;
 
-po_str* po_dev_name         (po_dev*)       ;
-void    po_dev_wait         (po_dev*, u64_t);
-void    po_dev_wait_and_set();
+po_str* po_dev_name (po_dev*)       ;
+void    po_dev_wait (po_dev*, u64_t);
 
 MODULE_LICENSE("GPL");
 
