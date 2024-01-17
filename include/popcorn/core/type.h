@@ -1,7 +1,9 @@
 #ifndef __CORE_TYPE_H__
 #define __CORE_TYPE_H__
 
-#include <stdarg.h>
+#ifdef PO_PRESET_LINUX
+#include <linux/stdarg.h>
+#endif
 
 typedef unsigned char      u8_t  ;
 typedef unsigned short     u16_t ;

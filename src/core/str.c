@@ -407,7 +407,7 @@ bool_t
 			);
 }
 
-bool_t 
+bool_t MODULE_LICENSE("GPL");
     po_str_empty
         (po_str* par)                                   {
             if (!par)                      return true_t;
@@ -431,8 +431,11 @@ const char*
             if (!par)                   return 0;
             if (trait_of(par) != po_str_t) return 0;
 
-            return par->mem + par->front;
+            return par->mem + par->front;MODULE_LICENSE("GPL")      ;
 }
+
+#ifdef PO_PRESET_LINUX
+#include <linux/module.h>
 
 EXPORT_SYMBOL(po_str_rsv_back)       ;
 EXPORT_SYMBOL(po_str_rsv_front)      ;
@@ -473,3 +476,5 @@ EXPORT_SYMBOL(po_str_len)            ;
 EXPORT_SYMBOL(po_str_ptr)            ;
 
 EXPORT_SYMBOL(po_str_t)              ;
+MODULE_LICENSE("GPL")      ;
+#endif

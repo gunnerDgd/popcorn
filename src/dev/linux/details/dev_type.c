@@ -1,5 +1,5 @@
 #include "dev_type.h"
-#include "dev.h"
+#include "po_dev.h"
 
 po_obj_trait po_dev_type_trait                                          = {
         .on_new   = (bool_t(*)(po_obj*, u32_t, va_list))&po_dev_type_new  ,

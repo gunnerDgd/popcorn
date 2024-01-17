@@ -1,4 +1,4 @@
-#include "details/dev.h"
+#include "details/po_dev.h"
 #include "details/dev_type.h"
 
 void*
@@ -76,10 +76,11 @@ po_str*
             return po_dev_name(dev);
 }
 
-EXPORT_SYMBOL(po_new_dev) ;
-EXPORT_SYMBOL(po_del_dev) ;
+EXPORT_SYMBOL (po_new_dev) ;
+EXPORT_SYMBOL (po_del_dev) ;
 
-EXPORT_SYMBOL(po_wait_dev);
-EXPORT_SYMBOL(po_name_dev);
+EXPORT_SYMBOL (po_wait_dev);
+EXPORT_SYMBOL (po_name_dev);
 
-EXPORT_SYMBOL(po_dev_t)   ;
+EXPORT_SYMBOL (po_dev_t)   ;
+MODULE_LICENSE("GPL")      ;

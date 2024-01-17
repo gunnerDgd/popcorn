@@ -58,3 +58,4 @@ EXPORT_SYMBOL (po_buf_copy_to)  ;
 EXPORT_SYMBOL (po_buf_size)     ;
 EXPORT_SYMBOL (po_buf_off)      ;
 EXPORT_SYMBOL (po_buf_t)        ;
+MODULE_LICENSE("GPL")           ;

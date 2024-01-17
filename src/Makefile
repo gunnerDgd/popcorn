@@ -16,7 +16,9 @@ popcorn-objs := ./core/linux/obj.o	  		  \
 			    ./dev/linux/dev_type.o	      \
 			   						  		  \
 			    ./mem/linux/details/buf.o	  \
-			    ./mem/linux/buf.o
+			    ./mem/linux/buf.o			  \
+			    po_linux.o					  \
+
 
 all:
 	$(MAKE) KCPPFLAGS="-DPO_PRESET_LINUX" -C $(KERNELDIR) M=$(PWD)

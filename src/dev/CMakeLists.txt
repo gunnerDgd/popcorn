@@ -4,7 +4,7 @@ if(UNIX AND NOT APPLE)
 
             dev_type.h
 
-            linux/details/dev.h
+            linux/details/po_dev.h
             linux/details/dev.c
 
             linux/details/dev_type.h

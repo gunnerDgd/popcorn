@@ -1,5 +1,4 @@
 #include "mem.h"
-#include <linux/module.h>
 
 po_mem* global_po_mem;
 
@@ -129,6 +128,9 @@ bool_t
             return true_t;
 }
 
+#ifdef PO_PRESET_LINUX
+#include <linux/module.h>
+
 EXPORT_SYMBOL(po_get_mem) ;
 EXPORT_SYMBOL(po_set_mem) ;
 
@@ -143,3 +145,6 @@ EXPORT_SYMBOL(po_mem_find);
 EXPORT_SYMBOL(po_mem_eq) ;
 EXPORT_SYMBOL(po_mem_gt) ;
 EXPORT_SYMBOL(po_mem_lt) ;
+
+MODULE_LICENSE("GPL");
+#endif

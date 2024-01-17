@@ -25,14 +25,20 @@ po_dev_type dev_type;
 po_dev      dev     ;
 
 static int
-    __init init_module() {
+    __init mod_new(void) {
         dev_type = make (po_dev_type_t) from (1, "TestDevice");
         dev      = po_new_dev("Test", dev_type, &ops, 0);
         printk("Hello Module!!\n");
+
+        return 0;
 }
 
-static int
-    __exit exit_module()    {
+static void
+    __exit mod_del(void) {
         po_del_dev(dev)     ;
         del       (dev_type);
 }
+
+module_init   (mod_new);
+module_exit   (mod_del);
+MODULE_LICENSE("GPL");

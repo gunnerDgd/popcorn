@@ -275,21 +275,26 @@ po_obj*
             return ret;
 }
 
-EXPORT_SYMBOL(po_list_push_back) ;
-EXPORT_SYMBOL(po_list_push_front);
-EXPORT_SYMBOL(po_list_push)      ;
+#ifdef PO_PRESET_LINUX
+#include <linux/module.h>
 
-EXPORT_SYMBOL(po_list_pop_back) ;
-EXPORT_SYMBOL(po_list_pop_front);
-EXPORT_SYMBOL(po_list_pop)      ;
+EXPORT_SYMBOL (po_list_push_back) ;
+EXPORT_SYMBOL (po_list_push_front);
+EXPORT_SYMBOL (po_list_push)      ;
 
-EXPORT_SYMBOL(po_list_empty)    ;
-EXPORT_SYMBOL(po_list_begin)    ;
-EXPORT_SYMBOL(po_list_end)      ;
-EXPORT_SYMBOL(po_list_next)     ;
-EXPORT_SYMBOL(po_list_prev)     ;
+EXPORT_SYMBOL (po_list_pop_back)  ;
+EXPORT_SYMBOL (po_list_pop_front) ;
+EXPORT_SYMBOL (po_list_pop)       ;
 
-EXPORT_SYMBOL(po_list_get)      ;
-EXPORT_SYMBOL(po_list_set)      ;
+EXPORT_SYMBOL (po_list_empty)     ;
+EXPORT_SYMBOL (po_list_begin)     ;
+EXPORT_SYMBOL (po_list_end)       ;
+EXPORT_SYMBOL (po_list_next)      ;
+EXPORT_SYMBOL (po_list_prev)      ;
 
-EXPORT_SYMBOL(po_list_t)        ;
+EXPORT_SYMBOL (po_list_get)       ;
+EXPORT_SYMBOL (po_list_set)       ;
+
+EXPORT_SYMBOL (po_list_t)         ;
+MODULE_LICENSE("GPL")             ;
+#endif

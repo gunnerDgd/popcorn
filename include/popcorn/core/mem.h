@@ -22,8 +22,8 @@ po_mod bool_t   po_mem_eq  (void*, void*, u64_t)       ;
 po_mod bool_t   po_mem_gt  (void*, void*, u64_t)       ;
 po_mod bool_t   po_mem_lt  (void*, void*, u64_t)       ;
 
-#define kb *(1ull << 10ull)
-#define mb *(1ull << 20ull)
-#define gb *(1ull << 30ull)
+#define KB *(1ull << 10ull)
+#define MB *(1ull << 20ull)
+#define GB *(1ull << 30ull)
 
 #endif

@@ -181,6 +181,9 @@ u64_t
 			return kref_read(&par->ref);
 }
 
+#ifdef PO_PRESET_LINUX
+#include <linux/module.h>
+
 EXPORT_SYMBOL(po_obj_new)      ;
 EXPORT_SYMBOL(po_obj_new_va)   ;
 
@@ -195,3 +198,6 @@ EXPORT_SYMBOL(po_obj_del)      ;
 
 EXPORT_SYMBOL(po_obj_get_trait);
 EXPORT_SYMBOL(po_obj_use_count);
+
+MODULE_LICENSE("GPL")          ;
+#endif
