@@ -143,13 +143,14 @@ struct file_operations dev_type_ops   = {
 
 bool_t
     po_dev_type_new
-        (po_dev_type* par_type, u32_t par_count, va_list par)                                {
-            const char* name  = NULL    ; if (par_count > 0) name  = va_arg(par, const char*);
-            u64_t       count = 1 MB - 1; if (par_count > 1) count = va_arg(par, u64_t)      ;
+        (po_dev_type* par_type, u32_t par_count, va_list par)  {
+            const char* name  = NULL                           ;
+            if (par_count > 0) name  = va_arg(par, const char*);
+            if (!name)         return false_t                  ;
 
             cdev_init(&par_type->hnd, &dev_type_ops);
-            if (alloc_chrdev_region(&par_type->id, 0, count, name)       < 0) goto new_failed;
-            if (cdev_add           (&par_type->hnd, par_type->id, count) < 0) goto new_failed;
+            if (alloc_chrdev_region(&par_type->id, 0, (1 MB - 1), name)       < 0) goto new_failed;
+            if (cdev_add           (&par_type->hnd, par_type->id, (1 MB - 1)) < 0) goto new_failed;
 
             if (!make_at(&par_type->name  , po_str_t)  from (0)) goto new_failed;
             if (!make_at(&par_type->active, po_list_t) from (0)) goto new_failed;
@@ -159,8 +160,8 @@ bool_t
             po_str_push_back_cstr(&par_type->name, name, strlen(name));
             return true_t;
     new_failed:
-            if (par_type->id)  unregister_chrdev_region(par_type->id, count);
-            if (par_type->cls) class_destroy           (par_type->cls)      ;
+            if (par_type->id)  unregister_chrdev_region(par_type->id, (1 MB - 1));
+            if (par_type->cls) class_destroy           (par_type->cls)           ;
 
             del(&par_type->active);
             del(&par_type->free)  ;
@@ -189,7 +190,7 @@ void
             unregister_chrdev_region(par->id, 1 MB);
             class_destroy           (par->cls)     ;
 
-            del(&par->dev.active);
-            del(&par->dev.free)  ;
-            del(&par->name)      ;
+            del(&par->active);
+            del(&par->free)  ;
+            del(&par->name)  ;
 }

@@ -7,8 +7,9 @@ void*
             dev_t   dev_num = par_type->dev_num                           ;
             po_dev *dev     = (po_dev*) po_list_pop_front(&par_type->free);
 
-            if (!dev)                       {
-                return make (po_dev_t) from (
+            if (!dev)                                         {
+                if (dev_num != (1 MB - 1)) par_type->dev_num++;
+                return make (po_dev_t) from                   (
                     5       ,
                     par_name,
                     par_type,
