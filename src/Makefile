@@ -3,21 +3,21 @@ ifndef KERNELDIR
 endif
 
 obj-m 	 	 := popcorn.o
-popcorn-objs := ./core/linux/obj.o	  		  \
-				./core/mem.o		  		  \
-			    ./core/box.o		  		  \
-			    ./core/list.o	 	 		  \
-			    ./core/map.o		  		  \
-			    ./core/str.o		  		  \
-			   						  		  \
-			    ./dev/linux/details/dev.o 	  \
-			    ./dev/linux/details/dev_type.o\
-			    ./dev/linux/dev.o		 	  \
-			    ./dev/linux/dev_type.o	      \
-			   						  		  \
-			    ./mem/linux/details/buf.o	  \
-			    ./mem/linux/buf.o			  \
-			    po_linux.o					  \
+popcorn-objs := core/linux/obj.o	  		\
+				core/mem.o		  		    \
+			    core/box.o		  		    \
+			    core/list.o	 	 		    \
+			    core/map.o		  		    \
+			    core/str.o		  		    \
+			   						  		\
+			    dev/linux/details/dev.o 	\
+			    dev/linux/details/dev_type.o\
+			    dev/linux/dev.o		 	    \
+			    dev/linux/dev_type.o	    \
+			   						  		\
+			    mem/linux/details/buf.o	    \
+			    mem/linux/buf.o			    \
+			    ./po_linux.o				\
 
 
 all:
