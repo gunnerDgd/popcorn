@@ -2,7 +2,7 @@
 #define __PO_DEV_H__
 
 #ifdef PO_PRESET_LINUX
-#include "linux/details/po_dev.h"
+#include "linux/details/dev.h"
 #include "linux/details/dev_type.h"
 #endif
 

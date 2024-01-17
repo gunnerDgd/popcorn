@@ -1,4 +1,4 @@
-#include "po_dev.h"
+#include "dev.h"
 #include "dev_type.h"
 
 #include <linux/sched.h>
@@ -25,7 +25,6 @@ bool_t
             if (!name)                           return false_t;
             if (!type)                           return false_t;
             if (!ops)                            return false_t;
-            if (!dev)                            return false_t;
 
             if (trait_of(type) != po_dev_type_t) return false_t;
             if (!ops->on_new)                    return false_t;
@@ -37,9 +36,9 @@ bool_t
             if (!ops->on_control)                return false_t;
 
             if (id >= 1 MB)                      return false_t;
-            if (type->dev.all[id])               return false_t;
+            if (type->dev[id])                   return false_t;
 
-            par_dev->hnd     = po_list_push_back(&type->dev.active, (po_obj*)par_dev);
+            par_dev->hnd     = po_list_push_back(&type->active, (po_obj*)par_dev);
             par_dev->dev_hnd = device_create    (
                 type->cls    ,
                 NULL         ,
@@ -58,11 +57,11 @@ bool_t
             par_dev->ops  = ops      ;
             par_dev->id   = id       ;
 
-            type->dev.all[id] = par_dev;
+            type->dev[id] = par_dev;
             return true_t;
     new_failed:
-            po_list_pop(&type   ->dev.active, par_dev->hnd);
-            del        (&par_dev->name)                    ;
+            po_list_pop(&type   ->active, par_dev->hnd);
+            del        (&par_dev->name)                ;
             return false_t;
 }
 
@@ -78,7 +77,7 @@ void
             po_dev_wait   (par, po_dev_free)       ;
             device_destroy(par->type->cls, par->id);
 
-            par->type->dev.all[par->id] = NULL;
+            par->type->dev[par->id] = NULL;
             del (par->dev) ;
 }
 

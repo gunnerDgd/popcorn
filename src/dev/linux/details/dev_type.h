@@ -16,12 +16,11 @@ typedef struct       po_dev_type  {
     struct class  *cls      ;
     struct cdev    hnd      ;
     dev_t          id       ;
-    struct                  {
-    struct po_dev* all[1 MB];
+
+    u64_t          dev_num  ;
+    struct po_dev* dev[1 MB];
     po_list        active   ;
     po_list        free     ;
-    u64_t          count    ;
-    }              dev      ;
 }   po_dev_type;
 
 extern po_dev_type*           dev_type[4096];
