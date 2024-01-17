@@ -35,7 +35,6 @@ static int
             if (trait_of(ret_priv) != po_dev_t) return -EINVAL;
             if (!ret->ops->on_ref(ret->dev))    return -EINVAL;
 
-            ref(ret_priv);
             return 0;
 }
 
@@ -144,9 +143,9 @@ struct file_operations dev_type_ops   = {
 bool_t
     po_dev_type_new
         (po_dev_type* par_type, u32_t par_count, va_list par)  {
-            const char* name  = NULL                           ;
-            if (par_count > 0) name  = va_arg(par, const char*);
-            if (!name)         return false_t                  ;
+            const char* name  = va_arg(par, const char*);
+            if (par_count != 1) return false_t;
+            if (!name)          return false_t ;
 
             cdev_init(&par_type->hnd, &dev_type_ops);
             if (alloc_chrdev_region(&par_type->id, 0, (1 MB - 1), name)       < 0) goto new_failed;
@@ -165,7 +164,7 @@ bool_t
 
             del(&par_type->active);
             del(&par_type->free)  ;
-            del(&par_type->name)      ;
+            del(&par_type->name)  ;
             return false_t;
 }
 

@@ -47,7 +47,7 @@ void
             if (trait_of(dev) != po_dev_t)      return;
             if (dev->state == po_dev_free)      return;
 
-            po_dev_wait   (dev, po_dev_free)                       ;
+            po_dev_wait   (dev, po_dev_active)                     ;
             device_destroy(dev->type->cls, dev->type->id + dev->id);
             po_list_pop   (&dev->type->active, dev->hnd)           ;
 
