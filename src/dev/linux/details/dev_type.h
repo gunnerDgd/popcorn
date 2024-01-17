@@ -11,16 +11,16 @@ struct po_dev_type;
 
 extern po_obj_trait *po_dev_type_t;
 typedef struct       po_dev_type  {
-    po_obj         head     ;
-    po_str         name     ;
-    struct class  *cls      ;
-    struct cdev    hnd      ;
-    dev_t          id       ;
+    po_obj         head      ;
+    po_str         name      ;
+    struct class  *cls       ;
+    struct cdev    hnd       ;
+    dev_t          id        ;
 
-    u64_t          dev_num  ;
-    struct po_dev* dev[1 MB];
-    po_list        active   ;
-    po_list        free     ;
+    u64_t          num       ;
+    struct po_dev* dev[64 KB];
+    po_list        free      ;
+    po_list        use       ;
 }   po_dev_type;
 
 extern po_dev_type*           dev_type[4096];

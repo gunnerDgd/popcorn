@@ -4,7 +4,5 @@
 #ifdef PO_PRESET_LINUX
 #include "linux/details/dev.h"
 #include "linux/details/dev_type.h"
-
 #endif
-
 #endif

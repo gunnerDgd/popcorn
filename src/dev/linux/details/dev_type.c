@@ -80,7 +80,7 @@ static ssize_t
             po_buf *ret_buf = (po_buf*) make (po_buf_t) from (3, par_buf, par_len, par_off);
             i64_t   res     = ret->ops->on_read (ret->dev, ret_buf)                        ;
 
-            del   (ret_buf); ret->state = po_dev_active;
+            del   (ret_buf); ret->state = po_dev_use;
             return res     ;
 }
 
@@ -105,7 +105,7 @@ static ssize_t
             po_buf *ret_buf = (po_buf*) make (po_buf_t) from (3, par_buf, par_len, par_off);
             i64_t   res     = ret->ops->on_write (ret->dev, ret_buf)                       ;
 
-            del   (ret_buf); ret->state = po_dev_active;
+            del   (ret_buf); ret->state = po_dev_use;
             return res     ;
 }
 
@@ -124,8 +124,8 @@ static long
             if (trait_of(ret)      != po_dev_t)      return -EINVAL;
             if (ret_type->dev[pos] != ret)           return -EINVAL;
 
-            ret->state = po_dev_busy  ; i64_t res = ret->ops->on_control (ret->dev, par_code, (void*)par_arg);
-            ret->state = po_dev_active;
+            ret->state = po_dev_busy; i64_t res = ret->ops->on_control (ret->dev, par_code, (void*)par_arg);
+            ret->state = po_dev_use ;
             return res;
 }
 
@@ -145,26 +145,27 @@ bool_t
         (po_dev_type* par_type, u32_t par_count, va_list par)  {
             const char* name  = va_arg(par, const char*);
             if (par_count != 1) return false_t;
-            if (!name)          return false_t ;
+            if (!name)          return false_t;
 
             cdev_init(&par_type->hnd, &dev_type_ops);
-            if (alloc_chrdev_region(&par_type->id, 0, (1 MB - 1), name)       < 0) goto new_failed;
-            if (cdev_add           (&par_type->hnd, par_type->id, (1 MB - 1)) < 0) goto new_failed;
+            if (alloc_chrdev_region(&par_type->id, 0, 64 KB, name)       < 0) goto new_failed;
+            if (cdev_add           (&par_type->hnd, par_type->id, 64 KB) < 0) goto new_failed;
 
-            if (!make_at(&par_type->name  , po_str_t)  from (0)) goto new_failed;
-            if (!make_at(&par_type->active, po_list_t) from (0)) goto new_failed;
-            if (!make_at(&par_type->free  , po_list_t) from (0)) goto new_failed;
-            if (!(par_type->cls = class_create(name)))           goto new_failed;
+            if (!make_at(&par_type->name, po_str_t)  from (0)) goto new_failed;
+            if (!make_at(&par_type->use , po_list_t) from (0)) goto new_failed;
+            if (!make_at(&par_type->free, po_list_t) from (0)) goto new_failed;
+            if (!(par_type->cls = class_create(name)))         goto new_failed;
 
             po_str_push_back_cstr(&par_type->name, name, strlen(name));
+            par_type->num = 0;
             return true_t;
     new_failed:
-            if (par_type->id)  unregister_chrdev_region(par_type->id, (1 MB - 1));
-            if (par_type->cls) class_destroy           (par_type->cls)           ;
+            if (par_type->id)  unregister_chrdev_region(par_type->id, 64 KB);
+            if (par_type->cls) class_destroy           (par_type->cls)      ;
 
-            del(&par_type->active);
-            del(&par_type->free)  ;
-            del(&par_type->name)  ;
+            del(&par_type->use) ;
+            del(&par_type->free);
+            del(&par_type->name);
             return false_t;
 }
 
@@ -177,7 +178,7 @@ bool_t
 void
     po_dev_type_del
         (po_dev_type* par)                                   {
-            po_list_while(&par->active, dev_it)              {
+            po_list_while(&par->use, dev_it)                 {
                 po_dev *dev = po_list_get_as(dev_it, po_dev*);
                 if (!dev)                      continue;
                 if (trait_of(dev) != po_dev_t) continue;
@@ -186,10 +187,10 @@ void
                 del(dev);
             }
 
-            unregister_chrdev_region(par->id, (1 MB - 1));
-            class_destroy           (par->cls)           ;
+            unregister_chrdev_region(par->id, 64 KB);
+            class_destroy           (par->cls)      ;
 
-            del(&par->active);
-            del(&par->free)  ;
-            del(&par->name)  ;
+            del(&par->use) ;
+            del(&par->free);
+            del(&par->name);
 }

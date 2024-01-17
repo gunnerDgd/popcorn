@@ -20,28 +20,32 @@ typedef struct po_dev_ops                      {
     i64_t  (*on_read)   (po_obj*, po_buf*)     ;
 }   po_dev_ops;
 
-#define              po_dev_free   0
-#define              po_dev_active 1
-#define              po_dev_busy   2
+#define              po_dev_free 0
+#define              po_dev_use  1
+#define              po_dev_busy 2
 extern po_obj_trait* po_dev_t  ;
 typedef struct       po_dev    {
     po_obj              head   ;
     u64_t               state  ;
     po_str              name   ;
-    po_list_elem       *hnd    ;
     struct po_dev_type *type   ;
     po_dev_ops         *ops    ;
+
+    dev_t               id     ;
+    dev_t               idx    ;
     struct device      *dev_hnd;
     po_obj             *dev    ;
-    dev_t               id     ;
+    po_list_elem       *hnd    ;
+
 }   po_dev;
 
 bool_t  po_dev_new  (po_dev*, u32_t, va_list);
 bool_t  po_dev_clone(po_dev*, po_dev*)       ;
 void    po_dev_del  (po_dev*)                ;
 
-po_str* po_dev_name (po_dev*)       ;
-void    po_dev_wait (po_dev*, u64_t);
+po_str* po_dev_name         (po_dev*)       ;
+void    po_dev_wait         (po_dev*, u64_t);
+void    po_dev_wait_and_set();
 
 MODULE_LICENSE("GPL");
 

@@ -4,36 +4,45 @@
 void*
     po_new_dev
         (const char* par_name, po_dev_type* par_type, po_dev_ops* par_ops, po_obj* par) {
-            dev_t   dev_num = par_type->dev_num                           ;
-            po_dev *dev     = (po_dev*) po_list_pop_front(&par_type->free);
+            if (!par_name)                           return NULL;
+            if (!par_type)                           return NULL;
+            if (trait_of(par_type) != po_dev_type_t) return NULL;
 
-            if (!dev)                                         {
-                if (dev_num != (1 MB - 1)) par_type->dev_num++;
-                return make (po_dev_t) from                   (
-                    5       ,
+            if (!par_ops)             return NULL;
+            if (!par_ops->on_new)     return NULL;
+            if (!par_ops->on_ref)     return NULL;
+            if (!par_ops->on_del)     return NULL;
+
+            if (!par_ops->on_control) return NULL;
+            if (!par_ops->on_write)   return NULL;
+            if (!par_ops->on_read)    return NULL;
+
+            po_dev *dev = (po_dev*) po_list_pop_front(&par_type->free);
+            if (!dev)                       {
+                return make (po_dev_t) from (
+                    4       ,
                     par_name,
                     par_type,
                     par_ops ,
-                    par     ,
-                    dev_num
+                    par
                 );
             }
 
-            po_list_pop(&par_type->free, dev->hnd)                            ;
-            dev->hnd     = po_list_push_back(&par_type->active, (po_obj*) dev);
-            dev->state   = po_dev_active                                      ;
-            dev->dev_hnd = device_create (
-                par_type->cls         ,
-                NULL                  ,
-                par_type->id + dev_num,
-                dev                   ,
+            po_list_pop(&par_type->free, dev->hnd)                         ;
+            dev->state   = po_dev_use                                      ;
+            dev->hnd     = po_list_push_back(&par_type->use, (po_obj*) dev);
+            dev->dev_hnd = device_create    (
+                par_type->cls,
+                NULL         ,
+                dev->id      ,
+                dev          ,
                 par_name
             );
 
-            if (!dev->dev_hnd) goto create_failed; par_type->dev[dev_num] = dev;
+            if (!dev->dev_hnd) goto create_failed;
             return dev->hnd;
     create_failed:
-            po_list_pop(&par_type->active, dev->hnd)                      ;
+            po_list_pop(&par_type->use, dev->hnd)                         ;
             dev->state = po_dev_free                                      ;
             dev->hnd   = po_list_push_back(&par_type->free, (po_obj*) dev);
             return NULL;
@@ -47,10 +56,10 @@ void
             if (trait_of(dev) != po_dev_t)      return;
             if (dev->state == po_dev_free)      return;
 
-            po_dev_wait   (dev, po_dev_active)                     ;
+            po_dev_wait   (dev, po_dev_use)                        ;
             device_destroy(dev->type->cls, dev->type->id + dev->id);
-            po_list_pop   (&dev->type->active, dev->hnd)           ;
 
+            po_list_pop   (&dev->type->use, dev->hnd);
             dev->state              = po_dev_free                                       ;
             dev->hnd                = po_list_push_back(&dev->type->free, (po_obj*) dev);
             dev->dev_hnd            = NULL                                              ;
