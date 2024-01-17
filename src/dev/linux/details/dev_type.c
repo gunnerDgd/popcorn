@@ -147,19 +147,19 @@ bool_t
             u64_t       count = 1 MB - 1; if (par_count > 1) count = va_arg(par, u64_t)      ;
 
             cdev_init(&par_type->hnd, &dev_type_ops);
-            if (alloc_chrdev_region(&par_type->id, 0, count, name)       < 0) goto new_failed;
-            if (cdev_add           (&par_type->hnd, par_type->id, count) < 0) goto new_failed;
+            if (alloc_chrdev_region(&par_type->id, 0, count, name)       < 0) goto new_failed; printk("chrdev\n");
+            if (cdev_add           (&par_type->hnd, par_type->id, count) < 0) goto new_failed; printk("cdev\n");
 
-            if (!make_at(&par_type->name      , po_str_t)  from (0)) goto new_failed;
-            if (!make_at(&par_type->dev.active, po_list_t) from (0)) goto new_failed;
-            if (!make_at(&par_type->dev.free  , po_list_t) from (0)) goto new_failed; par_type->cls = class_create(name);
+            if (!make_at(&par_type->name      , po_str_t)  from (0)) goto new_failed; printk("name\n")       ;
+            if (!make_at(&par_type->dev.active, po_list_t) from (0)) goto new_failed; printk("active list\n");
+            if (!make_at(&par_type->dev.free  , po_list_t) from (0)) goto new_failed; printk("free list\n")  ; par_type->cls = class_create(name);
             if (!par_type->cls)                                      goto new_failed;
 
             po_str_push_back_cstr(&par_type->name, name, strlen(name));
             return true_t;
     new_failed:
-            if (par_type->id)  unregister_chrdev_region(par_type->id, 1 MB);
-            if (par_type->cls) class_destroy           (par_type->cls)     ;
+            if (par_type->id)  unregister_chrdev_region(par_type->id, count);
+            if (par_type->cls) class_destroy           (par_type->cls)      ;
 
             del(&par_type->dev.active);
             del(&par_type->dev.free)  ;

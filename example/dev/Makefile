@@ -22,11 +22,11 @@ popcorn-objs := ../../src/core/linux/obj.o	  		  \
 			    ../../src/po_linux.o				  \
 
 all:
-	@$(MAKE) KCPPFLAGS="-DPO_PRESET_LINUX -I$(PWD)/../../include" -C $(KERNELDIR) M=$(PWD)
+	$(MAKE) KCPPFLAGS="-DPO_PRESET_LINUX -I$(PWD)/../../include" -C $(KERNELDIR) M=$(PWD)
 
 clean:
-	@$(MAKE) -C $(KERNELDIR) M=$(PWD) 			clean
-	@$(MAKE) -C $(KERNELDIR) M=$(PWD)/../../src clean
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) 		   clean
+	$(MAKE) -C $(KERNELDIR) M=$(PWD)/../../src clean
 
 install:
-	@$(MAKE) -C $(KERNELDIR) M=$(PWD) modules_install
+	$(MAKE) -C $(KERNELDIR) M=$(PWD) modules_install
