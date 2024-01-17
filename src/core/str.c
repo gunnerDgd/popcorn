@@ -67,7 +67,7 @@ void
 void 
     po_str_rsv_back 
         (po_str* par, u64_t par_size)            {
-            if (!par)                   return;
+            if (!par)                      return;
             if (trait_of(par) != po_str_t) return;
 
             u64_t rsv_size = par->size << 1		           ; if (rsv_size < par_size) rsv_size = par_size + par->size;
@@ -88,7 +88,7 @@ void
             if (!par)                   return;
             if (trait_of(par) != po_str_t) return;
 
-            u64_t rsv_size = par->size << 1			    ; if (rsv_size < par_size) rsv_size = par_size + par->size;
+            u64_t rsv_size = par->size << 1			       ; if (rsv_size < par_size) rsv_size = par_size + par->size;
 			u8_t *rsv	   = po_mem_new(par->res, rsv_size); 
             if  (!rsv) return;
 
@@ -302,8 +302,8 @@ bool_t
 
 bool_t
     po_str_gt
-        (po_str* par, po_str* par_cmp)                           {
-            if (!par_cmp)                   return false_t;
+        (po_str* par, po_str* par_cmp)                       {
+            if (!par_cmp)                      return false_t;
             if (trait_of(par_cmp) != po_str_t) return false_t;
 
             return po_str_gt_cstr            (
@@ -329,8 +329,8 @@ bool_t
 
 bool_t 
     po_str_lt
-        (po_str* par, po_str* par_cmp)                          {
-            if (!par_cmp)                   return false_t;
+        (po_str* par, po_str* par_cmp)                       {
+            if (!par_cmp)                      return false_t;
             if (trait_of(par_cmp) != po_str_t) return false_t;
 
             return po_str_lt_cstr            (
@@ -407,7 +407,7 @@ bool_t
 			);
 }
 
-bool_t MODULE_LICENSE("GPL");
+bool_t
     po_str_empty
         (po_str* par)                                   {
             if (!par)                      return true_t;
@@ -431,7 +431,7 @@ const char*
             if (!par)                   return 0;
             if (trait_of(par) != po_str_t) return 0;
 
-            return par->mem + par->front;MODULE_LICENSE("GPL")      ;
+            return par->mem + par->front;
 }
 
 #ifdef PO_PRESET_LINUX
@@ -476,5 +476,5 @@ EXPORT_SYMBOL(po_str_len)            ;
 EXPORT_SYMBOL(po_str_ptr)            ;
 
 EXPORT_SYMBOL(po_str_t)              ;
-MODULE_LICENSE("GPL")      ;
+MODULE_LICENSE("GPL")                ;
 #endif
