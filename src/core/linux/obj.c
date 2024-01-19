@@ -12,8 +12,8 @@ po_obj*
 po_obj*
     po_obj_new_va
 		(po_mem* par_res, po_obj_trait* par_trait, u32_t par_count, va_list par) {
-			if (!par_res)						par_res = po_get_mem();
-			if (!par_res)						return 0;
+			if (!par_res)						   par_res = po_get_mem();
+			if (!par_res)						   return 0;
 			if (par_trait->size <= sizeof(po_obj)) return 0;
 
 			po_obj *ret = po_mem_new(par_res, par_trait->size);
@@ -184,20 +184,5 @@ u64_t
 #ifdef PO_PRESET_LINUX
 #include <linux/module.h>
 
-EXPORT_SYMBOL(po_obj_new)      ;
-EXPORT_SYMBOL(po_obj_new_va)   ;
-
-EXPORT_SYMBOL(po_obj_new_at)   ;
-EXPORT_SYMBOL(po_obj_new_at_va);
-
-EXPORT_SYMBOL(po_obj_clone)    ;
-EXPORT_SYMBOL(po_obj_clone_at) ;
-
-EXPORT_SYMBOL(po_obj_ref)      ;
-EXPORT_SYMBOL(po_obj_del)      ;
-
-EXPORT_SYMBOL(po_obj_get_trait);
-EXPORT_SYMBOL(po_obj_use_count);
-
-MODULE_LICENSE("GPL")          ;
+MODULE_LICENSE("GPL");
 #endif

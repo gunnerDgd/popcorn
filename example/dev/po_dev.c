@@ -3,6 +3,8 @@
 #include <popcorn/core.h>
 #include <popcorn/dev.h>
 
+#include <linux/slab.h>
+
 bool_t mod_do_new    (po_obj* par) { printk("New Module !!\n")        ; return true_t; }
 bool_t mod_do_ref    (po_obj* par) { printk("Module Have Friend !!\n"); return true_t; }
 void   mod_do_del    (po_obj* par) { printk("Goodbye Module !!\n")    ; }
@@ -21,22 +23,34 @@ po_dev_ops ops  =               {
     .on_control = mod_do_control
 };
 
-po_dev_type dev_type;
-po_dev      dev     ;
+void* po_heap_new(po_mem* par, u64_t par_size) { return kmalloc(par_size, GFP_KERNEL); }
+void  po_heap_del(po_mem* par, void* par_mem)  { kfree(par_mem); }
+
+po_mem po_heap =            {
+    .on_new    = po_heap_new,
+    .on_del    = po_heap_del
+};
+
+po_chr dev_type;
+po_ns  dev_ns  ;
 
 static int
-    __init mod_new(void) {
-        dev_type = make (po_dev_type_t) from (1, "TestDevice");
-        dev      = po_new_dev("Test", dev_type, &ops, 0);
-        printk("Hello Module!!\n");
+    __init mod_new(void)                                 {
+        po_set_mem(&po_heap)                             ;
+        dev_type = make (po_chr_t) from (1, "TestDevice");
+        dev_ns   = make (po_ns_t)  from (1, "TestClass") ;
+        printk("Hello Module!!\n")           ;
+        printk("dev_type : %08x\n", dev_type);
+        printk("dev_ns : %08x\n"  , dev_ns)  ;
 
         return 0;
 }
 
 static void
-    __exit mod_del(void) {
-        po_del_dev(dev)     ;
-        del       (dev_type);
+    __exit mod_del(void)            {
+        printk("Goodbye Module!!\n");
+        del(dev_type);
+        del(dev_ns)  ;
 }
 
 module_init   (mod_new);

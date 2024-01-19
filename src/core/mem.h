@@ -1,5 +1,5 @@
-#ifndef __PO_MEM_H__
-#define __PO_MEM_H__
+#ifndef __PO_CORE_MEM_H__
+#define __PO_CORE_MEM_H__
 
 #include "type.h"
 

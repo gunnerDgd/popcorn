@@ -10,7 +10,8 @@ add_library(popcorn-include STATIC
 
     dev.h
     dev/dev.h
-    dev/dev_type.h
+    dev/chr.h
+    dev/ns.h
 
     mem.h
     mem/buf.h

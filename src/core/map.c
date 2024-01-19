@@ -148,17 +148,5 @@ po_obj*
 #ifdef PO_PRESET_LINUX
 #include <linux/module.h>
 
-EXPORT_SYMBOL (po_map_push) ;
-EXPORT_SYMBOL (po_map_pop)  ;
-EXPORT_SYMBOL (po_map_find) ;
-
-EXPORT_SYMBOL (po_map_empty);
-EXPORT_SYMBOL (po_map_begin);
-EXPORT_SYMBOL (po_map_end)  ;
-EXPORT_SYMBOL (po_map_next) ;
-EXPORT_SYMBOL (po_map_prev) ;
-
-EXPORT_SYMBOL (po_map_get)  ;
-EXPORT_SYMBOL (po_map_t)    ;
-MODULE_LICENSE("GPL")       ;
+MODULE_LICENSE("GPL");
 #endif

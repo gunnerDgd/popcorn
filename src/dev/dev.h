@@ -2,14 +2,10 @@
 #define __PO_DEV_H__
 
 #ifdef PO_PRESET_LINUX
-#include "linux/details/dev.h"
-#include "linux/details/dev_type.h"
+#include "details/linux_dev.h"
 #endif
 
-void*   po_new_dev (const char*, po_dev_type*, po_dev_ops*, po_obj*);
-void    po_del_dev (void*);
-
-void    po_wait_dev(void*, u64_t);
-po_str* po_name_dev(void*)       ;
+po_str* po_dev_name(void*);
+po_obj* po_dev_type(void*);
 
 #endif

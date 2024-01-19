@@ -81,8 +81,5 @@ u64_t
 #ifdef PO_PRESET_LINUX
 #include <linux/module.h>
 
-EXPORT_SYMBOL (po_box_ptr) ;
-EXPORT_SYMBOL (po_box_size);
-EXPORT_SYMBOL (po_box_t)   ;
-MODULE_LICENSE("GPL")      ;
+MODULE_LICENSE("GPL");
 #endif

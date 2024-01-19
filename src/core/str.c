@@ -437,44 +437,5 @@ const char*
 #ifdef PO_PRESET_LINUX
 #include <linux/module.h>
 
-EXPORT_SYMBOL(po_str_rsv_back)       ;
-EXPORT_SYMBOL(po_str_rsv_front)      ;
-
-EXPORT_SYMBOL(po_str_push_back)      ;
-EXPORT_SYMBOL(po_str_push_back_cstr) ;
-
-EXPORT_SYMBOL(po_str_push_front)     ;
-EXPORT_SYMBOL(po_str_push_front_cstr);
-
-EXPORT_SYMBOL(po_str_push)           ;
-EXPORT_SYMBOL(po_str_push_cstr)      ;
-
-EXPORT_SYMBOL(po_str_pop_front)      ;
-EXPORT_SYMBOL(po_str_pop_back)       ;
-EXPORT_SYMBOL(po_str_pop)            ;
-
-EXPORT_SYMBOL(po_str_find)           ;
-EXPORT_SYMBOL(po_str_find_cstr)      ;
-
-EXPORT_SYMBOL(po_str_eq)             ;
-EXPORT_SYMBOL(po_str_eq_cstr)        ;
-
-EXPORT_SYMBOL(po_str_gt)             ;
-EXPORT_SYMBOL(po_str_gt_cstr)        ;
-
-EXPORT_SYMBOL(po_str_lt)             ;
-EXPORT_SYMBOL(po_str_lt_cstr)        ;
-
-EXPORT_SYMBOL(po_str_starts)         ;
-EXPORT_SYMBOL(po_str_starts_cstr)    ;
-
-EXPORT_SYMBOL(po_str_ends)           ;
-EXPORT_SYMBOL(po_str_ends_cstr)      ;
-
-EXPORT_SYMBOL(po_str_empty)          ;
-EXPORT_SYMBOL(po_str_len)            ;
-EXPORT_SYMBOL(po_str_ptr)            ;
-
-EXPORT_SYMBOL(po_str_t)              ;
-MODULE_LICENSE("GPL")                ;
+MODULE_LICENSE("GPL");
 #endif

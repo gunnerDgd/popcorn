@@ -22,4 +22,6 @@ if(UNIX AND NOT APPLE)
         list.h
         list.c
     )
+
+    target_include_directories(popcorn-core PRIVATE /usr/src/kernels/linux-headers-${CMAKE_HOST_SYSTEM_VERSION}/include)
 endif()
