@@ -15,6 +15,7 @@ add_library(popcorn-include STATIC
 
     mem.h
     mem/buf.h
+        dev/chr_dev.h
 )
 
 set_target_properties(popcorn-include PROPERTIES LINKER_LANGUAGE C)

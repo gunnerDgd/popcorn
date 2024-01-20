@@ -14,8 +14,9 @@ po-objs := ../../src/core/linux/obj.o	  	 \
 		   ../../src/dev/details/linux_chr.o \
 		   ../../src/dev/details/linux_ns.o  \
 				 							 \
-		   ../../src/dev/dev.o 	  		     \
            ../../src/dev/chr.o 	  		     \
+           ../../src/dev/chr_dev.o  		 \
+           ../../src/dev/dev.o 	  		     \
            ../../src/dev/ns.o 	      		 \
 		 						  		  	 \
 		   ../../src/mem/details/linux_buf.o \

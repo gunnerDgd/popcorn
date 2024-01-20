@@ -185,7 +185,6 @@ void
             cdev_del                (&par->chr)    ;
 
             chr[MAJOR(par->id)] = NULL;
-            vfree(par->dev)  ;
             del  (&par->use) ;
             del  (&par->free);
             del  (&par->name);

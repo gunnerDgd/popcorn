@@ -149,11 +149,9 @@ void
 
 u64_t	   
 	po_obj_del
-		(po_obj* par)			                              {
-			if(!par)		                          return 0;
-			if(!par->trait)                           return 0;
-
-            if (!kref_read(&par->ref))                return 0;
+		(po_obj* par)			                                                 {
+			if(!par)		                          return 0                   ;
+			if(!par->trait)                           return 0                   ;
             if (!kref_put (&par->ref, po_obj_do_del)) return kref_read(&par->ref);
             return 0;
 }

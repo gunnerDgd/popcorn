@@ -14,10 +14,12 @@ if(UNIX AND NOT APPLE)
             details/linux_ns.c
 
             ../dev.h
-            chr.c
             ns.h
             dev.c
             ns.c
+            chr_dev.h
+            chr_dev.c
+            chr.c
     )
 
     target_include_directories(popcorn-dev PRIVATE /usr/src/kernels/linux-headers-${CMAKE_HOST_SYSTEM_VERSION}/include)
