@@ -38,9 +38,10 @@ bool_t
             if (!make_at (&par_dev->name, po_str_t) from (0)) return false_t;
 
             po_str_push_back_cstr(&par_dev->name, name, strlen(name));
-            par_dev->ns  = (po_ns*) ref(ns) ;
-            par_dev->obj =          ref(dev);
-            par_dev->id  =                -1;
+            par_dev->ns  = (po_ns*) ref(ns);
+            par_dev->obj = ref(dev)        ;
+            par_dev->ops = ops             ;
+            par_dev->id  = -1              ;
             return true_t;
     new_failed:
 }
