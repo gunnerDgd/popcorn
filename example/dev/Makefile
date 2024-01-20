@@ -19,7 +19,9 @@ po-objs := ../../src/core/linux/obj.o	  	 \
            ../../src/dev/dev.o 	  		     \
            ../../src/dev/ns.o 	      		 \
 		 						  		  	 \
-		   ../../src/mem/details/linux_buf.o \
+		   ../../src/mem/details/linux_ubuf.o\
+		   ../../src/mem/details/linux_heap.o\
+		   ../../src/mem/details/linux_page.o\
 		   po_dev.o
 
 all:

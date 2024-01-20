@@ -67,30 +67,30 @@ void
 
 i64_t
     po_chr_dev_read
-        (po_chr_dev* par, po_buf* par_buf)                                                                 {
-            if (!par)                            return -1; po_dev* dev = po_list_get_as(par->dev, po_dev*);
-            if (!dev)                            return -1;
-            if (!par_buf)                        return -1;
+        (po_chr_dev* par, po_ubuf* par_buf)                                                                 {
+            if (!par)                             return -1; po_dev* dev = po_list_get_as(par->dev, po_dev*);
+            if (!dev)                             return -1;
+            if (!par_buf)                         return -1;
 
-            if (trait_of(par_buf)   != po_buf_t) return -1;
-            if (trait_of(dev)       != po_dev_t) return -1;
-            if (trait_of(dev->type) != po_chr_t) return -1;
-            if (dev->type != par->chr)           return -1;
+            if (trait_of(par_buf)   != po_ubuf_t) return -1;
+            if (trait_of(dev)       != po_dev_t)  return -1;
+            if (trait_of(dev->type) != po_chr_t)  return -1;
+            if (dev->type != par->chr)            return -1;
 
             return dev->ops->on_read (dev->obj, par_buf);
 }
 
 i64_t
     po_chr_dev_write
-        (po_chr_dev* par, po_buf* par_buf)                                                                 {
-            if (!par)                            return -1; po_dev* dev = po_list_get_as(par->dev, po_dev*);
-            if (!dev)                            return -1;
-            if (!par_buf)                        return -1;
+        (po_chr_dev* par, po_ubuf* par_buf)                                                                 {
+            if (!par)                             return -1; po_dev* dev = po_list_get_as(par->dev, po_dev*);
+            if (!dev)                             return -1;
+            if (!par_buf)                         return -1;
 
-            if (trait_of(par_buf)   != po_buf_t) return -1;
-            if (trait_of(dev)       != po_dev_t) return -1;
-            if (trait_of(dev->type) != po_chr_t) return -1;
-            if (dev->type != par->chr)           return -1;
+            if (trait_of(par_buf)   != po_ubuf_t) return -1;
+            if (trait_of(dev)       != po_dev_t)  return -1;
+            if (trait_of(dev->type) != po_chr_t)  return -1;
+            if (dev->type != par->chr)            return -1;
 
             return dev->ops->on_write (dev->obj, par_buf);
 }

@@ -1,26 +1,9 @@
 #include "mem.h"
-#include <linux/slab.h>
+#include "../../mem.h"
 
-void*   mem_slab_new(po_mem* par, u64_t par_size) { return kzalloc(par_size, GFP_KERNEL); }
-void    mem_slab_del(po_mem* par, void* par_mem)  { kfree(par_mem); }
-po_mem  mem_slab        = {
-    .on_new = mem_slab_new,
-    .on_del = mem_slab_del
-};
-
-po_mem* mem = &mem_slab;
-po_mem*
-    po_get_mem
-        (void)        {
-            return mem;
-}
-
-po_mem* 
-    po_set_mem
-        (po_mem* par)                   {
-            po_mem* ret = mem; mem = par;
-            return  ret;
-}
+po_mem* mem = &po_heap;
+po_mem* po_get_mem (void)        { return mem; }
+po_mem* po_set_mem (po_mem* par) { po_mem* ret = mem; mem = par; return  ret; }
 
 void* 
     po_mem_new    

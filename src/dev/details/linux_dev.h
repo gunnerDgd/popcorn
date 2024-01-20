@@ -4,7 +4,7 @@
 #include <linux/cdev.h>
 #include <linux/fs.h>
 
-#include "../../mem/buf.h"
+#include "../../mem/ubuf.h"
 #include "linux_ns.h"
 
 struct po_dev_type;
@@ -17,8 +17,8 @@ typedef struct po_dev_ops                      {
     void   (*on_del)    (po_obj*)              ;
 
     i64_t  (*on_control)(po_obj*, u32_t, void*);
-    i64_t  (*on_write)  (po_obj*, po_buf*)     ;
-    i64_t  (*on_read)   (po_obj*, po_buf*)     ;
+    i64_t  (*on_write)  (po_obj*, po_ubuf*)    ;
+    i64_t  (*on_read)   (po_obj*, po_ubuf*)    ;
 }   po_dev_ops;
 
 extern po_obj_trait* po_dev_t;

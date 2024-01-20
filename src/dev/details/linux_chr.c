@@ -59,9 +59,9 @@ static ssize_t
             if (!par->private_data) return -EINVAL; u64_t pos     = iminor(par->f_inode);
             if (!par_buf)           return -EINVAL;
 
-            po_chr *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
-            po_dev *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
-            po_buf *buf     = (po_buf*) make (po_buf_t) from (
+            po_chr  *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
+            po_dev  *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
+            po_ubuf *buf     = (po_ubuf*) make (po_ubuf_t) from (
                 3      ,
                 par_buf,
                 par_len,
@@ -82,9 +82,9 @@ static ssize_t
             if (!par->private_data) return -EINVAL; u64_t pos     = iminor(par->f_inode);
             if (!par_buf)           return -EINVAL;
 
-            po_chr *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
-            po_dev *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
-            po_buf *buf     = (po_buf*) make (po_buf_t) from (
+            po_chr  *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
+            po_dev  *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
+            po_ubuf *buf     = (po_ubuf*) make (po_ubuf_t) from (
                 3      ,
                 par_buf,
                 par_len,
