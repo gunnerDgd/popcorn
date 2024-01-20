@@ -141,8 +141,7 @@ bool_t
             if (!make_at(&par_chr->use , po_list_t) from (0)) goto new_failed;
             if (!make_at(&par_chr->free, po_list_t) from (0)) goto new_failed;
 
-            po_str_push_back_cstr(&par_chr->name, name, strlen(name))      ;
-            po_mem_set           (par_chr->dev, 0x00, sizeof(par_chr->dev));
+            po_str_push_back_cstr(&par_chr->name, name, strlen(name));
             chr[MAJOR(par_chr->id)] = par_chr;
             par_chr->num            = 0ull   ;
             return true_t;
