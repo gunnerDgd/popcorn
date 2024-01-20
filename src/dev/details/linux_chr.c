@@ -1,6 +1,8 @@
 #include "linux_chr.h"
 #include "linux_dev.h"
 
+#include <linux/vmalloc.h>
+
 po_obj_trait po_chr_trait           = {
     .on_new   = as_new  (po_chr_new)  ,
     .on_clone = as_clone(po_chr_clone),
@@ -17,8 +19,8 @@ static int
             if (!par_inode) return -EINVAL; u64_t pos_chr = imajor(par_inode);
             if (!par)       return -EINVAL; u64_t pos     = iminor(par_inode);
 
-            po_chr *ret_chr = chr    [pos_chr]     ; if (!ret_chr) return -EINVAL;
-            po_dev *ret     = chr_dev[pos_chr][pos]; if (!ret)     return -EINVAL;
+            po_chr *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
+            po_dev *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
 
             if (trait_of(ret_chr) != po_chr_t)   return -EINVAL;
             if (trait_of(ret)     != po_dev_t)   return -EINVAL;
@@ -40,8 +42,8 @@ static int
             if (!par)               return -EINVAL; u64_t pos     = iminor(par_inode);
             if (!par->private_data) return -EINVAL;
 
-            po_chr *ret_chr = chr    [pos_chr]     ; if (!ret_chr) return -EINVAL;
-            po_dev *ret     = chr_dev[pos_chr][pos]; if (!ret)     return -EINVAL;
+            po_chr *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
+            po_dev *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
 
             if (trait_of(ret_chr) != po_chr_t) return -EINVAL;
             if (trait_of(ret)     != po_dev_t) return -EINVAL;
@@ -57,8 +59,8 @@ static ssize_t
             if (!par->private_data) return -EINVAL; u64_t pos     = iminor(par->f_inode);
             if (!par_buf)           return -EINVAL;
 
-            po_chr *ret_chr = chr    [pos_chr]     ; if (!ret_chr) return -EINVAL;
-            po_dev *ret     = chr_dev[pos_chr][pos]; if (!ret)     return -EINVAL;
+            po_chr *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
+            po_dev *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
             po_buf *buf     = (po_buf*) make (po_buf_t) from (
                 3      ,
                 par_buf,
@@ -80,8 +82,8 @@ static ssize_t
             if (!par->private_data) return -EINVAL; u64_t pos     = iminor(par->f_inode);
             if (!par_buf)           return -EINVAL;
 
-            po_chr *ret_chr = chr    [pos_chr]     ; if (!ret_chr) return -EINVAL;
-            po_dev *ret     = chr_dev[pos_chr][pos]; if (!ret)     return -EINVAL;
+            po_chr *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
+            po_dev *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
             po_buf *buf     = (po_buf*) make (po_buf_t) from (
                 3      ,
                 par_buf,
@@ -102,8 +104,8 @@ static long
             if (!par)               return -EINVAL; u64_t pos_chr = imajor(par->f_inode);
             if (!par->private_data) return -EINVAL; u64_t pos     = iminor(par->f_inode);
 
-            po_chr *ret_chr = chr    [pos_chr]     ; if (!ret_chr) return -EINVAL;
-            po_dev *ret     = chr_dev[pos_chr][pos]; if (!ret)     return -EINVAL;
+            po_chr *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
+            po_dev *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
 
             if (trait_of(ret_chr) != po_chr_t) return -EINVAL;
             if (trait_of(ret)     != po_dev_t) return -EINVAL;
@@ -115,9 +117,8 @@ static long
             );
 }
 
-po_chr                *chr    [4 KB]        = { NULL,  }     ;
-po_dev                *chr_dev[4 KB][64 KB] = { { NULL, },  };
-struct file_operations chr_ops              = {
+po_chr                *chr[4 KB]     = { NULL,  };
+struct file_operations chr_ops       = {
     .open           = po_chr_do_open   ,
     .release        = po_chr_do_close  ,
 
@@ -133,8 +134,12 @@ bool_t
             const char* name  = va_arg(par, const char*);
             if (par_count != 1) return false_t;
             if (!name)          return false_t;
+            if (!par_chr->dev)  return false_t;
 
             cdev_init(&par_chr->chr, &chr_ops);
+            par_chr->dev = vmalloc(sizeof (po_dev*) * 64 KB);
+
+            if (!par_chr->dev)                                              goto new_failed;
             if (alloc_chrdev_region(&par_chr->id , 0, 64 KB, name)     < 0) goto new_failed;
             if (cdev_add           (&par_chr->chr, par_chr->id, 64 KB) < 0) goto new_failed;
 
@@ -148,6 +153,8 @@ bool_t
             return true_t;
     new_failed:
             cdev_del(&par_chr->chr);
+            vfree   (par_chr->dev) ;
+
             del(&par_chr->use)     ;
             del(&par_chr->free)    ;
             del(&par_chr->name)    ;
@@ -182,9 +189,10 @@ void
             cdev_del                (&par->chr)     ;
 
             chr[MAJOR(par->id)] = NULL;
-            del(&par->use)            ;
-            del(&par->free)           ;
-            del(&par->name)           ;
+            vfree(par->dev)  ;
+            del  (&par->use) ;
+            del  (&par->free);
+            del  (&par->name);
 }
 
 struct po_dev*
@@ -211,8 +219,8 @@ struct po_dev*
             );
 
             if (!par_dev->dev) return NULL;
-            par_dev->hnd                         = po_list_push_back(&par->use, (po_obj*) par_dev);
-            chr_dev[MAJOR(par->id)][par_dev->id] = par_dev;
+            par_dev->hnd              = po_list_push_back(&par->use, (po_obj*) par_dev);
+            par    ->dev[par_dev->id] = par_dev;
             return par_dev;
 }
 
@@ -232,9 +240,9 @@ void
             device_destroy(par_dev->ns->ns, par->id + par_dev->id);
             po_list_pop   (&par->use, par_dev->hnd)               ;
 
-            par_dev->hnd                         = po_list_push_back(&par->free, (po_obj*) par_dev);
-            chr_dev[MAJOR(par->id)][par_dev->id] = NULL;
-            par_dev->dev                         = NULL;
+            par_dev->hnd              = po_list_push_back(&par->free, (po_obj*) par_dev);
+            par    ->dev[par_dev->id] = NULL;
+            par_dev->dev              = NULL;
 }
 
 #ifdef PO_PRESET_LINUX
