@@ -15,9 +15,9 @@ po_obj_trait *po_chr_t = &po_chr_trait;
 
 static int
     po_chr_do_open
-        (struct inode* par_inode, struct file* par)                          {
-            if (!par_inode) return -EINVAL; u64_t pos_chr = imajor(par_inode);
-            if (!par)       return -EINVAL; u64_t pos     = iminor(par_inode);
+        (struct inode* par_inode, struct file* par)                                 {
+            if (!par_inode)        return -EINVAL; u64_t pos_chr = imajor(par_inode);
+            if (!par)              return -EINVAL; u64_t pos     = iminor(par_inode);
 
             if (pos_chr >= (4 KB)) return -EINVAL;
             if (pos     >= (1 KB)) return -EINVAL;
@@ -45,8 +45,8 @@ static int
             if (!par)               return -EINVAL; u64_t pos     = iminor(par_inode);
             if (!par->private_data) return -EINVAL;
 
-            if (pos_chr >= (4 KB)) return -EINVAL;
-            if (pos     >= (1 KB)) return -EINVAL;
+            if (pos_chr >= (4 KB))  return -EINVAL;
+            if (pos     >= (1 KB))  return -EINVAL;
 
             po_chr *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
             po_dev *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
@@ -65,8 +65,8 @@ static ssize_t
             if (!par->private_data) return -EINVAL; u64_t pos     = iminor(par->f_inode);
             if (!par_buf)           return -EINVAL;
 
-            if (pos_chr >= (4 KB)) return -EINVAL;
-            if (pos     >= (1 KB)) return -EINVAL;
+            if (pos_chr >= (4 KB))  return -EINVAL;
+            if (pos     >= (1 KB))  return -EINVAL;
 
             po_chr  *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
             po_dev  *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
@@ -91,8 +91,8 @@ static ssize_t
             if (!par->private_data) return -EINVAL; u64_t pos     = iminor(par->f_inode);
             if (!par_buf)           return -EINVAL;
 
-            if (pos_chr >= (4 KB)) return -EINVAL;
-            if (pos     >= (1 KB)) return -EINVAL;
+            if (pos_chr >= (4 KB))  return -EINVAL;
+            if (pos     >= (1 KB))  return -EINVAL;
 
             po_chr  *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
             po_dev  *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
@@ -116,8 +116,8 @@ static long
             if (!par)               return -EINVAL; u64_t pos_chr = imajor(par->f_inode);
             if (!par->private_data) return -EINVAL; u64_t pos     = iminor(par->f_inode);
 
-            if (pos_chr >= (4 KB)) return -EINVAL;
-            if (pos     >= (1 KB)) return -EINVAL;
+            if (pos_chr >= (4 KB))  return -EINVAL;
+            if (pos     >= (1 KB))  return -EINVAL;
 
             po_chr *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
             po_dev *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
@@ -246,6 +246,11 @@ void
             if (!par_dev->ns)                     return;
             if (trait_of(par_dev->ns) != po_ns_t) return;
             if (par_dev->type != par)             return;
+
+            if (!par_dev->ops)                    return;
+            if (!par_dev->ops->on_del)            return;
+
+            par_dev->ops->on_del(par_dev->obj);
 
             device_destroy(par_dev->ns->ns, par->id + par_dev->id);
             po_list_pop   (&par->use, par_dev->hnd)               ;
