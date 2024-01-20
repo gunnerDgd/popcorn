@@ -4,7 +4,7 @@ endif
 
 obj-m   += po.o
 po-objs := ../../src/core/linux/obj.o	  	 \
-		   ../../src/core/mem.o		  	     \
+		   ../../src/core/linux/mem.o		 \
 		   ../../src/core/box.o		  	     \
 		   ../../src/core/list.o	 	 	 \
 		   ../../src/core/map.o		  	     \

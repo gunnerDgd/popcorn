@@ -1,5 +1,5 @@
-#ifndef __PO_TYPE_H__
-#define __PO_TYPE_H__
+#ifndef __PO_CORE_TYPE_H__
+#define __PO_CORE_TYPE_H__
 
 typedef unsigned char      u8_t  ;
 typedef unsigned short     u16_t ;

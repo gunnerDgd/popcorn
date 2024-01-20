@@ -1,7 +1,7 @@
-#ifndef __LINUX_PO_OBJ_H__
-#define __LINUX_PO_OBJ_H__
+#ifndef __PO_CORE_LINUX_OBJ_H__
+#define __PO_CORE_LINUX_OBJ_H__
 
-#include "../mem.h"
+#include "mem.h"
 
 #include "../type.h"
 #include "../type_atom.h"

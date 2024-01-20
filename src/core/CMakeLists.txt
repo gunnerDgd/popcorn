@@ -10,8 +10,8 @@ if(UNIX AND NOT APPLE)
         box.h
         box.c
 
-        mem.h
-        mem.c
+            linux/mem.h
+            linux/mem.c
 
         str.h
         str.c
@@ -21,6 +21,7 @@ if(UNIX AND NOT APPLE)
 
         list.h
         list.c
+            mem.h
     )
 
     target_include_directories(popcorn-core PRIVATE /usr/src/kernels/linux-headers-${CMAKE_HOST_SYSTEM_VERSION}/include)

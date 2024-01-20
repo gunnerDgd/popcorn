@@ -1,5 +1,5 @@
-#ifndef __PO_LIST_H__
-#define __PO_LIST_H__
+#ifndef __PO_CORE_LIST_H__
+#define __PO_CORE_LIST_H__
 
 #include "obj.h"
 

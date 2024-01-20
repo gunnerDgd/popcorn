@@ -1,8 +1,8 @@
-#ifndef __PO_BOX_H__
-#define __PO_BOX_H__
+#ifndef __PO_CORE_BOX_H__
+#define __PO_CORE_BOX_H__
 
 #include "obj.h"
-#include "mem.h"
+#include "linux/mem.h"
 
 extern po_obj_trait* po_box_t;
 typedef struct       po_box  {

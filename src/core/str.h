@@ -1,5 +1,5 @@
-#ifndef __PO_STR_H__
-#define __PO_STR_H__
+#ifndef __PO_CORE_STR_H__
+#define __PO_CORE_STR_H__
 
 #include "obj.h"
 

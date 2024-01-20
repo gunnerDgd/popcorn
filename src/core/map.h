@@ -1,5 +1,5 @@
-#ifndef __PO_MAP_H__
-#define __PO_MAP_H__
+#ifndef __PO_CORE_MAP_H__
+#define __PO_CORE_MAP_H__
 
 #include "obj.h"
 #include "list.h"
