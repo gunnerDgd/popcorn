@@ -116,27 +116,28 @@ struct file_operations chr_ops        = {
 
 bool_t
     po_chr_new
-        (po_chr* par_type, u32_t par_count, va_list par)  {
+        (po_chr* par_chr, u32_t par_count, va_list par)  {
             const char* name  = va_arg(par, const char*);
             if (par_count != 1) return false_t;
             if (!name)          return false_t;
 
-            cdev_init(&par_type->chr, &chr_ops);
-            if (alloc_chrdev_region(&par_type->id, 0, 64 KB, name)       < 0) goto new_failed;
-            if (cdev_add           (&par_type->chr, par_type->id, 64 KB) < 0) goto new_failed;
+            cdev_init(&par_chr->chr, &chr_ops);
+            if (alloc_chrdev_region(&par_chr->id, 0, 64 KB, name)      < 0) goto new_failed;
+            if (cdev_add           (&par_chr->chr, par_chr->id, 64 KB) < 0) goto new_failed;
 
-            if (!make_at(&par_type->name, po_str_t)  from (0)) goto new_failed;
-            if (!make_at(&par_type->use , po_list_t) from (0)) goto new_failed;
-            if (!make_at(&par_type->free, po_list_t) from (0)) goto new_failed;
+            if (!make_at(&par_chr->name, po_str_t)  from (0)) goto new_failed;
+            if (!make_at(&par_chr->use , po_list_t) from (0)) goto new_failed;
+            if (!make_at(&par_chr->free, po_list_t) from (0)) goto new_failed;
 
-            po_str_push_back_cstr(&par_type->name, name, strlen(name));
-            par_type->num = 0;
+            po_str_push_back_cstr(&par_chr->name, name, strlen(name));
+            par_chr->num            = 0      ;
+            chr[MAJOR(par_chr->id)] = par_chr;
             return true_t;
     new_failed:
-            if (par_type->id) unregister_chrdev_region(par_type->id, 64 KB);
-            del(&par_type->use) ;
-            del(&par_type->free);
-            del(&par_type->name);
+            if (par_chr->id) unregister_chrdev_region(par_chr->id, 64 KB);
+            del(&par_chr->use) ;
+            del(&par_chr->free);
+            del(&par_chr->name);
             return false_t;
 }
 
@@ -149,22 +150,25 @@ bool_t
 void
     po_chr_del
         (po_chr* par)                                        {
-            po_list_for(&par->use, dev_it)                   {
-                po_dev *dev = po_list_get_as(dev_it, po_dev*); printk("chr_del - delete all use object\n");
-                if (!dev)                      continue;
-                if (trait_of(dev) != po_dev_t) continue;
-                if (dev->type != par)          continue;
+            po_list_while(&par->use, dev_it)                 {
+                po_dev *dev = po_list_get_as(dev_it, po_dev*);
+                if (!dev)                      goto next;
+                if (trait_of(dev) != po_dev_t) goto next;
+                if (dev->type != par)          goto next;
 
-                po_chr_free(par, dev);
+                dev_it = po_list_next(dev_it);
+                po_chr_free(par, dev)        ;
+                continue;
+            next: dev_it = po_list_next(dev_it);
             }
 
-            unregister_chrdev_region(par->id, 64 KB); printk("chr_del - delete region\n");
-            cdev_del                (&par->chr)     ; printk("chr_del - delete cdev\n");
+            unregister_chrdev_region(par->id, 64 KB);
+            cdev_del                (&par->chr)     ;
 
-            chr[par->id] = NULL;
-            del(&par->use)     ; printk("chr_del - delete use\n");
-            del(&par->free)    ; printk("chr_del - delete free\n");
-            del(&par->name)    ; printk("chr_del - delete name\n");
+            chr[MAJOR(par->id)] = NULL;
+            del(&par->use)            ;
+            del(&par->free)           ;
+            del(&par->name)           ;
 }
 
 bool_t
