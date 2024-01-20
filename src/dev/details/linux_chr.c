@@ -59,11 +59,17 @@ static ssize_t
 
             po_chr *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
             po_dev *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
+            po_buf *buf     = (po_buf*) make (po_buf_t) from (
+                3      ,
+                par_buf,
+                par_len,
+                par_off
+            );
 
+            if (!buf)                          return -EINVAL;
             if (trait_of(ret_chr) != po_chr_t) return -EINVAL;
             if (trait_of(ret)     != po_dev_t) return -EINVAL;
 
-            po_buf *buf = (po_buf*) make (po_buf_t) from (3, par_buf, par_len, par_off);
             return ret->ops->on_read (ret->obj, buf);
 }
 
@@ -76,11 +82,17 @@ static ssize_t
 
             po_chr *ret_chr = chr[pos_chr]     ; if (!ret_chr) return -EINVAL;
             po_dev *ret     = ret_chr->dev[pos]; if (!ret)     return -EINVAL;
+            po_buf *buf     = (po_buf*) make (po_buf_t) from (
+                3      ,
+                par_buf,
+                par_len,
+                par_off
+            );
 
+            if (!buf)                          return -EINVAL;
             if (trait_of(ret_chr) != po_chr_t) return -EINVAL;
             if (trait_of(ret)     != po_dev_t) return -EINVAL;
 
-            po_buf *buf = (po_buf*) make (po_buf_t) from (3, par_buf, par_len, par_off);
             return ret->ops->on_write (ret->obj, buf);
 }
 
@@ -129,9 +141,10 @@ bool_t
             if (!make_at(&par_chr->use , po_list_t) from (0)) goto new_failed;
             if (!make_at(&par_chr->free, po_list_t) from (0)) goto new_failed;
 
-            po_str_push_back_cstr(&par_chr->name, name, strlen(name));
-            par_chr->num            = 0      ;
+            po_str_push_back_cstr(&par_chr->name, name, strlen(name))      ;
+            po_mem_set           (par_chr->dev, 0x00, sizeof(par_chr->dev));
             chr[MAJOR(par_chr->id)] = par_chr;
+            par_chr->num            = 0      ;
             return true_t;
     new_failed:
             if (par_chr->id) unregister_chrdev_region(par_chr->id, 64 KB);
@@ -149,19 +162,20 @@ bool_t
 
 void
     po_chr_del
-        (po_chr* par)                                        {
-            po_list_while(&par->use, dev_it)                 {
-                po_dev *dev = po_list_get_as(dev_it, po_dev*);
+        (po_chr* par)                                     {
+            po_list_while(&par->use, use)                 {
+                po_dev *dev = po_list_get_as(use, po_dev*);
                 if (!dev)                      goto next;
                 if (trait_of(dev) != po_dev_t) goto next;
                 if (dev->type != par)          goto next;
 
-                dev_it = po_list_next(dev_it);
-                po_chr_free(par, dev)        ;
+                use = po_list_next(use);
+                po_chr_free(par, dev)  ;
                 continue;
-            next: dev_it = po_list_next(dev_it);
+            next: use = po_list_next(use);
             }
 
+            po_list_for(&par->free, free) del (po_list_get(free));
             unregister_chrdev_region(par->id, 64 KB);
             cdev_del                (&par->chr)     ;
 
@@ -171,23 +185,23 @@ void
             del(&par->name)           ;
 }
 
-bool_t
+struct po_dev*
     po_chr_use
         (po_chr* par, struct po_dev* par_dev)                                                   {
-            if (!par)                          return false_t                                   ;
+            if (!par)                          return NULL                                      ;
             if (!par_dev)                      par_dev = (po_dev*) po_list_pop_front(&par->free);
-            if (!par_dev)                      return false_t                                   ;
+            if (!par_dev)                      return NULL                                      ;
 
-            if (trait_of(par)     != po_chr_t) return false_t;
-            if (trait_of(par_dev) != po_dev_t) return false_t;
-            if (!par_dev->dev)                 return false_t;
-            if (par_dev->id == -1)                                                  {
-                par_dev->type = (po_obj*) par; if (par->num == 64 KB) return false_t;
-                par_dev->id   = par->num     ;
+            if (trait_of(par)     != po_chr_t) return NULL;
+            if (trait_of(par_dev) != po_dev_t) return NULL;
+            if (par_dev->dev)                  return NULL;
+            if (par_dev->id == -1)                                               {
+                par_dev->type = (po_obj*) par; if (par->num == 64 KB) return NULL;
+                par_dev->id   = par->num++   ;
             }
 
-            if (par->dev[par_dev->id]) return false_t;
-            par_dev->dev = device_create             (
+            if (par->dev[par_dev->id]) return NULL;
+            par_dev->dev = device_create          (
                 par_dev->ns->ns          ,
                 NULL                     ,
                 par->id + par_dev->id    ,
@@ -195,11 +209,10 @@ bool_t
                 po_str_ptr(&par_dev->name)
             );
 
-            if (!par_dev->dev) return false_t;
+            if (!par_dev->dev) return NULL;
             par_dev->hnd              = po_list_push_back(&par->use, (po_obj*) par_dev);
             par    ->dev[par_dev->id] = par_dev                                        ;
-            par    ->num++;
-            return true_t;
+            return par_dev;
 }
 
 void
@@ -215,11 +228,12 @@ void
             if (trait_of(par_dev->ns) != po_ns_t) return;
             if (par_dev->type != par)             return;
 
-            device_destroy   (par_dev->ns->ns, par->id + par_dev->id);
-            po_list_pop      (&par->use , par_dev->hnd)              ;
+            device_destroy(par_dev->ns->ns, par->id + par_dev->id);
+            po_list_pop   (&par->use, par_dev->hnd)               ;
 
             par_dev->hnd          = po_list_push_back(&par->free, (po_obj*) par_dev);
             par->dev[par_dev->id] = NULL;
+            par_dev->dev          = NULL;
 }
 
 #ifdef PO_PRESET_LINUX

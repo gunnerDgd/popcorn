@@ -31,17 +31,21 @@ po_mem po_heap =            {
     .on_del    = po_heap_del
 };
 
-po_chr dev_type;
-po_ns  dev_ns  ;
+po_chr     dev_type;
+po_ns      dev_ns  ;
+po_chr_dev dev     ;
 
 static int
     __init mod_new(void)                                 {
         po_set_mem(&po_heap)                             ;
         dev_type = make (po_chr_t) from (1, "TestDevice");
         dev_ns   = make (po_ns_t)  from (1, "TestClass") ;
+        dev      = po_chr_dev_new("Test", dev_ns, dev_type, &ops, NULL);
+
         printk("Hello Module!!\n")           ;
         printk("dev_type : %08x\n", dev_type);
         printk("dev_ns : %08x\n"  , dev_ns)  ;
+        printk("dev : %08x\n"     , dev)     ;
 
         return 0;
 }
@@ -49,6 +53,7 @@ static int
 static void
     __exit mod_del(void)            {
         printk("Goodbye Module!!\n");
+        po_chr_dev_del(dev);
         del(dev_type);
         del(dev_ns)  ;
 }

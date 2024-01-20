@@ -25,11 +25,11 @@ typedef struct       po_chr  {
     u64_t          num       ;
 }   po_chr;
 
-bool_t po_chr_new  (po_chr*, u32_t, va_list);
-bool_t po_chr_clone(po_chr*, po_chr*)       ;
-void   po_chr_del  (po_chr*)                ;
+bool_t         po_chr_new  (po_chr*, u32_t, va_list);
+bool_t         po_chr_clone(po_chr*, po_chr*)       ;
+void           po_chr_del  (po_chr*)                ;
 
-bool_t po_chr_use  (po_chr*, struct po_dev*);
-void   po_chr_free (po_chr*, struct po_dev*);
+struct po_dev* po_chr_use  (po_chr*, struct po_dev*);
+void           po_chr_free (po_chr*, struct po_dev*);
 
 #endif

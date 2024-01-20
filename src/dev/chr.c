@@ -3,9 +3,11 @@
 po_chr_dev
     po_chr_dev_new
         (const char* par_name, po_ns* par_ns, po_chr* par_chr, po_dev_ops* par_ops, po_obj* par) {
-            if (!par_chr)                      return NULL;
-            if (trait_of(par_chr) != po_chr_t) return NULL;
-            po_dev* ret = (po_dev*) make (po_dev_t) from  (
+            if (!par_chr)                         return NULL    ; po_dev* ret = NULL;
+            if (trait_of(par_chr) != po_chr_t)    return NULL    ;
+            if ((ret = po_chr_use(par_chr, ret))) return ret->hnd;
+
+            ret = (po_dev*) make (po_dev_t) from  (
                 4       ,
                 par_name,
                 par_ns  ,
@@ -13,7 +15,7 @@ po_chr_dev
                 par
             );
 
-            if (!ret)                      return NULL;
+            if (!ret)           return NULL;
             if (!po_chr_use(par_chr, ret)) {
                 del (ret)  ;
                 return NULL;
