@@ -14,15 +14,15 @@ extern struct file_operations chr_ops  ;
 
 extern po_obj_trait *po_chr_t;
 typedef struct       po_chr  {
-    po_obj          head;
-    po_str          name;
-    struct cdev     chr ;
-    dev_t           id  ;
+    po_obj          head     ;
+    po_str          name     ;
+    struct cdev     chr      ;
+    dev_t           id       ;
 
-    struct po_dev** dev ;
-    po_list         free;
-    po_list         use ;
-    u64_t           num ;
+    struct po_dev*  dev[1 KB];
+    po_list         free     ;
+    po_list         use      ;
+    u64_t           num      ;
 }   po_chr;
 
 bool_t         po_chr_new  (po_chr*, u32_t, va_list);

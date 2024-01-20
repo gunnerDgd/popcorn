@@ -134,14 +134,10 @@ bool_t
             const char* name  = va_arg(par, const char*);
             if (par_count != 1) return false_t;
             if (!name)          return false_t;
-            if (!par_chr->dev)  return false_t;
 
             cdev_init(&par_chr->chr, &chr_ops);
-            par_chr->dev = vmalloc(sizeof (po_dev*) * 64 KB);
-
-            if (!par_chr->dev)                                              goto new_failed;
-            if (alloc_chrdev_region(&par_chr->id , 0, 64 KB, name)     < 0) goto new_failed;
-            if (cdev_add           (&par_chr->chr, par_chr->id, 64 KB) < 0) goto new_failed;
+            if (alloc_chrdev_region(&par_chr->id , 0, 1 KB, name)     < 0) goto new_failed;
+            if (cdev_add           (&par_chr->chr, par_chr->id, 1 KB) < 0) goto new_failed;
 
             if (!make_at(&par_chr->name, po_str_t)  from (0)) goto new_failed;
             if (!make_at(&par_chr->use , po_list_t) from (0)) goto new_failed;
@@ -159,7 +155,7 @@ bool_t
             del(&par_chr->free)    ;
             del(&par_chr->name)    ;
 
-            if (par_chr->id) unregister_chrdev_region(par_chr->id, 64 KB);
+            if (par_chr->id) unregister_chrdev_region(par_chr->id, 1 KB);
             return false_t;
 }
 
@@ -185,8 +181,8 @@ void
             }
 
             po_list_for(&par->free, free) del (po_list_get(free));
-            unregister_chrdev_region(par->id, 64 KB);
-            cdev_del                (&par->chr)     ;
+            unregister_chrdev_region(par->id, 1 KB);
+            cdev_del                (&par->chr)    ;
 
             chr[MAJOR(par->id)] = NULL;
             vfree(par->dev)  ;
@@ -205,8 +201,8 @@ struct po_dev*
             if (trait_of(par)     != po_chr_t) return NULL;
             if (trait_of(par_dev) != po_dev_t) return NULL;
             if (par_dev->dev)                  return NULL;
-            if (par_dev->id == -1)                                               {
-                par_dev->type = (po_obj*) par; if (par->num == 64 KB) return NULL;
+            if (par_dev->id == -1)                                              {
+                par_dev->type = (po_obj*) par; if (par->num == 1 KB) return NULL;
                 par_dev->id   = par->num++   ;
             }
 
