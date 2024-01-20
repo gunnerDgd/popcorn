@@ -9,8 +9,9 @@
 struct po_dev;
 struct po_chr;
 
-extern struct po_chr*         chr[4 KB];
-extern struct file_operations chr_ops  ;
+extern struct po_chr*         chr    [4 KB]       ;
+extern struct po_dev*         chr_dev[4 KB][64 KB];
+extern struct file_operations chr_ops             ;
 
 extern po_obj_trait *po_chr_t;
 typedef struct       po_chr  {
@@ -19,7 +20,6 @@ typedef struct       po_chr  {
     struct cdev    chr       ;
     dev_t          id        ;
 
-    struct po_dev* dev[64 KB];
     po_list        free      ;
     po_list        use       ;
     u64_t          num       ;
