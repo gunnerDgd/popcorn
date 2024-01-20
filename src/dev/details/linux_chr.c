@@ -1,11 +1,11 @@
 #include "linux_chr.h"
 #include "linux_dev.h"
 
-po_obj_trait po_chr_trait            = {
-    .on_new   = as_new  (&po_chr_new)  ,
-    .on_clone = as_clone(&po_chr_clone),
-    .on_ref   = 0                      ,
-    .on_del   = as_del  (&po_chr_del)  ,
+po_obj_trait po_chr_trait           = {
+    .on_new   = as_new  (po_chr_new)  ,
+    .on_clone = as_clone(po_chr_clone),
+    .on_ref   = 0                     ,
+    .on_del   = as_del  (po_chr_del)  ,
     .size     = sizeof(po_dev)
 };
 
@@ -117,24 +117,24 @@ static long
 
 po_chr                *chr[4096]      = { NULL,  };
 struct file_operations chr_ops        = {
-    .open           = &po_chr_do_open   ,
-    .release        = &po_chr_do_close  ,
+    .open           = po_chr_do_open   ,
+    .release        = po_chr_do_close  ,
 
-    .read           = &po_chr_do_read   ,
-    .write          = &po_chr_do_write  ,
-    .compat_ioctl   = &po_chr_do_control,
-    .unlocked_ioctl = &po_chr_do_control,
+    .read           = po_chr_do_read   ,
+    .write          = po_chr_do_write  ,
+    .compat_ioctl   = po_chr_do_control,
+    .unlocked_ioctl = po_chr_do_control
 };
 
 bool_t
     po_chr_new
-        (po_chr* par_chr, u32_t par_count, va_list par)  {
+        (po_chr* par_chr, u32_t par_count, va_list par) {
             const char* name  = va_arg(par, const char*);
             if (par_count != 1) return false_t;
             if (!name)          return false_t;
 
             cdev_init(&par_chr->chr, &chr_ops);
-            if (alloc_chrdev_region(&par_chr->id, 0, 64 KB, name)      < 0) goto new_failed;
+            if (alloc_chrdev_region(&par_chr->id , 0, 64 KB, name)     < 0) goto new_failed;
             if (cdev_add           (&par_chr->chr, par_chr->id, 64 KB) < 0) goto new_failed;
 
             if (!make_at(&par_chr->name, po_str_t)  from (0)) goto new_failed;
@@ -144,13 +144,15 @@ bool_t
             po_str_push_back_cstr(&par_chr->name, name, strlen(name))      ;
             po_mem_set           (par_chr->dev, 0x00, sizeof(par_chr->dev));
             chr[MAJOR(par_chr->id)] = par_chr;
-            par_chr->num            = 0      ;
+            par_chr->num            = 0ull   ;
             return true_t;
     new_failed:
+            cdev_del(&par_chr->chr);
+            del(&par_chr->use)     ;
+            del(&par_chr->free)    ;
+            del(&par_chr->name)    ;
+
             if (par_chr->id) unregister_chrdev_region(par_chr->id, 64 KB);
-            del(&par_chr->use) ;
-            del(&par_chr->free);
-            del(&par_chr->name);
             return false_t;
 }
 
@@ -221,7 +223,7 @@ void
             if (!par)                             return;
             if (!par_dev)                         return;
 
-            if (trait_of(par) != po_chr_t)        return;
+            if (trait_of(par)     != po_chr_t)    return;
             if (trait_of(par_dev) != po_dev_t)    return;
 
             if (!par_dev->ns)                     return;

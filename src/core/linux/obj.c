@@ -35,9 +35,9 @@ po_obj*
 
 bool_t
 	po_obj_new_at
-		(po_obj* par_po_obj, po_obj_trait* par_trait, u32_t par_count, ...) {
+		(po_obj* par_obj, po_obj_trait* par_trait, u32_t par_count, ...) {
 			va_list  par;
-			va_start(par, par_count); bool_t ret = po_obj_new_at_va(par_po_obj, par_trait, par_count, par);
+			va_start(par, par_count); bool_t ret = po_obj_new_at_va(par_obj, par_trait, par_count, par);
 			va_end  (par);
 
 			return ret;
@@ -45,51 +45,52 @@ bool_t
 
 bool_t 
 	po_obj_new_at_va
-		(po_obj* par_po_obj, po_obj_trait* par_trait, u32_t par_count, va_list par) {
-			if (!par_po_obj)					   return false_t;
+		(po_obj* par_obj, po_obj_trait* par_trait, u32_t par_count, va_list par) {
+			if (!par_obj)					       return false_t;
 			if (!par_trait)						   return false_t;
 			if (par_trait->size <= sizeof(po_obj)) return false_t;
 
-            po_mem_set(par_po_obj, 0x00, par_trait->size);
-			par_po_obj->trait = par_trait;
-			par_po_obj->mem   = 0		  ;
+            po_mem_set(par_obj, 0x00, par_trait->size);
+            par_obj->trait = par_trait;
+            par_obj->mem   = 0		  ;
 
-			if (!par_po_obj->trait->on_new)			 return true_t;
-			if (!par_po_obj->trait->on_new(par_po_obj, par_count, par)) {
-                po_mem_set(par_po_obj, 0x00, par_trait->size);
+            if (!par_obj->trait->on_new) {
+                kref_init(&par_obj->ref);
+                return true_t;
+            }
+
+			if (!par_obj->trait->on_new(par_obj, par_count, par)) {
+                po_mem_set(par_obj, 0x00, par_trait->size);
 				return false_t;
 			}
 
-            kref_init(&par_po_obj->ref);
+            kref_init(&par_obj->ref);
 			return true_t;
 }
 
 po_obj*	   
 	po_obj_clone   
-		(po_obj* par)										 {
-			if (!par)							 return 0;
-			if (!par->mem)						 return 0;
-			if (!par->trait)					 return 0;
-			if (par->trait->size <= sizeof(po_obj)) return 0;
+		(po_obj* par)                                             {
+			if (!par)   return 0; po_obj_trait *trait = par->trait;
+            if (!trait) return 0; po_mem       *mem   = par->mem  ;
+			if (!mem)   return 0; po_obj       *ret   = NULL      ;
 
-			po_obj *ret = po_mem_new(par->mem, par->trait->size);
-			if (!ret)						return 0;
-			if (!par->trait->on_clone)				   {
+			if (trait->size <= sizeof(po_obj)) return 0; ret = po_mem_new(par->mem, par->trait->size);
+			if (!ret)                          return 0;
+
+			ret->trait = trait;
+			ret->mem   = mem  ;
+
+			if (!par->trait->on_clone)				    {
                 po_mem_copy(ret, par, par->trait->size);
-				ret->trait = par->trait;
-				ret->mem   = par->mem  ;
-
 				kref_init(&par->ref);
 				return ret;
 			}
 
 			if(!par->trait->on_clone(ret, par)) {
-                po_mem_del(ret->mem, ret);
+                po_mem_del(mem, ret);
 				return 0;
 			}
-
-			ret->trait = par->trait;
-			ret->mem   = par->mem  ;
 
 			kref_init(&par->ref);
 			return ret;
@@ -97,26 +98,21 @@ po_obj*
 
 bool_t     
 	po_obj_clone_at
-		(po_obj* par, po_obj* par_clone)							   {
-			if (!par)								   return 0;
-			if (!par_clone)							   return 0;
-			if (!par_clone->trait)					   return 0;
+		(po_obj* par, po_obj* par_clone)                                                       {
+            if (!par_clone)                    return 0; po_obj_trait *trait = par_clone->trait;
+			if (!par)                          return 0;
 
-			if (par_clone->trait->size <= sizeof(po_obj)) return 0;
-			if (!par_clone->mem)                       return 0;
-			if (!kref_read(&par_clone->ref))           return 0;
+            if (!trait)	                       return 0;
+			if (trait->size <= sizeof(po_obj)) return 0;
+            par->trait = trait;
+            par->mem   = 0;
 
-			if (!par_clone->trait->on_clone)					   {
-                po_mem_copy(par, par_clone, par_clone->trait->size);
-				par->trait = par_clone->trait;
-				par->mem   = 0;
-
-                kref_init(&par->ref);
+			if (!par_clone->trait->on_clone)		    {
+                po_mem_copy(par, par_clone, trait->size);
+                kref_init  (&par->ref);
 				return true_t;
 			}
 
-			par->trait = par_clone->trait;
-			par->mem   = 0				 ;
 			if(!par->trait->on_clone(par, par_clone))        {
                 po_mem_set(par, 0x00, par_clone->trait->size);
 				return false_t;
@@ -127,14 +123,11 @@ bool_t
 
 po_obj*
 	po_obj_ref
-		(po_obj* par)					           {
-			if (!par)		           return 0;
-			if (!par->trait)           return 0;
-			if (!kref_read(&par->ref)) return 0;
-
-			if (par->trait->on_ref)          {
-			    if (!par->trait->on_ref(par))
-			        return 0;
+		(po_obj* par)				                              {
+			if (!par)	return 0; po_obj_trait* trait = par->trait;
+			if (!trait) return 0;
+			if (trait->on_ref)                      {
+			    if (!trait->on_ref(par)) return NULL;
 			}
 			
 			kref_get(&par->ref);
