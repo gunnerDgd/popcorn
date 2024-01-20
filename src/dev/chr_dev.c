@@ -60,9 +60,13 @@ bool_t
 
 void
     po_chr_dev_del
-        (po_chr_dev* par)                  {
-            po_chr_free(par->chr, par->dev);
-            del        (par->dev)          ;
+        (po_chr_dev* par)                                  {
+            po_dev *dev = po_list_get_as(par->dev, po_dev*);
+            if (!dev)                      return;
+            if (trait_of(dev) != po_dev_t) return;
+
+            po_chr_free(par->chr, dev);
+            del        (par->dev)     ;
 }
 
 i64_t
