@@ -80,6 +80,8 @@ if    (PRESET_LINUX)
 
             linux/thd.h
             linux/thd.c
+
+            linux/mod.c
     )
 
     target_link_libraries(popcorn PRIVATE popcorn-linux)
