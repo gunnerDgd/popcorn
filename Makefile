@@ -29,9 +29,10 @@ popcorn-objs :=\
 popcorn-dev-objs :=\
 	/linux/src/dev/dev.o\
 	/linux/src/dev/class.o\
+	/linux/src/dev/ops/read.o\
+	/linux/src/dev/ops/write.o\
 	/linux/src/dev/chr/chr.o\
 	/linux/src/dev/chr/dev.o\
-	/linux/src/dev/chr/type.o\
 -objs :=\
 
 all:
