@@ -1,9 +1,13 @@
 #include "chr.h"
 #include "dev.h"
 
-#include "bit.h"
+#include "read.h"
+#include "write.h"
+#include "con.h"
 
-#include <linux/vmalloc.h>
+#include "../../sync/event.h"
+
+#include <linux/poll.h>
 
 static int
     po_chr_dev_do_open
@@ -42,14 +46,109 @@ static int
 static ssize_t
     po_chr_dev_do_read
         (struct file* par, __user char* par_buf, size_t par_len, loff_t* par_off) {
+            po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr);
+            po_chr     *chr = container_of(par->f_op           , po_chr    , ops);
+            if (po_trait_of(dev)               != po_chr_dev_t) return -EINVAL;
+            if (po_trait_of(chr)               != po_chr_t)     return -EINVAL;
+            if (po_trait_of(par->private_data) != dev->trait)   return -EINVAL;
+            po_chr_read* read = po_make (po_chr_read) from                    (
+                3      ,
+                dev    ,
+                par_buf,
+                par_len
+            );
 
+            po_fut *fut = po_chr_read_fut(read);
+            if (!dev->ops->read(par->private_data, read)) {
+                po_del  (read);
+                return -EINVAL;
+            }
+
+            ssize_t ret = (ssize_t) po_fut_ret(fut);
+            return  ret;
 }
 
 static ssize_t
     po_chr_dev_do_write
         (struct file* par, __user const char* par_buf, size_t par_len, loff_t* par_off) {
+            po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr);
+            po_chr     *chr = container_of(par->f_op           , po_chr    , ops);
+            if (po_trait_of(dev)               != po_chr_dev_t) return -EINVAL;
+            if (po_trait_of(chr)               != po_chr_t)     return -EINVAL;
+            if (po_trait_of(par->private_data) != dev->trait)   return -EINVAL;
+            po_chr_write* write = po_make (po_chr_write) from                 (
+                3      ,
+                dev    ,
+                par_buf,
+                par_len
+            );
 
+            po_fut *fut = po_chr_write_fut(write);
+            if (!dev->ops->write(par->private_data, write)) {
+                po_del (write);
+                po_del (fut)  ;
+                return -EINVAL;
+            }
+
+            ssize_t ret = (ssize_t) po_fut_ret(fut);
+            return  ret;
 }
+
+static long
+    po_chr_dev_do_con
+        (struct file* par, unsigned int par_cmd, unsigned long par_arg)          {
+            po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr);
+            po_chr     *chr = container_of(par->f_op           , po_chr    , ops);
+            if (po_trait_of(dev)               != po_chr_dev_t) return -EINVAL;
+            if (po_trait_of(chr)               != po_chr_t)     return -EINVAL;
+            if (po_trait_of(par->private_data) != dev->trait)   return -EINVAL;
+            po_chr_con *con = po_make (po_chr_con) from                       (
+                3      ,
+                dev    ,
+                par_cmd,
+                par_arg
+            );
+
+            po_fut *fut = po_chr_con_fut(con);
+            if (!dev->ops->con(par->private_data, con)) {
+                po_del(con)   ;
+                po_del(fut)   ;
+                return -EINVAL;
+            }
+
+            ssize_t ret = (ssize_t) po_fut_ret(fut);
+            return  ret;
+}
+
+static __poll_t
+    po_chr_dev_do_poll
+        (struct file* par, struct poll_table_struct* par_poll)                   {
+            po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr);
+            po_chr     *chr = container_of(par->f_op           , po_chr    , ops);
+            if (po_trait_of(dev)               != po_chr_dev_t) return -1;
+            if (po_trait_of(chr)               != po_chr_t)     return -1;
+            if (po_trait_of(par->private_data) != dev->trait)   return -1;
+            po_chr_stat stat = { .all = 0ull }                          ;
+            u64_t       ret  = 0ull                                     ;
+            po_event   *poll = dev->ops->poll (par->private_data, &stat);
+            if (stat.write_norm) ret |= POLLOUT   ;
+            if (stat.write)      ret |= POLLWRNORM;
+            if (stat.read_norm)  ret |= POLLRDNORM;
+            if (stat.read)       ret |= POLLIN    ;
+
+            if (po_trait_of(poll) == po_event_t) poll_wait(par, &poll->event, par_poll);
+            return ret;
+}
+
+struct file_operations po_chr_dev_ops  = {
+    .open           = po_chr_dev_do_open ,
+    .release        = po_chr_dev_do_close,
+    .read           = po_chr_dev_do_read ,
+    .write          = po_chr_dev_do_write,
+    .unlocked_ioctl = po_chr_dev_do_con  ,
+    .compat_ioctl   = po_chr_dev_do_con  ,
+    .poll           = po_chr_dev_do_poll
+};
 
 po_obj_trait po_chr_trait = po_make_trait (
     po_chr_new    ,
@@ -72,11 +171,8 @@ bool_t
             if (!po_make_at(&par_chr->name, po_str) from (0))                          goto new_err;
             if (!po_make_at(&par_chr->dev , po_set) from (0))                          goto new_err;
             if (alloc_chrdev_region(&par_chr->maj, maj, min, po_str_as_raw(name)) < 0) goto new_err;
-            par_chr->ops.open    = po_chr_dev_do_open ;
-            par_chr->ops.release = po_chr_dev_do_close;
-            par_chr->ops.read    = po_chr_dev_do_read ;
-            par_chr->ops.write   = po_chr_dev_do_write;
             po_str_push_back(&par_chr->name, name);
+            par_chr->ops = po_chr_dev_ops;
             par_chr->num = 0;
             return true_t   ;
     new_err:

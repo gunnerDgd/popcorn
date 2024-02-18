@@ -15,6 +15,7 @@ popcorn-objs :=\
 	/src/core/box.o\
 	/src/core/map.o\
 	/src/core/set.o\
+	/src/core/ran.o\
 	/src/core/endian.o\
 	/src/core/ops/arith.o\
 	/src/core/ops/cast.o\
@@ -29,10 +30,14 @@ popcorn-objs :=\
 popcorn-dev-objs :=\
 	/linux/src/dev/dev.o\
 	/linux/src/dev/class.o\
-	/linux/src/dev/ops/read.o\
-	/linux/src/dev/ops/write.o\
+	/linux/src/dev/chr/read.o\
+	/linux/src/dev/chr/write.o\
+	/linux/src/dev/chr/con.o\
 	/linux/src/dev/chr/chr.o\
 	/linux/src/dev/chr/dev.o\
+popcorn-sync-objs :=\
+	/linux/src/sync/event.o\
+	/linux/src/sync/work.o\
 -objs :=\
 
 all:

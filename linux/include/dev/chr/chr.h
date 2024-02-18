@@ -1,8 +1,9 @@
-//
-// Created by enbay on 2/16/24.
-//
+#ifndef __PO_DEV_CHR_CHR_H__
+#define __PO_DEV_CHR_CHR_H__
 
-#ifndef POPCORN_CHR_H
-#define POPCORN_CHR_H
+#include <obj.h>
 
-#endif //POPCORN_CHR_H
+extern po_obj_trait *po_chr_t;
+typedef struct       po_chr { u8_t chr[512]; } po_chr;
+
+#endif

@@ -5,16 +5,29 @@
 #include <str.h>
 #include <linux/cdev.h>
 
-#include "../ops/read.h"
+struct po_chr_read ;
+struct po_chr_write;
+struct po_chr_con  ;
 
-struct po_chr_type;
-struct po_chr;
-struct po_dev;
+struct po_event  ;
+struct po_chr_dev;
+struct po_chr    ;
+struct po_dev    ;
 
-typedef struct po_chr_ops               {
-    u64_t  (*read)   (po_obj*, po_read*);
-    u64_t  (*write)  (po_obj*);
-    u64_t  (*control)(po_obj*);
+typedef union po_chr_stat   {
+    struct                  {
+        u64_t read       : 1;
+        u64_t read_norm  : 1;
+        u64_t write      : 1;
+        u64_t write_norm : 1;
+    };  u64_t all;
+}   po_chr_stat;
+
+typedef struct po_chr_ops                                   {
+    bool_t           (*read) (po_obj*, struct po_chr_read *);
+    bool_t           (*write)(po_obj*, struct po_chr_write*);
+    bool_t           (*con)  (po_obj*, struct po_chr_con  *);
+    struct po_event* (*poll) (po_obj*, po_chr_stat*)        ;
 }   po_chr_ops;
 
 extern po_obj_trait *po_chr_dev_t;

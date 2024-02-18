@@ -31,10 +31,12 @@ bool_t
         any_t         arg    = par_arg   ; if (!arg)    return false_t;
         po_obj_trait *trait  = cmp->trait; if (!trait)  return false_t;
         po_obj_ops   *po_ops = trait->ops; if (!po_ops) return false_t;
+        if (!po_ops->cmp)      return false_t;
+        if (!po_ops->cmp->ord) return false_t;
+        po_ord_t ord = po_op_ord(cmp, arg);
 
-        if (!po_ops->cmp)                     return false_t;
-        if (!po_ops->cmp->ord)                return false_t;
-        if (po_op_ord(cmp, arg) == po_ord_lt) return false_t;
+        if (ord == po_ord_err) return false_t;
+        if (ord == po_ord_lt)  return false_t;
         return true_t;
 }
 
@@ -57,10 +59,12 @@ bool_t
         any_t         arg    = par_arg   ; if (!arg)    return false_t;
         po_obj_trait *trait  = cmp->trait; if (!trait)  return false_t;
         po_obj_ops   *po_ops = trait->ops; if (!po_ops) return false_t;
-
         if (!po_ops->cmp)                     return false_t;
         if (!po_ops->cmp->ord)                return false_t;
-        if (po_op_ord(cmp, arg) == po_ord_gt) return false_t;
+        po_ord_t ord = po_op_ord(cmp, arg);
+
+        if (ord == po_ord_err) return false_t;
+        if (ord == po_ord_gt)  return false_t;
         return true_t;
 }
 

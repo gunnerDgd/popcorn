@@ -6,11 +6,14 @@ add_library(popcorn-dev STATIC
     class.h
     class.c
 
-        ops/read.h
-        ops/read.c
+    chr/read.h
+    chr/read.c
 
-        ops/write.h
-        ops/write.c
+    chr/write.h
+    chr/write.c
+
+    chr/con.h
+    chr/con.c
 
     chr/chr.h
     chr/chr.c

@@ -34,6 +34,9 @@ add_library           (popcorn STATIC
         set.h
         set.c
 
+        ran.h
+        ran.c
+
         endian.h
         endian.c
 

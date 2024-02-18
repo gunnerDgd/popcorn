@@ -80,7 +80,7 @@ add_subdirectory(include)
 add_subdirectory(src)
 
 if    (PRESET_LINUX)
-    add_subdirectory(linux/src)
+    add_subdirectory(linux)
 endif ()
 
 if (PRESET_LINUX)

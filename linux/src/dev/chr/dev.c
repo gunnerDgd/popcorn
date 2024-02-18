@@ -24,32 +24,44 @@ bool_t
             po_class     *class = null_t; if (par_count > 1) class = va_arg(par, po_class*)    ;
             po_chr       *chr   = null_t; if (par_count > 2) chr   = va_arg(par, po_chr*)      ;
             po_obj_trait *trait = null_t; if (par_count > 3) trait = va_arg(par, po_obj_trait*);
-            if (!trait)                                      return false_t;
             if (po_trait_of(class) != po_class_t)            return false_t;
             if (po_trait_of(name)  != po_str_t)              return false_t;
+            if (po_trait_of(chr)   != po_chr_t)              return false_t;
             if (!po_make_at(&par_dev->name, po_str) from(0)) return false_t;
-            if (chr->num >= shl(1, 19))                      return false_t;
-            par_dev->id = po_lock_inc64(&chr->num)    ;
-            par_dev->id = MKDEV(chr->maj, par_dev->id);
-
-            cdev_init(&par_dev->chr, &chr->ops);
-            if (cdev_add(&par_dev->chr, par_dev->id, 1) < 0) return false_t;
-            if (!(par_dev->dev = (po_dev*) po_set_acq(&chr->dev)))         {
-                par_dev->dev = po_make (po_dev) from                       (
-                    4                 ,
-                    class             ,
-                    name              ,
-                    MAJOR(par_dev->id),
-                    MINOR(par_dev->id)
-                );
+            if (!trait)                                                    {
+                po_del(&par_dev->name);
+                return false_t;
             }
 
-            if (!par_dev->dev)             return false_t;
-            if (!po_dev_use(par_dev->dev)) return false_t;
+            par_dev->dev = (po_dev*) po_set_acq(&chr->dev);
+            if(!par_dev->dev)                                                                       {
+                par_dev->id  = po_lock_inc64(&chr->num); if (par_dev->id >= shl(1, 19)) goto new_err;
+                par_dev->dev = po_make (po_dev) from   (
+                    4         ,
+                    class     ,
+                    name      ,
+                    chr->maj  ,
+                    par_dev->id
+                );
+
+                if (po_trait_of(par_dev->dev) != po_dev_t) {
+                    po_del(&par_dev->name);
+                    return false_t;
+                }
+            }
+
+            cdev_init(&par_dev->chr, &chr->ops);
+            if (cdev_add(&par_dev->chr, par_dev->id, 1) < 0) goto new_err;
+            if (!po_dev_use(par_dev->dev))                   goto new_err;
+
             po_str_push_back(&par_dev->name, name);
             par_dev->trait = trait      ;
             par_dev->type  = po_ref(chr);
             return true_t;
+    new_err:
+            po_set_rel(&chr->dev, (po_obj*) par_dev->dev);
+            po_del    (&par_dev->name)                   ;
+            return false_t;
 }
 
 bool_t

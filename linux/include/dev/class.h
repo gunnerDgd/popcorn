@@ -1,8 +1,9 @@
-//
-// Created by enbay on 2/16/24.
-//
+#ifndef __PO_DEV_CLASS_H__
+#define __PO_DEV_CLASS_H__
 
-#ifndef POPCORN_CLASS_H
-#define POPCORN_CLASS_H
+#include <obj.h>
 
-#endif //POPCORN_CLASS_H
+extern po_obj_trait *po_class_t;
+typedef struct       po_class { u8_t class[128]; } po_class;
+
+#endif

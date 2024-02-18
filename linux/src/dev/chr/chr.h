@@ -18,7 +18,7 @@ typedef struct       po_chr    {
     struct file_operations ops;
     po_set                 dev;
     u64_t                  num;
-    u64_t                  maj;
+    dev_t                  maj;
 }   po_chr;
 
 bool_t po_chr_new  (po_chr*, u32_t, va_list);
