@@ -6,6 +6,7 @@ add_library           (popcorn STATIC
         sched.h
         task.h
         thd.h
+        print.h
 
         fut.h
         fut.c
@@ -74,6 +75,7 @@ if    (PRESET_LINUX)
             linux/atom.c
             linux/bit.c
             linux/mem.c
+            linux/print.c
 
             linux/sched.h
             linux/sched.c
