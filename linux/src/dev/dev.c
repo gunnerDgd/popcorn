@@ -3,6 +3,17 @@
 
 #include <linux/fs.h>
 
+po_obj_trait po_dev_trait = po_make_trait (
+    po_dev_new    ,
+    po_dev_clone  ,
+    null_t        ,
+    po_dev_del    ,
+    sizeof(po_dev),
+    null_t
+);
+
+po_obj_trait *po_dev_t = &po_dev_trait;
+
 bool_t
     po_dev_new
         (po_dev* par_dev, u32_t par_count, va_list par)                                {
@@ -16,8 +27,8 @@ bool_t
             if (maj == -1) return false_t;
             if (min == -1) return false_t;
 
-            po_str_push_back(&par_dev->name, name);
-            par_dev->class = po_ref(class)  ;
+            po_str_push_back(&par_dev->name, name)    ;
+            par_dev->class = (po_class*) po_ref(class);
             par_dev->id    = MKDEV(maj, min);
             return true_t;
 }

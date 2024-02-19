@@ -8,7 +8,7 @@ typedef struct po_mem                      {
     void  (*on_del) (struct po_mem*, void*);
 }   po_mem;
 
-po_mem* po_get_mem ()                          ;
+po_mem* po_get_mem (void)                      ;
 po_mem* po_set_mem (po_mem*)                   ;
 void*   po_mem_new (po_mem*, u64_t)            ;
 void    po_mem_del (po_mem*, void*)            ;

@@ -1,6 +1,17 @@
 #include "write.h"
 #include "dev.h"
 
+po_obj_trait po_chr_write_trait = po_make_trait (
+    po_chr_write_new    ,
+    po_chr_write_clone  ,
+    null_t              ,
+    po_chr_write_del    ,
+    sizeof(po_chr_write),
+    null_t
+);
+
+po_obj_trait *po_chr_write_t = &po_chr_write_trait;
+
 bool_t
     po_chr_write_new
         (po_chr_write* par_write, u32_t par_count, va_list par)                            {
@@ -10,7 +21,7 @@ bool_t
             if (po_trait_of(dev) != po_chr_dev_t) return false_t;
             if (!write)                           return false_t;
             if (!len)                             return false_t;
-            par_write->dev   = (po_obj*) po_ref(dev);
+            par_write->dev   = (po_chr_dev*) po_ref(dev);
             par_write->stat  = po_fut_pend;
             par_write->write = write      ;
             par_write->len   = len        ;

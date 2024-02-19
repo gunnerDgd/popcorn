@@ -55,8 +55,8 @@ bool_t
             if (!po_dev_use(par_dev->dev))                   goto new_err;
 
             po_str_push_back(&par_dev->name, name);
-            par_dev->trait = trait      ;
-            par_dev->type  = po_ref(chr);
+            par_dev->trait = trait                ;
+            par_dev->type  = (po_chr*) po_ref(chr);
             return true_t;
     new_err:
             po_set_rel(&chr->dev, (po_obj*) par_dev->dev);

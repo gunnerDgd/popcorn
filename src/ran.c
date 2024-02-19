@@ -25,6 +25,8 @@ po_obj_trait po_ran_trait = po_make_trait (
     &po_ran_ops
 );
 
+po_obj_trait *po_ran_t = &po_ran_trait;
+
 bool_t
     po_ran_new
         (po_ran* par_ran, u32_t par_count, va_list par)                   {

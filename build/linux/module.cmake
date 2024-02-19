@@ -1,0 +1,16 @@
+function   (add_linux_module_target par_make par_name par_dir par_target_dir par_src)
+    include       (${popcorn-dir}/build/linux/make.cmake)
+    add_linux_make(${par_make} ${par_name})
+
+    get_target_property   (popcorn-src       popcorn       SOURCES)
+    get_target_property   (popcorn-linux-src popcorn-linux SOURCES)
+    get_target_property   (popcorn-dev-src   popcorn-dev   SOURCES)
+    get_target_property   (popcorn-sync-src  popcorn-sync  SOURCES)
+
+    add_linux_make_target (${par_make} ${par_name} "${par_dir}/src"            ${popcorn-src})
+    add_linux_make_target (${par_make} ${par_name} "${par_dir}/src"            ${popcorn-linux-src})
+    add_linux_make_target (${par_make} ${par_name} "${par_dir}/linux/src/dev"  ${popcorn-dev-src})
+    add_linux_make_target (${par_make} ${par_name} "${par_dir}/linux/src/sync" ${popcorn-sync-src})
+    add_linux_make_target (${par_make} ${par_name} "${par_target_dir}"         ${par_src})
+    add_linux_make_command(${par_make} ${par_name})
+endfunction()

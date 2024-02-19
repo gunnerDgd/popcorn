@@ -3,6 +3,17 @@
 
 #include <linux/sched.h>
 
+po_obj_trait po_task_trait = po_make_trait (
+    po_task_new    ,
+    po_task_clone  ,
+    null_t         ,
+    po_task_del    ,
+    sizeof(po_task),
+    null_t
+);
+
+po_obj_trait *po_task_t = &po_task_trait;
+
 bool_t
     po_task_new
         (po_task* par_task, u32_t par_count, va_list par)                  {

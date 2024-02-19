@@ -1,6 +1,17 @@
 #include "thd.h"
 #include "task.h"
 
+po_obj_trait po_thd_trait = po_make_trait (
+    po_thd_new    ,
+    po_thd_clone  ,
+    null_t        ,
+    po_thd_del    ,
+    sizeof(po_thd),
+    null_t
+);
+
+po_obj_trait *po_thd_t = &po_thd_trait;
+
 int
     po_thd_run
         (any_t par)                                                                          {
@@ -19,9 +30,9 @@ bool_t
             if (po_trait_of(task) != po_task_t) return false_t;
             if (po_trait_of(name) != po_str_t)  return false_t;
             if (task->sup)                      return false_t;
-            task->sup     = po_ref(par_thd);
-            par_thd->task = po_ref(par_thd);
-            par_thd->thd  = kthread_run    (
+            task->sup     = (po_obj*)  par_thd     ;
+            par_thd->task = (po_task*) po_ref(task);
+            par_thd->thd  = kthread_run            (
                 po_thd_run        ,
                 (any_t) par_thd   ,
                 po_str_as_raw(name)

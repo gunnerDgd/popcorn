@@ -1,6 +1,17 @@
 #include "read.h"
 #include "dev.h"
 
+po_obj_trait po_chr_read_trait = po_make_trait (
+    po_chr_read_new    ,
+    po_chr_read_clone  ,
+    null_t             ,
+    po_chr_read_del    ,
+    sizeof(po_chr_read),
+    null_t
+);
+
+po_obj_trait* po_chr_read_t = &po_chr_read_trait;
+
 bool_t
     po_chr_read_new
         (po_chr_read* par_read, u32_t par_count, va_list par)                            {

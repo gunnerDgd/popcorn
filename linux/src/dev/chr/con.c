@@ -1,6 +1,17 @@
 #include "con.h"
 #include "dev.h"
 
+po_obj_trait po_chr_con_trait = po_make_trait (
+    po_chr_con_new    ,
+    po_chr_con_clone  ,
+    null_t            ,
+    po_chr_con_del    ,
+    sizeof(po_chr_con),
+    null_t
+);
+
+po_obj_trait* po_chr_con_t = &po_chr_con_trait;
+
 bool_t
     po_chr_con_new
         (po_chr_con* par_con, u32_t par_count, va_list par)                            {

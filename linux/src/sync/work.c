@@ -1,6 +1,17 @@
 #include "work.h"
 #include <linux/sched.h>
 
+po_obj_trait po_work_trait = po_make_trait (
+    po_work_new    ,
+    po_work_clone  ,
+    null_t         ,
+    po_work_del    ,
+    sizeof(po_work),
+    null_t
+);
+
+po_obj_trait *po_work_t = &po_work_trait;
+
 static void
     po_work_do
         (struct work_struct* par)                {
@@ -15,10 +26,10 @@ bool_t
             void *run = null_t; if (par_count > 0) run = va_arg(par, void*);
             void *arg = null_t; if (par_count > 1) arg = va_arg(par, void*);
             if (!run) return false_t;
-
-            par_work->work.stat = po_fut_pend;
-            par_work->work.run  = run;
-            par_work->work.arg  = arg;
+            par_work->work.head.func = (work_func_t) po_work_do;
+            par_work->work.stat      = po_fut_pend;
+            par_work->work.run       = run;
+            par_work->work.arg       = arg;
 
             if (!queue_work(system_long_wq, &par_work->work.head)) return false_t;
             return true_t;

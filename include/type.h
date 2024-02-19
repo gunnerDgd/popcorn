@@ -2,10 +2,9 @@
 #define __TYPE_H__
 
 #ifdef PRESET_LINUX
-#include <stdarg.h>
-#include <stdint.h>
-#include <stddef.h>
-#include <stdbool.h>
+#include <linux/stdarg.h>
+#include <linux/stddef.h>
+#include <linux/types.h>
 
 typedef uint8_t  u8_t ;
 typedef uint16_t u16_t;
@@ -39,12 +38,6 @@ typedef struct cstr_t    {
     const char *str;
     u64_t       len; 
 }   cstr_t;
-
-#define        wcstr(par) { .str = L##par, .len = (sizeof(par) - 1) / sizeof(wchar_t) }
-typedef struct wcstr_t    { 
-    const wchar_t *str; 
-    u64_t          len;
-}   wcstr_t;
 
 #if PRESET_ARCH_BIT == 64
 typedef u64_t reg_t;

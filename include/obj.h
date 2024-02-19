@@ -2,10 +2,7 @@
 #define __OBJ_H__
 
 #include "mem.h"
-
 #include "type.h"
-#include "type_atom.h"
-
 #include "ops.h"
 
 struct po_obj;

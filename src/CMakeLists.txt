@@ -70,44 +70,37 @@ add_library           (popcorn STATIC
         sync/mpmc.c
 )
 
-if    (PRESET_LINUX)
+if    (UNIX AND NOT APPLE)
     add_library(popcorn-linux STATIC
-            linux/atom.c
-            linux/bit.c
-            linux/mem.c
-            linux/print.c
+        linux/atom.c
+        linux/bit.c
+        linux/mem.c
+        linux/print.c
 
-            linux/sched.h
-            linux/sched.c
+        linux/sched.h
+        linux/sched.c
 
-            linux/task.h
-            linux/task.c
+        linux/task.h
+        linux/task.c
 
-            linux/thd.h
-            linux/thd.c
+        linux/thd.h
+        linux/thd.c
 
-            linux/mod.c
+        linux/mod.c
     )
 
     target_link_libraries(popcorn PRIVATE popcorn-linux)
-    file (APPEND ${CMAKE_SOURCE_DIR}/Makefile "popcorn-objs :=\\\n")
-    set  (popcorn-src-linux)
-    set  (popcorn-src-all)
-    set  (popcorn-src)
+    if (PRESET_BUILD)
+        set  (popcorn-target "popcorn")
+        set  (popcorn-src-linux)
+        set  (popcorn-src-generic)
+        set  (popcorn-src)
 
-    get_target_property(popcorn-src-linux popcorn-linux SOURCES)
-    get_target_property(popcorn-src       popcorn       SOURCES)
-    list(APPEND popcorn-src-all ${popcorn-src-linux})
-    list(APPEND popcorn-src-all ${popcorn-src})
+        get_target_property(popcorn-src-linux   popcorn-linux SOURCES)
+        get_target_property(popcorn-src-generic popcorn       SOURCES)
+        list(APPEND popcorn-src ${popcorn-src-generic})
+        list(APPEND popcorn-src ${popcorn-src-linux})
 
-    foreach    (src ${popcorn-src-all})
-        string (FIND ${src} ".h" src-type REVERSE)
-        if   (NOT src-type EQUAL -1)
-            continue()
-        endif()
-        string(PREPEND src "${popcorn-dir}/src/core/")
-        string(REPLACE ".c" ".o" src ${src})
-        file  (APPEND  ${CMAKE_SOURCE_DIR}/Makefile "\t${src}\\\n")
-    endforeach ()
-    file  (APPEND  ${CMAKE_SOURCE_DIR}/Makefile "\n")
+        add_make_target(${popcorn-make} ${popcorn-dir} popcorn ${popcorn-src})
+    endif()
 endif ()

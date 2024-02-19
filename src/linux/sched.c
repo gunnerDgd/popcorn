@@ -1,6 +1,17 @@
 #include "sched.h"
 #include "task.h"
 
+po_obj_trait po_sched_trait = po_make_trait (
+    po_sched_new    ,
+    po_sched_clone  ,
+    null_t          ,
+    po_sched_del    ,
+    sizeof(po_sched),
+    null_t
+);
+
+po_obj_trait *po_sched_t = &po_sched_trait;
+
 void*
     po_sched_run
         (po_sched* par)                                          {

@@ -1,5 +1,16 @@
 #include "mtx.h"
 
+po_obj_trait po_mtx_trait = po_make_trait (
+    po_mtx_new    ,
+    po_mtx_clone  ,
+    null_t        ,
+    po_mtx_del    ,
+    sizeof(po_mtx),
+    null_t
+);
+
+po_obj_trait *po_mtx_t = &po_mtx_trait;
+
 bool_t
     po_mtx_new
         (po_mtx* par_mtx, u32_t par_count, va_list par) {

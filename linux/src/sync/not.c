@@ -1,5 +1,16 @@
 #include "not.h"
 
+po_obj_trait po_not_trait = po_make_trait (
+    po_not_new    ,
+    po_not_clone  ,
+    null_t        ,
+    po_not_del    ,
+    sizeof(po_not),
+    null_t
+);
+
+po_obj_trait *po_not_t = &po_not_trait;
+
 bool_t po_not_new  (po_not* par_event, u32_t par_count, va_list par) { return true_t ; }
 bool_t po_not_clone(po_not* par, po_not* par_clone)                  { return false_t; }
 void   po_not_del  (po_not* par)                                     {}
