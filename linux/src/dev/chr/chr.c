@@ -64,6 +64,7 @@ static ssize_t
                 return -EINVAL;
             }
 
+            if (!(par->f_flags & O_NONBLOCK)) while(po_fut_poll(fut) == po_fut_pend) schedule();
             ssize_t ret = (ssize_t) po_fut_ret(fut);
             return  ret;
 }
@@ -90,6 +91,7 @@ static ssize_t
                 return -EINVAL;
             }
 
+            if (!(par->f_flags & O_NONBLOCK)) while(po_fut_poll(fut) == po_fut_pend) schedule();
             ssize_t ret = (ssize_t) po_fut_ret(fut);
             return  ret;
 }
