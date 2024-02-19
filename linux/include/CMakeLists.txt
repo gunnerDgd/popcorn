@@ -9,8 +9,9 @@ add_library(popcorn-linux-include STATIC
     dev/class.h
     dev/dev.h
 
-    sync/event.h
+    sync/not.h
     sync/work.h
+    sync/mtx.h
 )
 
 set_target_properties     (popcorn-linux-include PROPERTIES LINKER_LANGUAGE C)

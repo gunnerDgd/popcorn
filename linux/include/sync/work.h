@@ -1,8 +1,12 @@
-//
-// Created by enbay on 2/18/24.
-//
+#ifndef __PO_SYNC_WORK_H__
+#define __PO_SYNC_WORK_H__
 
-#ifndef POPCORN_WORK_H
-#define POPCORN_WORK_H
+#include <obj.h>
+#include <fut.h>
 
-#endif //POPCORN_WORK_H
+extern po_obj_trait *po_work_t;
+typedef struct       po_work { u8_t po_work[128]; } po_work;
+
+po_fut* po_work_fut (po_work*);
+
+#endif

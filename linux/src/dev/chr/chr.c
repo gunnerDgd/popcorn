@@ -5,7 +5,7 @@
 #include "write.h"
 #include "con.h"
 
-#include "../../sync/event.h"
+#include "../../sync/not.h"
 
 #include <linux/poll.h>
 
@@ -128,15 +128,15 @@ static __poll_t
             if (po_trait_of(dev)               != po_chr_dev_t) return -1;
             if (po_trait_of(chr)               != po_chr_t)     return -1;
             if (po_trait_of(par->private_data) != dev->trait)   return -1;
-            po_chr_stat stat = { .all = 0ull }                          ;
+            po_chr_poll stat = { .all = 0ull }                          ;
             u64_t       ret  = 0ull                                     ;
-            po_event   *poll = dev->ops->poll (par->private_data, &stat);
+            po_not     *poll = dev->ops->poll (par->private_data, &stat);
             if (stat.write_norm) ret |= POLLOUT   ;
             if (stat.write)      ret |= POLLWRNORM;
             if (stat.read_norm)  ret |= POLLRDNORM;
             if (stat.read)       ret |= POLLIN    ;
 
-            if (po_trait_of(poll) == po_event_t) poll_wait(par, &poll->event, par_poll);
+            if (po_trait_of(poll) == po_not_t) poll_wait(par, &poll->not, par_poll);
             return ret;
 }
 

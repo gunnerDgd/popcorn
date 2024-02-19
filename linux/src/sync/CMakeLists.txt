@@ -1,7 +1,10 @@
 project    (popcorn-sync)
 add_library(popcorn-sync STATIC
-    event.h
-    event.c
+    not.h
+    not.c
+
+        mtx.h
+    mtx.c
 
     work.h
     work.c
