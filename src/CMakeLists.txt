@@ -89,18 +89,7 @@ if    (UNIX AND NOT APPLE)
         linux/mod.c
     )
 
-    target_link_libraries(popcorn PRIVATE popcorn-linux)
-    if (PRESET_BUILD)
-        set  (popcorn-target "popcorn")
-        set  (popcorn-src-linux)
-        set  (popcorn-src-generic)
-        set  (popcorn-src)
-
-        get_target_property(popcorn-src-linux   popcorn-linux SOURCES)
-        get_target_property(popcorn-src-generic popcorn       SOURCES)
-        list(APPEND popcorn-src ${popcorn-src-generic})
-        list(APPEND popcorn-src ${popcorn-src-linux})
-
-        add_make_target(${popcorn-make} ${popcorn-dir} popcorn ${popcorn-src})
-    endif()
+    file(RELATIVE_PATH popcorn-path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+    set_target_properties(popcorn-linux PROPERTIES MODULE_PATH ${popcorn-path})
+    set_target_properties(popcorn       PROPERTIES MODULE_PATH ${popcorn-path})
 endif ()

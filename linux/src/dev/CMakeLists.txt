@@ -24,3 +24,5 @@ add_library(popcorn-dev STATIC
 )
 
 target_include_directories(popcorn-dev PRIVATE ../../../include)
+file(RELATIVE_PATH popcorn-dev-path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
+set_target_properties(popcorn-dev PROPERTIES MODULE_PATH ${popcorn-dev-path})
