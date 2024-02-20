@@ -1,5 +1,5 @@
-#include <obj.h>
-#include <print.h>
+#include "obj.h"
+#include "print.h"
 
 bool_t
     ModInit(po_obj* par_mod, u32_t par_count, va_list par) {
