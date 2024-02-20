@@ -2,6 +2,7 @@
 #include "chr.h"
 
 #include <atom.h>
+#include <print.h>
 
 #include "../class.h"
 #include "../dev.h"
@@ -44,16 +45,21 @@ bool_t
                     par_dev->id
                 );
 
-                if (po_trait_of(par_dev->dev) != po_dev_t) {
+                if (po_trait_of(par_dev->dev) != po_dev_t)                     {
+                    po_err("[popcorn-dev][po_chr_dev] Failed to Create Device");
                     po_del(&par_dev->name);
                     return false_t;
                 }
+
+                po_info("[popcorn-dev][po_chr_dev] No Free Device Remaining in Pool.");
+                po_info("[popcorn-dev][po_chr_dev] Successfully Created Device.")     ;
             }
 
             cdev_init(&par_dev->chr, &chr->ops);
             if (cdev_add(&par_dev->chr, par_dev->id, 1) < 0) goto new_err;
             if (!po_dev_use(par_dev->dev))                   goto new_err;
 
+            po_info         ("[popcorn-dev][po_chr_dev] Device Enabled");
             po_str_push_back(&par_dev->name, name);
             par_dev->trait = trait                ;
             par_dev->type  = (po_chr*) po_ref(chr);

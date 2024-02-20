@@ -76,7 +76,8 @@ bool_t
             cstr_t name = cstr("ChrDev");
             po_str_push_back_cstr(&par_chr->name    , name);
             po_str_push_back_cstr(&par_chr->cls_name, name);
-            if (!po_make_at(&par_chr->chr, po_chr)   from (1, &par_chr->name))     {
+
+            if (!po_make_at(&par_chr->chr, po_chr)   from (1, &par_chr->name)) {
                 po_err("Failed To Create Character Device Region");
                 goto new_err;
             }
@@ -86,7 +87,7 @@ bool_t
                 goto new_err;
             }
 
-            bool_t res = po_make_at(&par_chr->chr_dev, po_chr_dev) from                        (
+            bool_t res = po_make_at(&par_chr->chr_dev, po_chr_dev) from (
                 4             ,
                 &par_chr->name,
                 &par_chr->cls ,
