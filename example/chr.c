@@ -73,9 +73,10 @@ bool_t
             if(!po_make_at(&par_chr->name    , po_str) from(0)) return false_t;
             if(!po_make_at(&par_chr->cls_name, po_str) from(0)) return false_t;
 
-            cstr_t name = cstr("ChrDev");
-            po_str_push_back_cstr(&par_chr->name    , name);
-            po_str_push_back_cstr(&par_chr->cls_name, name);
+            cstr_t name_class = cstr("hello_world")    ;
+            cstr_t name       = cstr("hello_world_dev");
+            po_str_push_back_cstr(&par_chr->cls_name, name_class);
+            po_str_push_back_cstr(&par_chr->name    , name)      ;
 
             if (!po_make_at(&par_chr->chr, po_chr)   from (1, &par_chr->name)) {
                 po_err("Failed To Create Character Device Region");
@@ -118,10 +119,12 @@ bool_t
 void
     chr_del
         (chr* par)                {
+            po_del(&par->chr_dev) ;
+            po_del(&par->cls)     ;
+
             po_del(&par->cls_name);
             po_del(&par->name)    ;
-            po_del(&par->cls)     ;
-            po_del(&par->chr_dev) ;
+
             po_del(&par->chr)     ;
 }
 
