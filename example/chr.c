@@ -89,17 +89,20 @@ bool_t
             }
 
             bool_t res = po_make_at(&par_chr->chr_dev, po_chr_dev) from (
-                4             ,
-                &par_chr->name,
-                &par_chr->cls ,
-                &par_chr->chr ,
-                &chr_file_trait
+                5              ,
+                &par_chr->name ,
+                &par_chr->cls  ,
+                &par_chr->chr  ,
+                &chr_file_trait,
+                0
             );
 
             if (!res)                            {
                 po_err("Failed to Create Device");
                 goto new_err;
             }
+
+            po_info("Hello Device !!");
             return true_t;
     new_err:
             po_del(&par_chr->cls_name);

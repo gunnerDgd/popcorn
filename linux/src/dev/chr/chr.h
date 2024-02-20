@@ -16,9 +16,8 @@ typedef struct       po_chr    {
     po_obj                 head;
     po_str                 name;
     struct file_operations ops;
-    po_set                 dev;
-    u64_t                  num;
-    dev_t                  maj;
+    dev_t                  maj,
+                           min;
 }   po_chr;
 
 bool_t po_chr_new  (po_chr*, u32_t, va_list);

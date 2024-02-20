@@ -3,6 +3,8 @@
 
 #include <obj.h>
 #include <str.h>
+
+#include "../dev.h"
 #include <linux/cdev.h>
 
 struct po_chr_read ;
@@ -12,7 +14,6 @@ struct po_chr_con  ;
 struct po_not    ;
 struct po_chr_dev;
 struct po_chr    ;
-struct po_dev    ;
 
 typedef union po_chr_poll   {
     struct                  {
@@ -34,12 +35,10 @@ extern po_obj_trait *po_chr_dev_t;
 typedef struct       po_chr_dev  {
     po_obj             head ;
     po_obj_trait      *trait;
-    po_str             name ;
     struct po_chr     *type ;
     struct po_chr_ops *ops;
-    struct po_dev     *dev;
+    po_dev             dev;
     struct cdev        chr;
-    dev_t              min;
 }   po_chr_dev;
 
 bool_t po_chr_dev_new  (po_chr_dev*, u32_t, va_list);

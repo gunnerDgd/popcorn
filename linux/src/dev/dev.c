@@ -1,6 +1,7 @@
 #include "dev.h"
 #include "class.h"
 
+#include <bit.h>
 #include <linux/fs.h>
 
 po_obj_trait po_dev_trait = po_make_trait (
@@ -24,8 +25,20 @@ bool_t
             if (!po_make_at(&par_dev->name, po_str) from (0)) return false_t;
             if (po_trait_of(class) != po_class_t)             return false_t;
             if (po_trait_of(name)  != po_str_t)               return false_t;
-            if (maj == -1) return false_t;
-            if (min == -1) return false_t;
+            if (min >= shl (1, 19)) return false_t;
+            if (maj >= shl (1, 12)) return false_t;
+            par_dev->dev = device_create          (
+                par_dev->class->class       ,
+                null_t                      ,
+                par_dev->id                 ,
+                par_dev                     ,
+                po_str_as_raw(&par_dev->name)
+            );
+
+            if (IS_ERR(par_dev->dev)) {
+                po_del(&par_dev->name);
+                return false_t;
+            }
 
             po_str_push_back(&par_dev->name, name)    ;
             par_dev->class = (po_class*) po_ref(class);
@@ -44,34 +57,5 @@ void
         (po_dev* par)                                 {
             device_destroy(par->class->class, par->id);
             po_del(par->class);
-            po_del(par->type) ;
             po_del(&par->name);
-}
-
-bool_t
-    po_dev_use
-        (po_dev* par)                                                {
-            if (po_trait_of(par) != po_dev_t)          return false_t;
-            if (po_trait_of(par->class) != po_class_t) return false_t;
-            par->dev = device_create                                 (
-                par->class->class       ,
-                null_t                  ,
-                par->id                 ,
-                par                     ,
-                po_str_as_raw(&par->name)
-            );
-
-            if (IS_ERR(par->dev)) return false_t;
-            return true_t;
-}
-
-void
-    po_dev_free
-        (po_dev* par)                                        {
-            if (po_trait_of(par) != po_dev_t)          return;
-            if (po_trait_of(par->class) != po_class_t) return;
-            if (!par->dev)                             return;
-
-            device_destroy(par->class->class, par->id);
-            par->dev = null_t;
 }

@@ -170,17 +170,16 @@ bool_t
             po_str* name = null_t    ; if (par_count > 0) name = va_arg(par, po_str*);
             u64_t   maj  = 0         ; if (par_count > 1) maj  = va_arg(par, u64_t)  ;
             u64_t   min  = shl(1, 19); if (par_count > 2) min  = va_arg(par, u64_t)  ;
-            if (po_trait_of(name) != po_str_t)                                         goto new_err;
-            if (!po_make_at(&par_chr->name, po_str) from (0))                          goto new_err;
-            if (!po_make_at(&par_chr->dev , po_set) from (0))                          goto new_err;
-            if (alloc_chrdev_region(&par_chr->maj, maj, min, po_str_as_raw(name)) < 0) goto new_err;
+            if (po_trait_of(name) != po_str_t)                goto new_err;
+            if (!po_make_at(&par_chr->name, po_str) from (0)) goto new_err;
             po_str_push_back(&par_chr->name, name);
+
+            if (alloc_chrdev_region(&par_chr->maj, maj, min, po_str_as_raw(name)) < 0) goto new_err;
             par_chr->ops = po_chr_dev_ops;
-            par_chr->num = 0;
-            return true_t   ;
+            par_chr->min = min           ;
+            return true_t;
     new_err:
             po_del(&par_chr->name);
-            po_del(&par_chr->dev) ;
             return false_t;
 }
 
@@ -192,11 +191,9 @@ bool_t
 
 void
     po_chr_del
-        (po_chr* par)                                                                        {
-            for (po_chr* del = null_t; (del = (po_chr*) po_set_acq(&par->dev)) ; po_del(del));
-            unregister_chrdev_region(par->maj, shl (1, 19));
+        (po_chr* par)                                   {
+            unregister_chrdev_region(par->maj, par->min);
             po_del(&par->name);
-            po_del(&par->dev) ;
 }
 
 MODULE_LICENSE("GPL");
