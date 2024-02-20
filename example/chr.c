@@ -76,8 +76,16 @@ bool_t
             cstr_t name = cstr("ChrDev");
             po_str_push_back_cstr(&par_chr->name    , name);
             po_str_push_back_cstr(&par_chr->cls_name, name);
-            if (!po_make_at(&par_chr->chr, po_chr)   from (1, &par_chr->name))     goto new_err;
-            if (!po_make_at(&par_chr->cls, po_class) from (1, &par_chr->cls_name)) goto new_err;
+            if (!po_make_at(&par_chr->chr, po_chr)   from (1, &par_chr->name))     {
+                po_err("Failed To Create Character Device Region");
+                goto new_err;
+            }
+
+            if (!po_make_at(&par_chr->cls, po_class) from (1, &par_chr->cls_name)) {
+                po_err("Failed to Create Device Class");
+                goto new_err;
+            }
+
             bool_t res = po_make_at(&par_chr->chr_dev, po_chr_dev) from                        (
                 4             ,
                 &par_chr->name,
@@ -86,7 +94,10 @@ bool_t
                 &chr_file_trait
             );
 
-            if (!res) goto new_err;
+            if (!res)                            {
+                po_err("Failed to Create Device");
+                goto new_err;
+            }
             return true_t;
     new_err:
             po_del(&par_chr->cls_name);
