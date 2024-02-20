@@ -19,4 +19,7 @@ void __exit
         po_del(mod);
 }
 
+module_init(po_init)  ;
+module_exit(po_deinit);
+
 MODULE_LICENSE("GPL");
