@@ -1,5 +1,4 @@
-set        (popcorn-dev-src)
-add_library(popcorn-dev STATIC
+add_kernel_module_target(popcorn-dev
     dev.h
     dev.c
 
@@ -22,7 +21,3 @@ add_library(popcorn-dev STATIC
     chr/dev.c
 
 )
-
-target_include_directories(popcorn-dev PRIVATE ../../../include)
-file(RELATIVE_PATH popcorn-dev-path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-set_target_properties(popcorn-dev PROPERTIES MODULE_PATH ${popcorn-dev-path})

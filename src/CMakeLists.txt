@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.12)
-add_library           (popcorn STATIC
+cmake_minimum_required  (VERSION 3.12)
+add_kernel_module_target(popcorn
         type.h
         bit.h
         atom.h
@@ -71,7 +71,7 @@ add_library           (popcorn STATIC
 )
 
 if    (UNIX AND NOT APPLE)
-    add_library(popcorn-linux STATIC
+    add_kernel_module_target(popcorn-linux
         linux/atom.c
         linux/bit.c
         linux/mem.c
@@ -88,8 +88,4 @@ if    (UNIX AND NOT APPLE)
 
         linux/mod.c
     )
-
-    file(RELATIVE_PATH popcorn-path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-    set_target_properties(popcorn-linux PROPERTIES MODULE_PATH ${popcorn-path})
-    set_target_properties(popcorn       PROPERTIES MODULE_PATH ${popcorn-path})
 endif ()

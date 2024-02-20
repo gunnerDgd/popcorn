@@ -1,5 +1,5 @@
-project    (popcorn-sync)
-add_library(popcorn-sync STATIC
+project                 (popcorn-sync)
+add_kernel_module_target(popcorn-sync
     not.h
     not.c
 
@@ -9,7 +9,3 @@ add_library(popcorn-sync STATIC
     work.h
     work.c
 )
-
-target_include_directories(popcorn-sync PRIVATE ../../../include)
-file(RELATIVE_PATH popcorn-sync-path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-set_target_properties(popcorn-sync PROPERTIES MODULE_PATH ${popcorn-sync-path})

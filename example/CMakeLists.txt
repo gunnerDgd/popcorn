@@ -1,10 +1,8 @@
-file        (RELATIVE_PATH popcorn-example-start-path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-add_library               (popcorn-example-start STATIC start/mod.c)
+add_kernel_module_target  (popcorn-example-start start/mod.c)
 target_include_directories(popcorn-example-start PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_include_directories(popcorn-example-start PRIVATE ${CMAKE_SOURCE_DIR}/linux/include)
-set_target_properties     (popcorn-example-start PROPERTIES MODULE_PATH ${popcorn-example-start-path})
-
 add_kernel_module         (start ${CMAKE_HOST_SYSTEM_VERSION})
-add_kernel_module_target  (start popcorn popcorn-dev popcorn-sync popcorn-linux popcorn-example-start)
-add_kernel_module_include (start ${CMAKE_SOURCE_DIR}/include)
-add_kernel_module_include (start ${CMAKE_SOURCE_DIR}/linux/include)
+
+kernel_module_link_target(start popcorn popcorn-dev popcorn-sync popcorn-linux popcorn-example-start)
+kernel_module_include    (start ${CMAKE_SOURCE_DIR}/include)
+kernel_module_include    (start ${CMAKE_SOURCE_DIR}/linux/include)
