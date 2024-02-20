@@ -70,6 +70,9 @@ add_kernel_module_target(popcorn
         sync/mpmc.c
 )
 
+target_include_directories(popcorn PRIVATE /usr/src/kernels/${CMAKE_HOST_SYSTEM_VERSION}/include)
+target_include_directories(popcorn PRIVATE /usr/src/linux-headers-${CMAKE_HOST_SYSTEM_VERSION}/include)
+
 if    (UNIX AND NOT APPLE)
     add_kernel_module_target(popcorn-linux
         linux/atom.c
@@ -88,4 +91,7 @@ if    (UNIX AND NOT APPLE)
 
         linux/mod.c
     )
+
+    target_include_directories(popcorn-linux PRIVATE /usr/src/kernels/${CMAKE_HOST_SYSTEM_VERSION}/include)
+    target_include_directories(popcorn-linux PRIVATE /usr/src/linux-headers-${CMAKE_HOST_SYSTEM_VERSION}/include)
 endif ()

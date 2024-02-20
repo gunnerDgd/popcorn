@@ -22,7 +22,6 @@ function   (add_kernel_module par_name par_kernel)
     add_custom_target (
         ${par_name}-install
         COMMAND cp ${CMAKE_BINARY_DIR}/${par_name} ${CMAKE_SOURCE_DIR}/Kbuild
-        COMMAND make -C /lib/modules/${par_kernel}/build M=${CMAKE_SOURCE_DIR} modules
         COMMAND make -C /lib/modules/${par_kernel}/build M=${CMAKE_SOURCE_DIR} modules_install
         COMMAND rm ${CMAKE_SOURCE_DIR}/Kbuild
     )
@@ -37,7 +36,7 @@ endfunction()
 function   (add_kernel_module_target par_name)
     file       (REMOVE ${CMAKE_BINARY_DIR}/${par_name})
     file       (RELATIVE_PATH par_path ${CMAKE_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR})
-    add_library(${par_name} STATIC     ${ARGN})
+    add_library(${par_name} STATIC  ${ARGN})
     foreach    (src IN LISTS ARGN)
         string (FIND ${src} ".h" src_type REVERSE)
         if   (NOT src_type EQUAL -1)

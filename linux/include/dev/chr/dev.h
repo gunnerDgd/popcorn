@@ -3,6 +3,10 @@
 
 #include <obj.h>
 
+struct po_chr_read ;
+struct po_chr_write;
+struct po_chr_con  ;
+
 extern po_obj_trait *po_chr_dev_t;
 typedef struct       po_chr_dev { u8_t chr[512]; } po_chr_dev;
 
@@ -22,4 +26,10 @@ typedef struct po_chr_ops                                   {
     struct po_event* (*poll) (po_obj*, po_chr_stat*)        ;
 }   po_chr_ops;
 
+#define po_make_chr_ops(par_read, par_write, par_con, par_poll)               {\
+    .read  = ((bool_t          (*)(po_obj*, struct po_chr_read*)) (par_read)) ,\
+    .write = ((bool_t          (*)(po_obj*, struct po_chr_write*))(par_write)),\
+    .con   = ((bool_t          (*)(po_obj*, struct po_chr_con*))  (par_con))  ,\
+    .poll  = ((struct po_event*(*)(po_obj*, po_chr_stat*))        (par_poll))  \
+}
 #endif

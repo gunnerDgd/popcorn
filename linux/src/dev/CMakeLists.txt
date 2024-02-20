@@ -19,5 +19,8 @@ add_kernel_module_target(popcorn-dev
 
     chr/dev.h
     chr/dev.c
-
 )
+
+target_include_directories(popcorn-dev PRIVATE /usr/src/kernels/${CMAKE_HOST_SYSTEM_VERSION}/include)
+target_include_directories(popcorn-dev PRIVATE /usr/src/linux-headers-${CMAKE_HOST_SYSTEM_VERSION}/include)
+target_include_directories(popcorn-dev PRIVATE ../../../include)
