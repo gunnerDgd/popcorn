@@ -61,7 +61,7 @@ bool_t
                 po_str_as_raw(&par->name)
             );
 
-            if (par->dev <= 0) return false_t;
+            if (IS_ERR(par->dev)) return false_t;
             return true_t;
 }
 

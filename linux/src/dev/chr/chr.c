@@ -1,5 +1,6 @@
 #include "chr.h"
 #include "dev.h"
+#include "../dev.h"
 
 #include "read.h"
 #include "write.h"
@@ -191,7 +192,8 @@ bool_t
 
 void
     po_chr_del
-        (po_chr* par)                                      {
+        (po_chr* par)                                                                        {
+            for (po_chr* del = null_t; (del = (po_chr*) po_set_acq(&par->dev)) ; po_del(del));
             unregister_chrdev_region(par->maj, shl (1, 19));
             po_del(&par->name);
             po_del(&par->dev) ;
