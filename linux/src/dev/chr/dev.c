@@ -35,31 +35,25 @@ bool_t
             }
 
             par_dev->dev = (po_dev*) po_set_acq(&chr->dev);
-            if(!par_dev->dev)                                                                       {
-                par_dev->id  = po_lock_inc64(&chr->num); if (par_dev->id >= shl(1, 19)) goto new_err;
+            if(!par_dev->dev)                                                                        {
+                par_dev->min = po_lock_inc64(&chr->num); if (par_dev->min >= shl(1, 19)) goto new_err;
                 par_dev->dev = po_make (po_dev) from   (
-                    4         ,
-                    class     ,
-                    name      ,
-                    chr->maj  ,
-                    par_dev->id
+                    4          ,
+                    class      ,
+                    name       ,
+                    chr->maj   ,
+                    par_dev->min
                 );
 
-                if (po_trait_of(par_dev->dev) != po_dev_t)                     {
-                    po_err("[popcorn-dev][po_chr_dev] Failed to Create Device");
+                if (po_trait_of(par_dev->dev) != po_dev_t) {
                     po_del(&par_dev->name);
                     return false_t;
                 }
-
-                po_info("[popcorn-dev][po_chr_dev] No Free Device Remaining in Pool.");
-                po_info("[popcorn-dev][po_chr_dev] Successfully Created Device.")     ;
             }
 
             cdev_init(&par_dev->chr, &chr->ops);
-            if (cdev_add(&par_dev->chr, par_dev->id, 1) < 0) goto new_err;
-            if (!po_dev_use(par_dev->dev))                   goto new_err;
-
-            po_info         ("[popcorn-dev][po_chr_dev] Device Enabled");
+            if (cdev_add(&par_dev->chr, par_dev->dev->id, 1) < 0) goto new_err;
+            if (!po_dev_use(par_dev->dev))                        goto new_err;
             po_str_push_back(&par_dev->name, name);
             par_dev->trait = trait                ;
             par_dev->type  = (po_chr*) po_ref(chr);

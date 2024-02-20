@@ -14,7 +14,7 @@ typedef struct       po_dev  {
     po_str           name;
     po_obj          *type;
     struct device   *dev ;
-    u64_t            id  ;
+    dev_t            id  ;
 }   po_dev;
 
 bool_t po_dev_new  (po_dev*, u32_t, va_list);
