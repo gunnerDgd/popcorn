@@ -90,11 +90,12 @@ bool_t
             }
 
             bool_t res = po_make_at(&par_chr->chr_dev, po_chr_dev) from (
-                5              ,
+                6              ,
+                &par_chr->name ,
+                &par_chr->cls  ,
                 &par_chr->chr  ,
                 &chr_file_trait,
-                &par_chr->cls  ,
-                &par_chr->name ,
+                &chr_ops       ,
                 0ull
             );
 

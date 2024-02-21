@@ -62,6 +62,7 @@ static ssize_t
             po_fut *fut = po_chr_read_fut(read);
             if (!dev->ops->read(par->private_data, read)) {
                 po_del  (read);
+                po_del  (fut) ;
                 return -EINVAL;
             }
 
