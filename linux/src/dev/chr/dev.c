@@ -20,7 +20,7 @@ bool_t
             po_obj_trait *trait = null_t; if (par_count > 1) trait = va_arg(par, po_obj_trait*);
             po_class     *class = null_t; if (par_count > 2) class = va_arg(par, po_class*)    ;
             po_str       *name  = null_t; if (par_count > 3) name  = va_arg(par, po_str*)      ;
-            u64_t         min   = -1    ; if (par_count > 4) min   = va_arg(par, u64_t)        ;
+            dev_t         min   = -1    ; if (par_count > 4) min   = va_arg(par, dev_t)        ;
             if (po_trait_of(class) != po_class_t) return false_t;
             if (po_trait_of(name)  != po_str_t)   return false_t;
             if (po_trait_of(chr)   != po_chr_t)   return false_t;

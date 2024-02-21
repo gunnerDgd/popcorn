@@ -22,11 +22,9 @@ bool_t
             po_str   *name  = null_t; if (par_count > 1) name  = va_arg(par, po_str*)  ;
             u64_t     maj   = -1    ; if (par_count > 2) maj   = va_arg(par, u64_t)    ;
             u64_t     min   = -1    ; if (par_count > 3) min   = va_arg(par, u64_t)    ;
-            if (po_trait_of(class) != po_class_t) return false_t;
-            if (po_trait_of(name)  != po_str_t)   return false_t;
-            if (min >= shl (1, 19))               return false_t;
-            if (maj >= shl (1, 12))               return false_t;
-
+            if (po_trait_of(class) != po_class_t)             return false_t;
+            if (po_trait_of(name)  != po_str_t)               return false_t;
+            if (min >= shl (1, 19))                           return false_t;
             if (!po_make_at(&par_dev->name, po_str) from (0)) return false_t;
             par_dev->dev = device_create                                    (
                 class->class      ,
