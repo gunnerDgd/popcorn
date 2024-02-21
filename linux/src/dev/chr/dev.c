@@ -30,8 +30,8 @@ bool_t
             cdev_init(&par_dev->chr, &chr->ops);
 
             if (!po_make_at(&par_dev->dev, po_dev) from (4, class, name, chr->maj, min)) return false_t;
-            if (cdev_add(&par_dev->chr, par_dev->dev.id, 1) < 0) {
-                po_del (&par_dev->dev);
+            if (cdev_add(&par_dev->chr, par_dev->dev.id, 1) < 0)                                       {
+                po_del  (&par_dev->dev);
                 return false_t;
             }
 
