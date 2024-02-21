@@ -27,14 +27,10 @@ bool_t
             if (min >= chr->min) return false_t;
             if (min == -1)       return false_t;
             if (!trait)          return false_t;
-            cdev_init(&par_dev->chr, &chr->ops);
 
+            cdev_init   (&par_dev->chr, &chr->ops);
+            if (cdev_add(&par_dev->chr, par_dev->dev.id, 1) < 0)                         return false_t;
             if (!po_make_at(&par_dev->dev, po_dev) from (4, class, name, chr->maj, min)) return false_t;
-            if (cdev_add(&par_dev->chr, par_dev->dev.id, 1) < 0)                                       {
-                po_del  (&par_dev->dev);
-                return false_t;
-            }
-
             par_dev->trait = trait                ;
             par_dev->type  = (po_chr*) po_ref(chr);
             return true_t;

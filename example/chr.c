@@ -94,7 +94,7 @@ bool_t
                 &chr_file_trait,
                 &par_chr->cls  ,
                 &par_chr->name ,
-                0
+                0ull
             );
 
             if (!res)                            {
