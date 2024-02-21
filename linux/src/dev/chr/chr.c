@@ -46,7 +46,7 @@ static int
 
 static ssize_t
     po_chr_dev_do_read
-        (struct file* par, __user char* par_buf, size_t par_len, loff_t* par_off) {
+        (struct file* par, __user char* par_buf, size_t par_len, loff_t* par_off) { po_err("[chr_do_read] Read Start");
             po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr);
             po_chr     *chr = container_of(par->f_op           , po_chr    , ops);
             if (po_trait_of(dev)               != po_chr_dev_t) return -EINVAL; po_err("[chr_do_read] dev verify");
@@ -72,7 +72,7 @@ static ssize_t
 
 static ssize_t
     po_chr_dev_do_write
-        (struct file* par, __user const char* par_buf, size_t par_len, loff_t* par_off) {
+        (struct file* par, __user const char* par_buf, size_t par_len, loff_t* par_off) { po_err("[chr_do_write] Write Start");
             po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr);
             po_chr     *chr = container_of(par->f_op           , po_chr    , ops);
             if (po_trait_of(dev)               != po_chr_dev_t) return -EINVAL; po_err("[chr_do_write] dev verify");
