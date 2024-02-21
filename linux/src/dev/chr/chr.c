@@ -12,9 +12,9 @@
 
 static int
     po_chr_dev_do_open
-        (struct inode* par, struct file* par_file)                      {
-            po_chr_dev *dev = container_of(par->i_cdev, po_chr_dev, chr);
-            po_chr     *chr = container_of(par->i_fop , po_chr    , ops);
+        (struct inode* par, struct file* par_file)                         {
+            po_chr_dev *dev = container_of(par->i_cdev   , po_chr_dev, chr);
+            po_chr     *chr = container_of(par_file->f_op, po_chr    , ops);
             if (po_trait_of(dev) != po_chr_dev_t) return -EINVAL; po_err("[chr_do_open] dev verify");
             if (po_trait_of(chr) != po_chr_t)     return -EINVAL; po_err("[chr_do_open] chr verify");
             par_file->private_data = po_obj_new                 (
@@ -33,9 +33,9 @@ static int
 
 static int
     po_chr_dev_do_close
-        (struct inode* par, struct file* par_file)                      {
-            po_chr_dev *dev = container_of(par->i_cdev, po_chr_dev, chr); po_err("[chr_do_close] dev verify");
-            po_chr     *chr = container_of(par->i_fop , po_chr    , ops); po_err("[chr_do_close] dev verify");
+        (struct inode* par, struct file* par_file)                         {
+            po_chr_dev *dev = container_of(par->i_cdev   , po_chr_dev, chr); po_err("[chr_do_close] dev verify");
+            po_chr     *chr = container_of(par_file->f_op, po_chr    , ops); po_err("[chr_do_close] dev verify");
             if (po_trait_of(dev) != po_chr_dev_t) return -EINVAL;
             if (po_trait_of(chr) != po_chr_t)     return -EINVAL;
             po_del(par_file->private_data);
