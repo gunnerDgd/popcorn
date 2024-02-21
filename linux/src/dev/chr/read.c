@@ -48,11 +48,11 @@ void
             if (par->stat != po_fut_pend)          return;
             if (!par_buf)                          return;
             if (!par_len)                          return;
-            if (par_len >par->len) par_len = par->len;
-            par->ret = copy_to_user                  (
+            if (par_len > par->len) par_len = par->len;
+            par->ret = copy_to_user                   (
                 par->read,
                 par_buf  ,
-                par->ret
+                par_len
             );
 
             if (par->ret == 0)        {

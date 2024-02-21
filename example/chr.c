@@ -20,6 +20,7 @@ typedef struct chr     {
 
 typedef struct chr_file {
     po_obj head;
+    u64_t  file;
 }   chr_file;
 
 bool_t chr_new  (chr*, u32_t, va_list);
