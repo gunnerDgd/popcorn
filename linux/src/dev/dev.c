@@ -27,13 +27,12 @@ bool_t
             if (po_trait_of(name)  != po_str_t)               return false_t;
             if (min >= shl (1, 19)) return false_t;
             if (maj >= shl (1, 12)) return false_t;
-            par_dev->id  = MKDEV(maj, min)        ;
             par_dev->dev = device_create          (
-                par_dev->class->class       ,
-                null_t                      ,
-                par_dev->id                 ,
-                par_dev                     ,
-                po_str_as_raw(&par_dev->name)
+                class->class      ,
+                null_t            ,
+                MKDEV(maj, min)   ,
+                par_dev           ,
+                po_str_as_raw(name)
             );
 
             if (IS_ERR(par_dev->dev)) {
@@ -42,6 +41,7 @@ bool_t
             }
 
             par_dev->class = (po_class*) po_ref(class);
+            par_dev->id    = MKDEV(maj, min)          ;
             po_str_push_back(&par_dev->name, name);
             return true_t;
 }
