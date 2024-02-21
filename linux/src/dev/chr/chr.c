@@ -1,6 +1,5 @@
 #include "chr.h"
 #include "dev.h"
-#include "../dev.h"
 
 #include "read.h"
 #include "write.h"
@@ -9,14 +8,15 @@
 #include "../../sync/not.h"
 
 #include <linux/poll.h>
+#include <print.h>
 
 static int
     po_chr_dev_do_open
         (struct inode* par, struct file* par_file)                      {
             po_chr_dev *dev = container_of(par->i_cdev, po_chr_dev, chr);
             po_chr     *chr = container_of(par->i_fop , po_chr    , ops);
-            if (po_trait_of(dev) != po_chr_dev_t) return -EINVAL;
-            if (po_trait_of(chr) != po_chr_t)     return -EINVAL;
+            if (po_trait_of(dev) != po_chr_dev_t) return -EINVAL; po_err("[chr_do_open] dev verify");
+            if (po_trait_of(chr) != po_chr_t)     return -EINVAL; po_err("[chr_do_open] chr verify");
             par_file->private_data = po_obj_new                 (
                 null_t    ,
                 dev->trait,
@@ -34,8 +34,8 @@ static int
 static int
     po_chr_dev_do_close
         (struct inode* par, struct file* par_file)                      {
-            po_chr_dev *dev = container_of(par->i_cdev, po_chr_dev, chr);
-            po_chr     *chr = container_of(par->i_fop , po_chr    , ops);
+            po_chr_dev *dev = container_of(par->i_cdev, po_chr_dev, chr); po_err("[chr_do_close] dev verify");
+            po_chr     *chr = container_of(par->i_fop , po_chr    , ops); po_err("[chr_do_close] dev verify");
             if (po_trait_of(dev) != po_chr_dev_t) return -EINVAL;
             if (po_trait_of(chr) != po_chr_t)     return -EINVAL;
             po_del(par_file->private_data);
@@ -47,8 +47,8 @@ static int
 static ssize_t
     po_chr_dev_do_read
         (struct file* par, __user char* par_buf, size_t par_len, loff_t* par_off) {
-            po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr);
-            po_chr     *chr = container_of(par->f_op           , po_chr    , ops);
+            po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr); po_err("[chr_do_read] dev verify");
+            po_chr     *chr = container_of(par->f_op           , po_chr    , ops); po_err("[chr_do_read] dev verify");
             if (po_trait_of(dev)               != po_chr_dev_t) return -EINVAL;
             if (po_trait_of(chr)               != po_chr_t)     return -EINVAL;
             if (po_trait_of(par->private_data) != dev->trait)   return -EINVAL;
@@ -73,8 +73,8 @@ static ssize_t
 static ssize_t
     po_chr_dev_do_write
         (struct file* par, __user const char* par_buf, size_t par_len, loff_t* par_off) {
-            po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr);
-            po_chr     *chr = container_of(par->f_op           , po_chr    , ops);
+            po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr); po_err("[chr_do_write] dev verify");
+            po_chr     *chr = container_of(par->f_op           , po_chr    , ops); po_err("[chr_do_write] dev verify");
             if (po_trait_of(dev)               != po_chr_dev_t) return -EINVAL;
             if (po_trait_of(chr)               != po_chr_t)     return -EINVAL;
             if (po_trait_of(par->private_data) != dev->trait)   return -EINVAL;
@@ -100,8 +100,8 @@ static ssize_t
 static long
     po_chr_dev_do_con
         (struct file* par, unsigned int par_cmd, unsigned long par_arg)          {
-            po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr);
-            po_chr     *chr = container_of(par->f_op           , po_chr    , ops);
+            po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr); po_err("[chr_do_con] dev verify");
+            po_chr     *chr = container_of(par->f_op           , po_chr    , ops); po_err("[chr_do_con] dev verify");
             if (po_trait_of(dev)               != po_chr_dev_t) return -EINVAL;
             if (po_trait_of(chr)               != po_chr_t)     return -EINVAL;
             if (po_trait_of(par->private_data) != dev->trait)   return -EINVAL;
@@ -126,8 +126,8 @@ static long
 static __poll_t
     po_chr_dev_do_poll
         (struct file* par, struct poll_table_struct* par_poll)                   {
-            po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr);
-            po_chr     *chr = container_of(par->f_op           , po_chr    , ops);
+            po_chr_dev *dev = container_of(par->f_inode->i_cdev, po_chr_dev, chr); po_err("[chr_do_poll] dev verify");
+            po_chr     *chr = container_of(par->f_op           , po_chr    , ops); po_err("[chr_do_poll] dev verify");
             if (po_trait_of(dev)               != po_chr_dev_t) return -1;
             if (po_trait_of(chr)               != po_chr_t)     return -1;
             if (po_trait_of(par->private_data) != dev->trait)   return -1;
