@@ -29,8 +29,8 @@ bool_t
             if (!trait)          return false_t;
 
             cdev_init   (&par_dev->chr, &chr->ops);
-            if (cdev_add(&par_dev->chr, MKDEV(chr->maj, min), 1) < 0)                    return false_t;
-            if (!po_make_at(&par_dev->dev, po_dev) from (4, class, name, chr->maj, min)) return false_t;
+            if (cdev_add(&par_dev->chr, chr->maj + min, 1) < 0)                                 return false_t;
+            if (!po_make_at(&par_dev->dev, po_dev) from (4, class, name, MAJOR(chr->maj), min)) return false_t;
             par_dev->trait = trait                ;
             par_dev->type  = (po_chr*) po_ref(chr);
             return true_t;

@@ -170,8 +170,8 @@ bool_t
             po_str* name = null_t    ; if (par_count > 0) name = va_arg(par, po_str*);
             u64_t   maj  = 0         ; if (par_count > 1) maj  = va_arg(par, u64_t)  ;
             u64_t   min  = shl(1, 19); if (par_count > 2) min  = va_arg(par, u64_t)  ;
-            if (po_trait_of(name) != po_str_t)                goto new_err;
-            if (!po_make_at(&par_chr->name, po_str) from (0)) goto new_err;
+            if (po_trait_of (name) != po_str_t)                goto new_err;
+            if (!po_make_at (&par_chr->name, po_str) from (0)) goto new_err;
             po_str_push_back(&par_chr->name, name);
 
             if (alloc_chrdev_region(&par_chr->maj, maj, min, po_str_as_raw(name)) < 0) goto new_err;

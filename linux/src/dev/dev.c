@@ -24,6 +24,7 @@ bool_t
             u64_t     min   = -1    ; if (par_count > 3) min   = va_arg(par, u64_t)    ;
             if (po_trait_of(class) != po_class_t)             return false_t;
             if (po_trait_of(name)  != po_str_t)               return false_t;
+            if (maj >= shl (1, 12))                           return false_t;
             if (min >= shl (1, 19))                           return false_t;
             if (!po_make_at(&par_dev->name, po_str) from (0)) return false_t;
             par_dev->dev = device_create                                    (
