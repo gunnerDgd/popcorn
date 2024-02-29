@@ -1,4 +1,4 @@
-add_kernel_module_target(popcorn-dev
+add_kernel_source(popcorn-dev
     dev.h
     dev.c
 

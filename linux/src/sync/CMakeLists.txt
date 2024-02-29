@@ -1,5 +1,5 @@
-project                 (popcorn-sync)
-add_kernel_module_target(popcorn-sync
+project          (popcorn-sync)
+add_kernel_source(popcorn-sync
     not.h
     not.c
 

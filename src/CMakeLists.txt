@@ -1,5 +1,5 @@
-cmake_minimum_required  (VERSION 3.12)
-add_kernel_module_target(popcorn
+cmake_minimum_required(VERSION 3.12)
+add_kernel_source     (popcorn
         type.h
         bit.h
         atom.h
@@ -74,7 +74,7 @@ target_include_directories(popcorn PRIVATE /usr/src/kernels/${CMAKE_HOST_SYSTEM_
 target_include_directories(popcorn PRIVATE /usr/src/linux-headers-${CMAKE_HOST_SYSTEM_VERSION}/include)
 
 if    (UNIX AND NOT APPLE)
-    add_kernel_module_target(popcorn-linux
+    add_kernel_source(popcorn-linux
         linux/atom.c
         linux/bit.c
         linux/mem.c
