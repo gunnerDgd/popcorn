@@ -1,6 +1,9 @@
 project    (popcorn-linux-include)
 add_library(popcorn-linux-include STATIC
-    com.h
+    com/com.h
+    com/dev.h
+    com/class.h
+    com/bus.h
 
     dev/class.h
     dev/dev.h

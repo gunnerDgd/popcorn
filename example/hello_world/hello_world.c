@@ -1,18 +1,14 @@
-#include "obj.h"
-#include "print.h"
-#include "com.h"
+#include <obj.h>
+#include <print.h>
+
+#include <com/com.h>
+#include <com/class.h>
 
 bool_t
     ModInit(po_obj* par_mod, u32_t par_count, va_list par) {
         po_info("Hello World !!");
-        cstr_t  name_cstr = cstr("dev")             ;
-        po_str *name      = po_make(po_str) from (0);
-        po_str_push_back_cstr(name, name_cstr);
-        po_com *com     = po_com_root    ()              ;
-        po_com *com_dev = po_com_sub_cstr(com, name_cstr);
-
-        po_del(com_dev);
-        po_del(com)    ;
+        cstr_t  name  = cstr("block")          ;
+        po_com* class = po_com_class_cstr(name);
         return true_t;
 }
 

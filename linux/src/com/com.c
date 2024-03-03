@@ -1,5 +1,23 @@
 #include "com.h"
 
+po_com*
+    po_com_root(void)                                        {
+        po_com* ret = po_new(po_com); if (!ret) return null_t;
+        ret->head.trait = po_com_t    ;
+        ret->head.mem   = po_get_mem();
+        ret->head.ref   = 1           ;
+
+        ret->dir = kernel_kobj->sd->parent;
+        ret->sup = null_t                 ;
+        ret->com = null_t                 ;
+        if (!ret->com && !ret->dir)       {
+            po_drop (ret);
+            return null_t;
+        }
+
+        return ret;
+}
+
 po_obj_trait po_com_trait = po_make_trait (
     po_com_new    ,
     po_com_clone  ,
@@ -45,25 +63,6 @@ void
         (po_com* par)            {
             kobject_put(par->com);
             po_del     (par->sup);
-}
-
-po_com*
-    po_com_root(void)                                        {
-        po_com* ret = po_new(po_com); if (!ret) return null_t;
-        ret->head.trait = po_com_t    ;
-        ret->head.mem   = po_get_mem();
-        ret->head.ref   = 1           ;
-
-        ret->dir = kernel_kobj->sd->parent;
-        ret->sup = null_t                 ;
-        ret->com = null_t                 ;
-
-        if (!ret->com && !ret->dir) {
-            po_drop (ret);
-            return null_t;
-        }
-
-        return ret;
 }
 
 struct po_com*
@@ -120,4 +119,11 @@ po_com*
             ret->dir = ret->com->sd;
             ret->sup = null_t      ;
             return ret;
+}
+
+any_t
+    po_com_handle
+        (po_com* par)                                      {
+            if (po_trait_of(par) != po_com_t) return null_t;
+            return par->com;
 }
