@@ -1,16 +1,14 @@
-#include <unistd.h>
-#include <fcntl.h>
-#include <stdio.h>
-#include <string.h>
+#include <nolibc.h>
 
-int main()                                             {
-    int  fd      = open("/dev/hello_world_dev", O_RDWR);
+int main(void)                                    {
+    int  fd      = open("/dev/hello_world_dev", 2);
     char buf[64] = { 0x00, };
 
     ssize_t ret = read(fd, buf, 64);
-    printf("Read %d Bytes (Buf : %s)\n", ret, buf);
+    printf("[popcorn][chr-app] Read %d Bytes.\n", ret);
+    printf("[popcorn][chr-app] Read %s.\n"      , buf);
 
     const char* msg = "Hello UserMode Device !!";
-    ret = write(fd, msg, strlen(msg));
-    printf("Wrote %d Bytes\n", ret);
+    ret = write(fd, msg, 24);
+    printf("[popcorn][chr-app] Wrote %d Bytes.\n", ret);
 }

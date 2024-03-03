@@ -3,8 +3,8 @@
 
 #ifdef PRESET_LINUX
 #include <linux/types.h>
-#include <linux/stdarg.h>
 #include <linux/stddef.h>
+#include <linux/stdarg.h>
 
 typedef uint8_t  u8_t ;
 typedef uint16_t u16_t;

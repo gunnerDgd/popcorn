@@ -1,13 +1,18 @@
 project    (popcorn-linux-include)
 add_library(popcorn-linux-include STATIC
-    dev/chr/chr.h
-    dev/chr/con.h
-    dev/chr/dev.h
-    dev/chr/read.h
-    dev/chr/write.h
+    com.h
 
     dev/class.h
     dev/dev.h
+
+    fs/chr/chr_type.h
+    fs/chr/chr.h
+
+    fs/read.h
+    fs/write.h
+    fs/control.h
+    fs/file_type.h
+    fs/file.h
 
     sync/not.h
     sync/work.h

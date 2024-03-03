@@ -1,5 +1,5 @@
-project          (popcorn-sync)
-add_kernel_source(popcorn-sync
+project          (popcorn-linux-sync)
+add_kernel_source(popcorn-linux-sync
     not.h
     not.c
 
@@ -10,6 +10,5 @@ add_kernel_source(popcorn-sync
     work.c
 )
 
-target_include_directories(popcorn-sync PRIVATE /usr/src/kernels/${CMAKE_HOST_SYSTEM_VERSION}/include)
-target_include_directories(popcorn-sync PRIVATE /usr/src/linux-headers-${CMAKE_HOST_SYSTEM_VERSION}/include)
-target_include_directories(popcorn-sync PRIVATE ../../../include)
+target_include_directories(popcorn-linux-sync PRIVATE ../../../include)
+target_include_directories(popcorn-linux-sync PRIVATE ${PRESET_KERNEL_HEADER})

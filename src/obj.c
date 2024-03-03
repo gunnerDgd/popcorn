@@ -12,9 +12,9 @@ po_obj*
 
 po_obj*
     po_obj_new_va
-		(po_mem* par_mem, po_obj_trait* par_trait, u32_t par_count, va_list par) 		     {
-			po_obj_trait *trait = par_trait; if (!trait)					    return null_t;
-			po_mem       *mem   = par_mem  ; if (trait->size <= sizeof(po_obj)) return null_t;
+		(po_mem* par_mem, po_obj_trait* par_trait, u32_t par_count, va_list par) 		    {
+			po_obj_trait *trait = par_trait; if (!trait)				       return null_t;
+			po_mem       *mem   = par_mem  ; if (trait->size < sizeof(po_obj)) return null_t;
 			if (!mem) mem = po_get_mem();
 			if (!mem) return   null_t;
 			
@@ -54,7 +54,7 @@ bool_t
 		(po_obj* par_po_obj, po_obj_trait* par_trait, u32_t par_count, va_list par) {
 			po_obj		 *ret   = par_po_obj; if (!ret)   return false_t;
 			po_obj_trait *trait = par_trait ; if (!trait) return false_t;
-			if (trait->size <= sizeof(po_obj)) return false_t;
+			if (trait->size < sizeof(po_obj)) return false_t;
 
 			po_mem_set(ret, 0x00, trait->size);
 			ret->trait = par_trait;
@@ -76,10 +76,10 @@ po_obj*
 			po_obj		  *arg  = par		 ; if (!arg)  return null_t;
 			po_obj_trait *trait = arg->trait; if (!trait) return null_t;
 			po_mem		  *mem  = par->mem  ;
-			if (!mem)					   	   mem = po_get_mem();
-			if (!mem)						   return null_t;
-			if (trait->size <= sizeof(po_obj)) return null_t;
-			if (!arg->ref)					   return null_t;
+			if (!mem)					   	  mem = po_get_mem();
+			if (!mem)						  return null_t;
+			if (trait->size < sizeof(po_obj)) return null_t;
+			if (!arg->ref)					  return null_t;
 
 			po_obj *ret = po_mem_new(par->mem, par->trait->size); if (!ret) return null_t;
 			ret->trait = trait;
