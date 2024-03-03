@@ -29,5 +29,6 @@ if   (UNIX AND NOT APPLE)
     add_subdirectory(linux)
 endif()
 
-if
-add_subdirectory(example)
+if   (PRESET_BUILD_EXAMPLE)
+    add_subdirectory(example)
+endif()
