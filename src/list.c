@@ -17,6 +17,7 @@ bool_t
             po_mem* mem = null_t; if (par_count > 0) mem = va_arg(par, void*);
             if (!mem) mem = po_get_mem();
             if (!mem) return false_t    ;
+            par_list->mem = mem;
 
             if (!par_list->mem)                                 return false_t;
             if (!par_list->mem->on_new)                         return false_t;
