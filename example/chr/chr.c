@@ -72,7 +72,9 @@ po_file_ops chr_ops = po_make_file_ops (
     null_t   ,
     null_t   ,
     chr_read ,
+    null_t   ,
     chr_write,
+    null_t   ,
     null_t   ,
     null_t
 );

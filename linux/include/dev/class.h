@@ -4,6 +4,6 @@
 #include <obj.h>
 
 extern po_obj_trait *po_class_t;
-typedef struct       po_class { u8_t class[128]; } po_class;
+typedef struct       po_class { u8_t class[512]; } po_class;
 
 #endif

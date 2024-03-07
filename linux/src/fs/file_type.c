@@ -65,22 +65,29 @@ static ssize_t
 
             if (po_trait_of(file) != po_file_t) goto read_err;
             if (po_trait_of(read) != po_read_t) goto read_err;
-
             po_fut *fut = po_read_fut(read);
 
-            if (!file->type->ops->read)                  goto read_err;
-            if (!file->type->ops->read(file->obj, read)) goto read_err;
-            if (par->f_flags & O_NONBLOCK)                            {
-                po_del(fut);
-                return 0;
+            if (par->f_flags & O_NONBLOCK)                                       {
+                if (!file->type->ops->read_atomic)                  goto read_err;
+                if (!file->type->ops->read_atomic(file->obj, read)) goto read_err;
+
+                ssize_t ret = (ssize_t) po_fut_ret(fut);
+                po_del(read);
+                po_del(fut) ;
+                return ret  ;
             }
 
+            if   (!file->type->ops->read)                  goto read_err;
+            if   (!file->type->ops->read(file->obj, read)) goto read_err;
             while(po_fut_poll(fut) == po_fut_pend) schedule();
+
             ssize_t ret = (ssize_t) po_fut_ret(fut);
-            po_del(fut) ;
-            return ret  ;
+            po_del (read);
+            po_del (fut) ;
+            return  ret  ;
     read_err:
-            po_del   (fut);
+            po_del   (read);
+            po_del   (fut) ;
             return -EINVAL;
 }
 
@@ -88,25 +95,34 @@ static ssize_t
     po_file_do_write
         (struct file* par, __user const char* par_buf, size_t par_len, loff_t* par_off)      {
             po_write *write = po_make (po_write) from (3, par->private_data, par_buf, par_len);
-            po_file *file  = par->private_data;
+            po_file  *file  = par->private_data;
 
-            if (po_trait_of(write) != po_write_t) goto write_err;
             if (po_trait_of(file)  != po_file_t)  goto write_err;
+            if (po_trait_of(write) != po_write_t) goto write_err;
             po_fut *fut = po_write_fut(write);
 
-            if (!file->type->ops->write)                   goto write_err;
-            if (!file->type->ops->write(file->obj, write)) goto write_err;
-            if (par->f_flags & O_NONBLOCK)                               {
-                po_del(fut);
-                return 0;
+            if (par->f_flags & O_NONBLOCK)                                          {
+                if (!file->type->ops->write_atomic)                   goto write_err;
+                if (!file->type->ops->write_atomic(file->obj, write)) goto write_err;
+
+                ssize_t ret = (ssize_t) po_fut_ret(fut);
+                po_del(write);
+                po_del(fut)  ;
+                return ret   ;
             }
 
+
+            if   (!file->type->ops->write)                   goto write_err;
+            if   (!file->type->ops->write(file->obj, write)) goto write_err;
             while(po_fut_poll(fut) == po_fut_pend) schedule();
+
             ssize_t ret = (ssize_t) po_fut_ret(fut);
-            po_del(fut) ;
-            return ret  ;
+            po_del(write);
+            po_del(fut)  ;
+            return ret   ;
     write_err:
-            po_del   (fut);
+            po_del (write);
+            po_del (fut)  ;
             return -EINVAL;
 }
 
