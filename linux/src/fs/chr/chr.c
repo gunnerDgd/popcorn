@@ -29,6 +29,10 @@ bool_t
             if (po_trait_of(type->type) != po_file_type_t) return false_t;
             if (po_trait_of(name)       != po_str_t)       return false_t;
 
+            if (num == -1)      num = ida_simple_get(&type->ida, 0  , 0      , GFP_KERNEL);
+            else                num = ida_simple_get(&type->ida, num, num + 1, GFP_KERNEL);
+            if (num == -ENOSPC) return false_t;
+
             cdev_init (&par_dev->chr, &type->type->type);
             if (cdev_add(&par_dev->chr, type->maj + num, 1) < 0) return false_t;
             par_dev->dev = device_create                                       (
@@ -41,6 +45,7 @@ bool_t
 
             par_dev->class = (po_class*)    po_ref(class);
             par_dev->type  = (po_chr_type*) po_ref(type) ;
+            par_dev->num   = num;
             return true_t;
 }
 
@@ -52,9 +57,10 @@ bool_t
 
 void
     po_chr_del
-        (po_chr* par)                                  {
-            device_destroy(par->class->class, par->num);
-            cdev_del      (&par->chr);
+        (po_chr* par)                                     {
+            device_destroy   (par->class->class, par->num);
+            ida_simple_remove(&par->type->ida, par->num)  ;
+            cdev_del         (&par->chr);
             po_del (par->class);
             po_del (par->type) ;
 }

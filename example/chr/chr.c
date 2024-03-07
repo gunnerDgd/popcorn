@@ -94,11 +94,10 @@ bool_t
             if (!po_make_at(&par_chr->chr_type , po_chr_type)  from (2, &par_chr->name, &par_chr->file_type)) goto new_err;
             if (!po_make_at(&par_chr->cls      , po_class)     from (1, &par_chr->cls_name))                  goto new_err;
             bool_t res = po_make_at(&par_chr->chr, po_chr)     from (
-                4                 ,
+                3                 ,
                 &par_chr->cls     ,
                 &par_chr->chr_type,
-                &par_chr->name    ,
-                0ull
+                &par_chr->name
             );
 
             if (!res) goto new_err;

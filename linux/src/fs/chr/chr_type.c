@@ -28,6 +28,7 @@ bool_t
             if (po_trait_of (name) != po_str_t)       return false_t;
             if (maj >= shl(1, 12))                    return false_t;
             if (num >= shl(1, 20))                    return false_t;
+            ida_init(&par_chr->ida);
 
             if (alloc_chrdev_region(&par_chr->maj, 0, num, po_str_as_raw(name)) < 0) return false_t;
             par_chr->type = (po_file_type*) po_ref(type);
@@ -45,7 +46,8 @@ void
     po_chr_type_del
         (po_chr_type* par)                              {
             unregister_chrdev_region(par->maj, par->num);
-            po_del(par->type);
+            ida_destroy             (&par->ida);
+            po_del                  (par->type);
 }
 
 MODULE_LICENSE("GPL");

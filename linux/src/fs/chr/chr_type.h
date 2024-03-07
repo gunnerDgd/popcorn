@@ -13,6 +13,7 @@ extern po_obj_trait *po_chr_type_t;
 typedef struct       po_chr_type  {
     po_obj               head;
     struct po_file_type* type;
+    struct ida           ida ;
     dev_t                maj ;
     u64_t                num ;
 }   po_chr_type;
