@@ -5,6 +5,9 @@ add_kernel_source(popcorn-linux-fs
     chr/chr.h
     chr/chr.c
 
+    chr.h
+    chr.c
+
     control.h
     control.c
 

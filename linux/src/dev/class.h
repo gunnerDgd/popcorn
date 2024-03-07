@@ -3,14 +3,25 @@
 
 #include <obj.h>
 #include <str.h>
+#include <list.h>
 
 #include <linux/device.h>
 
-extern po_obj_trait *po_class_t;
-typedef struct       po_class  {
-    po_obj        head ;
-    struct class *class;
-    po_str        name ;
+struct po_dev;
+
+typedef struct po_class_ops               {
+    bool_t (*add)(po_obj*, struct po_dev*);
+    bool_t (*del)(po_obj*, struct po_dev*);
+}   po_class_ops;
+
+extern po_obj_trait *po_class_t ;
+typedef struct       po_class   {
+    po_obj                 head ;
+    struct class           class;
+    struct class_interface type ;
+    po_str                 name ;
+    po_class_ops          *ops  ;
+    po_obj                *obj  ;
 }   po_class;
 
 bool_t po_class_new  (po_class*, u32_t, va_list);

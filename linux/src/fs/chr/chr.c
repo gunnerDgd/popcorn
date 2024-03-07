@@ -33,10 +33,10 @@ bool_t
             else                num = ida_simple_get(&type->ida, num, num + 1, GFP_KERNEL);
             if (num == -ENOSPC) return false_t;
 
-            cdev_init (&par_dev->chr, &type->type->type);
+            cdev_init   (&par_dev->chr, &type->type->type);
             if (cdev_add(&par_dev->chr, type->maj + num, 1) < 0) return false_t;
             par_dev->dev = device_create                                       (
-                class->class      ,
+                &class->class     ,
                 null_t            ,
                 type->maj + num   ,
                 par_dev           ,
@@ -57,9 +57,9 @@ bool_t
 
 void
     po_chr_del
-        (po_chr* par)                                     {
-            device_destroy   (par->class->class, par->num);
-            ida_simple_remove(&par->type->ida, par->num)  ;
+        (po_chr* par)                                      {
+            device_destroy   (&par->class->class, par->num);
+            ida_simple_remove(&par->type->ida, par->num)   ;
             cdev_del         (&par->chr);
             po_del (par->class);
             po_del (par->type) ;

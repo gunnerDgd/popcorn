@@ -25,7 +25,7 @@ static int
             file->type = (po_file_type*) po_ref(type);
             file->file = par_file    ;
 
-            file->obj  = po_obj_new (null_t, type->trait, 1, type, file);
+            file->obj  = po_obj_new (null_t, type->trait, 2, type, file);
             if (!file->obj)       goto open_err;
             if (!type->ops->open)              {
                 par_file->private_data = file;
