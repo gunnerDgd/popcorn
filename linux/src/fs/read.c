@@ -40,7 +40,6 @@ void
         (po_read* par) {
 }
 
-
 void
     po_read_src
         (po_read* par, u8_t* par_buf, u64_t par_len)       {

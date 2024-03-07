@@ -40,6 +40,20 @@ void
         (po_write* par) {
 }
 
+void
+    po_write_buf
+        (po_write* par, u8_t* par_buf, u64_t par_len)  {
+            if (po_trait_of(par) != po_write_t)  return;
+            if (!par_buf)                        return;
+            if (!par_len)                        return;
+            if (par_len > par->len) par_len  = par->len;
+            copy_from_user                             (
+                par_buf   ,
+                par->write,
+                par_len
+            );
+}
+
 u64_t
     po_write_len
         (po_write* par)                                       {

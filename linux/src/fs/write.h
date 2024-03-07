@@ -23,6 +23,7 @@ bool_t  po_write_clone(po_write*, po_write*)     ;
 void    po_write_del  (po_write*)                ;
 
 void    po_write_dest (po_write*, u8_t*, u64_t);
+void    po_write_buf  (po_write*, u8_t*, u64_t);
 u64_t   po_write_len  (po_write*)              ;
 po_fut* po_write_fut  (po_write*)              ;
 
