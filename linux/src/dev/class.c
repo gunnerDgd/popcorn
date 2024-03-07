@@ -57,20 +57,23 @@ bool_t
             po_obj       *obj  = null_t; if (par_count > 2) obj  = va_arg(par, po_obj*)      ;
             if (po_trait_of (name) != po_str_t)                return false_t;
             if (!po_make_at (&par_cls->name, po_str) from (0)) return false_t;
-            if (!ops)                                          return false_t;
-            if (!ops->add)                                     return false_t;
-            if (!ops->del)                                     return false_t;
             po_str_push_back(&par_cls->name, name);
 
             par_cls->class.name = po_str_as_raw(&par_cls->name);
-            if (class_register(&par_cls->class))               {
-                po_del(&par_cls->name);
-                return false_t;
+            if (class_register(&par_cls->class)) goto new_err;
+            if (par_count == 1)                              {
+                par_cls->obj = po_ref(obj);
+                par_cls->ops = null_t     ;
+                return true_t;
             }
 
-            par_cls->type.add_dev        = po_class_do_add;
-            par_cls->type.remove_dev     = po_class_do_del;
-            par_cls->type.class          = &par_cls->class;
+            par_cls->type.add_dev    = po_class_do_add;
+            par_cls->type.remove_dev = po_class_do_del;
+            par_cls->type.class      = &par_cls->class;
+            if (!ops)      goto new_err;
+            if (!ops->add) goto new_err;
+            if (!ops->del) goto new_err;
+
             if (class_interface_register(&par_cls->type)) {
                 class_unregister(&par_cls->class);
                 po_del          (&par_cls->name) ;
@@ -80,6 +83,9 @@ bool_t
             par_cls->obj = po_ref(obj);
             par_cls->ops = ops        ;
             return true_t;
+    new_err:
+            po_del(&par_cls->name);
+            return false_t;
 }
 
 bool_t
