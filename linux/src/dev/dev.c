@@ -2,7 +2,32 @@
 #include "class.h"
 
 #include <bit.h>
+#include <ops.h>
 #include <linux/fs.h>
+
+po_obj*
+    po_dev_do_cast
+        (po_dev* par, po_obj_trait* par_trait)                                {
+            if (po_trait_of(par) != po_dev_t)                    return null_t;
+            if (po_trait_of(par->dev->driver_data) != par_trait) return null_t;
+            return par->dev->driver_data;
+}
+
+po_ops_cast po_dev_ops_cast = po_make_cast_ops (
+    po_dev_do_cast,
+    null_t        ,
+    null_t        ,
+    null_t        ,
+    null_t        ,
+    null_t        ,
+    null_t        ,
+    null_t        ,
+    null_t
+);
+
+po_obj_ops po_dev_ops     = {
+    .cast = &po_dev_ops_cast
+};
 
 po_obj_trait po_dev_trait = po_make_trait (
     po_dev_new    ,
@@ -10,7 +35,7 @@ po_obj_trait po_dev_trait = po_make_trait (
     po_dev_ref    ,
     po_dev_del    ,
     sizeof(po_dev),
-    null_t
+    &po_dev_ops
 );
 
 po_obj_trait *po_dev_t = &po_dev_trait;

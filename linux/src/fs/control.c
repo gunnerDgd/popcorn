@@ -17,7 +17,7 @@ bool_t
         (po_control* par_con, u32_t par_count, va_list par)                        {
             po_file *file = null_t; if (par_count > 0) file = va_arg(par, po_file*);
             u64_t    code = 0     ; if (par_count > 1) code = va_arg(par, u64_t)   ;
-            u64_t    arg  = 0     ; if (par_count > 2) arg  = va_arg(par, u64_t)   ;
+            any_t    arg  = 0     ; if (par_count > 2) arg  = va_arg(par, any_t)   ;
             if (po_trait_of(file) != po_file_t) return false_t;
 
             par_con->file = file;
@@ -38,7 +38,7 @@ void
 }
 
 void
-    po_control_ret
+    po_control_ready
         (po_control* par, u64_t par_ret)                      {
             if (po_trait_of(par)       != po_control_t) return;
             if (po_trait_of(par->file) != po_file_t)    return;
@@ -47,7 +47,7 @@ void
             par->stat = po_fut_ready;
 }
 
-u64_t
+any_t
     po_control_arg
         (po_control* par)                                        {
             if (po_trait_of(par)       != po_control_t) return -1;

@@ -21,11 +21,11 @@ bool_t
             if (po_trait_of(file) != po_file_t) return false_t;
             if (!write)                         return false_t;
             if (!len)                           return false_t;
-            par_write->stat  = po_fut_pend;
-            par_write->file  = file ;
-            par_write->write = write;
-            par_write->len   = len  ;
-            par_write->ret   = len  ;
+            par_write->stat = po_fut_pend;
+            par_write->file = file ;
+            par_write->buf  = write;
+            par_write->len  = len  ;
+            par_write->off  = 0    ;
             return true_t;
 }
 
@@ -40,18 +40,21 @@ void
         (po_write* par) {
 }
 
-void
+u8_t*
     po_write_buf
-        (po_write* par, u8_t* par_buf, u64_t par_len)  {
-            if (po_trait_of(par) != po_write_t)  return;
-            if (!par_buf)                        return;
-            if (!par_len)                        return;
-            if (par_len > par->len) par_len  = par->len;
-            copy_from_user                             (
-                par_buf   ,
-                par->write,
-                par_len
-            );
+        (po_write* par)                                            {
+            if (po_trait_of(par)       != po_write_t) return null_t;
+            if (po_trait_of(par->file) != po_file_t)  return null_t;
+            return par->buf;
+}
+
+void
+    po_write_err
+        (po_write* par, u64_t par_err)                      {
+            if (po_trait_of(par)       != po_write_t) return;
+            if (po_trait_of(par->file) != po_file_t)  return;
+            par->off  = par_err   ;
+            par->stat = po_fut_err;
 }
 
 u64_t
@@ -63,27 +66,29 @@ u64_t
 }
 
 void
-    po_write_dest
+    po_write_from
         (po_write* par, u8_t* par_buf, u64_t par_len)       {
             if (po_trait_of(par)       != po_write_t) return;
             if (po_trait_of(par->file) != po_file_t)  return;
-
-            if (par_len > par->ret) par_len = par->ret;
             if (par->stat != po_fut_pend) return;
             if (!par_buf)                 return;
             if (!par_len)                 return;
+            u64_t off = par->off      ;
+            u64_t len = par->len - off;
+            u8_t* buf = par->buf + off;
 
-            par->ret -= copy_from_user (par_buf, par->write, par_len);
-            if (par->ret == par->len)                                {
-                par->stat = po_fut_err;
-                return;
-            }
+            if (par_len > len) par_len = len;
+            u64_t ret = copy_from_user      (
+                par_buf,
+                buf    ,
+                len
+            );
 
-            par->stat = po_fut_ready;
+            par->off += (len - ret);
 }
 
 u64_t
-    po_write_poll
+    po_write_do_poll
         (po_write* par)                                                {
             if (po_trait_of(par)       != po_write_t) return po_fut_err;
             if (po_trait_of(par->file) != po_file_t)  return po_fut_err;
@@ -91,16 +96,16 @@ u64_t
 }
 
 u64_t
-    po_write_ret
+    po_write_do_ret
         (po_write* par)                                                {
             if (po_trait_of(par)       != po_write_t) return po_fut_err;
             if (po_trait_of(par->file) != po_file_t)  return po_fut_err;
-            return par->ret;
+            return par->off;
 }
 
 po_fut_ops po_write_fut_ops = po_make_fut_ops (
-        po_write_poll,
-        po_write_ret
+        po_write_do_poll,
+        po_write_do_ret
 );
 
 po_fut*
