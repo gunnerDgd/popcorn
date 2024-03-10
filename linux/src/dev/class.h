@@ -24,8 +24,12 @@ typedef struct       po_class   {
     po_obj                *obj  ;
 }   po_class;
 
-bool_t po_class_new  (po_class*, u32_t, va_list);
-bool_t po_class_clone(po_class*, po_class*)     ;
-void   po_class_del  (po_class*)                ;
+bool_t         po_class_new      (po_class*, u32_t, va_list);
+bool_t         po_class_clone    (po_class*, po_class*)     ;
+void           po_class_del      (po_class*)                ;
+
+struct po_dev* po_class_find_cstr(po_class*, cstr_t)            ;
+struct po_dev* po_class_find_raw (po_class*, const char*, u64_t);
+struct po_dev* po_class_find     (po_class*, po_str*)           ;
 
 #endif

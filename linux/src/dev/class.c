@@ -109,6 +109,48 @@ void
             po_del(par->obj)  ;
 }
 
+struct po_dev*
+    po_class_find_cstr
+        (po_class* par, cstr_t par_find)                     {
+            if (po_trait_of(par) != po_class_t) return null_t;
+            if (!par_find.str)                  return null_t;
+            if (!par_find.len)                  return null_t;
+            return po_class_find_raw                         (
+                par         ,
+                par_find.str,
+                par_find.len
+            );
+}
+
+struct po_dev*
+    po_class_find_raw
+        (po_class* par, const char* par_str, u64_t par_len)  {
+            if (po_trait_of(par) != po_class_t) return null_t;
+            if (!par_str)                       return null_t;
+            if (!par_len)                       return null_t;
+
+            struct device *dev = class_find_device_by_name(&par->class, par_str); if (IS_ERR(dev)) return null_t;
+            po_dev        *ret = po_new(po_dev)                                 ; if (!ret)        return null_t;
+            ret->head.trait = po_dev_t    ;
+            ret->head.mem   = po_get_mem();
+            ret->head.ref   = 1           ;
+
+            ret->dev = get_device(dev);
+            return ret;
+}
+
+struct po_dev*
+    po_class_find
+        (po_class* par, po_str* par_find)                         {
+            if (po_trait_of(par_find) != po_str_t)   return null_t;
+            if (po_trait_of(par)      != po_class_t) return null_t;
+            return po_class_find_raw                              (
+                par                    ,
+                po_str_as_raw(par_find),
+                po_str_len   (par_find)
+            );
+}
+
 #ifdef PO_PRESET_LINUX
 #include <linux/module.h>
 
