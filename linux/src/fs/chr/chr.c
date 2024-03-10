@@ -59,10 +59,10 @@ bool_t
 
 void
     po_chr_del
-        (po_chr* par)                                      {
-            device_destroy   (&par->class->class, par->num);
-            ida_simple_remove(&par->type->ida, par->num)   ;
-            cdev_del         (&par->chr);
+        (po_chr* par)                                                       {
+            device_destroy   (&par->class->class, par->type->maj + par->num);
+            ida_simple_remove(&par->type->ida   , par->num)                 ;
+            cdev_del         (&par->chr)                                    ;
             po_del (par->class);
             po_del (par->type) ;
 }

@@ -32,7 +32,7 @@ bool_t
             if (num >= shl(1, 20))                    return false_t;
             ida_init(&par_chr->ida);
 
-            if (alloc_chrdev_region(&par_chr->maj, 0, num, name.str) < 0) return false_t;
+            if (alloc_chrdev_region(&par_chr->maj, maj, num, name.str) < 0) return false_t;
             par_chr->type = (po_file_type*) po_ref(type);
             par_chr->num  = num;
             return true_t;
