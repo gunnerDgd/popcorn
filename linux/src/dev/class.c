@@ -136,6 +136,11 @@ struct po_dev*
             ret->head.ref   = 1           ;
 
             ret->dev = get_device(dev);
+            if (!ret->dev)            {
+                po_drop (ret);
+                return null_t;
+            }
+
             return ret;
 }
 

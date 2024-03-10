@@ -48,7 +48,7 @@ void
             u64_t off = par->off      ;
             u64_t len = par->len - off;
             u8_t* buf = par->buf + off;
-            par->off += po_buf_vec_copy_user(
+            par->off += po_buf_vec_copy_user (
                 par_buf,
                 buf    ,
                 len

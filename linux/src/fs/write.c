@@ -49,6 +49,15 @@ u8_t*
 }
 
 void
+    po_write_ready
+        (po_write* par)                                     {
+            if (po_trait_of(par)       != po_write_t) return;
+            if (po_trait_of(par->file) != po_file_t)  return;
+            if (par->stat != po_fut_pend)             return;
+            par->stat = po_fut_ready;
+}
+
+void
     po_write_err
         (po_write* par, u64_t par_err)                      {
             if (po_trait_of(par)       != po_write_t) return;
@@ -81,6 +90,7 @@ po_buf_vec*
             );
 
             if (po_trait_of(ret) != po_buf_vec_t) return null_t;
+            par->off = len;
             return ret;
 
 }
