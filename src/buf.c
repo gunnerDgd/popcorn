@@ -205,3 +205,14 @@ po_buf_vec*
             if (po_trait_of(ret) != po_buf_vec_t) return null_t;
             return ret;
 }
+
+po_obj_trait po_buf_trait = po_make_trait (
+    po_buf_new    ,
+    po_buf_clone  ,
+    null_t        ,
+    po_buf_del    ,
+    sizeof(po_buf),
+    null_t
+);
+
+po_obj_trait *po_buf_t = &po_buf_trait;

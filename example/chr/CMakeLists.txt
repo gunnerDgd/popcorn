@@ -16,6 +16,10 @@ kernel_feature_definition     (example-chr example-chr-kernel PRESET_ARCH_X86_64
 kernel_feature_definition     (example-chr example-chr-kernel PRESET_ARCH_BIT=64)
 kernel_feature_definition     (example-chr example-chr-kernel PRESET_LINUX)
 
+target_compile_definitions    (example-chr_src PRIVATE PRESET_ARCH_X86_64)
+target_compile_definitions    (example-chr_src PRIVATE PRESET_ARCH_BIT=64)
+target_compile_definitions    (example-chr_src PRIVATE PRESET_LINUX)
+
 kernel_feature_include        (example-chr example-chr-kernel ${CMAKE_SOURCE_DIR}/include)
 kernel_feature_include        (example-chr example-chr-kernel ${CMAKE_SOURCE_DIR}/linux/include)
 
