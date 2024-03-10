@@ -2,7 +2,7 @@
 #define __PO_FUT_H__
 
 #ifdef PRESET_LINUX
-#include "linux/fut.h"
+#include "linux/thd.h"
 #endif
 
 #endif

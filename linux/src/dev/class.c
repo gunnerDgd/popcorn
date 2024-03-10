@@ -38,6 +38,11 @@ void
             po_del(class);
 }
 
+struct class_interface po_class_do = {
+    .add_dev    = po_class_do_add,
+    .remove_dev = po_class_do_del
+};
+
 po_obj_trait po_class_trait = po_make_trait (
     po_class_new    ,
     po_class_clone  ,
@@ -51,25 +56,26 @@ po_obj_trait *po_class_t = &po_class_trait;
 
 bool_t
     po_class_new
-        (po_class* par_cls, u32_t par_count, va_list par)                                    {
-            po_str       *name = null_t; if (par_count > 0) name = va_arg(par, po_str*)      ;
-            po_class_ops *ops  = null_t; if (par_count > 1) ops  = va_arg(par, po_class_ops*);
-            po_obj       *obj  = null_t; if (par_count > 2) obj  = va_arg(par, po_obj*)      ;
-            if (po_trait_of (name) != po_str_t)                return false_t;
+        (po_class* par_cls, u32_t par_count, va_list par) {
+            cstr_t name = cstr_from_va(par);
+            if (!name.str)   return false_t;
+            if (!name.len)   return false_t;
+
+            po_class_ops *ops  = null_t; if (par_count > 2) ops  = va_arg(par, po_class_ops*);
+            po_obj       *obj  = null_t; if (par_count > 3) obj  = va_arg(par, po_obj*)      ;
             if (!po_make_at (&par_cls->name, po_str) from (0)) return false_t;
-            po_str_push_back(&par_cls->name, name);
+            po_str_push_back_cstr(&par_cls->name, name);
 
             par_cls->class.name = po_str_as_raw(&par_cls->name);
             if (class_register(&par_cls->class)) goto new_err;
-            if (par_count == 1)                              {
+            if (par_count == 2)                              {
                 par_cls->obj = po_ref(obj);
                 par_cls->ops = null_t     ;
                 return true_t;
             }
 
-            par_cls->type.add_dev    = po_class_do_add;
-            par_cls->type.remove_dev = po_class_do_del;
-            par_cls->type.class      = &par_cls->class;
+            par_cls->type       = po_class_do    ;
+            par_cls->type.class = &par_cls->class;
             if (!ops)      goto new_err;
             if (!ops->add) goto new_err;
             if (!ops->del) goto new_err;

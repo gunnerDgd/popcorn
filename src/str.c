@@ -101,7 +101,11 @@ void
         (po_str* par, po_str* par_push)                  {
             if (!par_push)                         return;
             if (po_trait_of(par_push) != po_str_t) return;
-            po_str_push_back_cstr(par, po_str_as_cstr(par_push));
+            po_str_push_back_raw                         (
+                par                    ,
+                po_str_as_raw(par_push),
+                po_str_len   (par_push)
+            );
 }
 
 void
@@ -120,11 +124,33 @@ void
 }
 
 void
+    po_str_push_back_raw
+        (po_str* par, const char* par_str, u64_t par_len) {
+            if (po_trait_of(par) != po_str_t) return;
+            if (!par_str)                     return;
+            if (!par_len)                     return;
+
+            if(par->size < (par->back + par_len + 1)) po_str_rsv_back(par, par_len + 1);
+            if(par->size < (par->back + par_len + 1)) return;
+
+            po_mem_copy(par->mem + par->back, par_str, par_len);
+            par->back += par_len;
+            par->len  += par_len;
+}
+
+
+
+
+void
     po_str_push_front
         (po_str* par, po_str* par_push)                  {
             if (po_trait_of(par_push) != po_str_t) return;
             if (po_trait_of(par)      != po_str_t) return;
-            po_str_push_front_cstr(par, po_str_as_cstr(par_push));
+            po_str_push_front_raw                        (
+                par                    ,
+                po_str_as_raw(par_push),
+                po_str_len   (par_push)
+            );
 }
 
 void
@@ -133,17 +159,27 @@ void
             if (!par_cstr.len)                return; u64_t       len = par_cstr.len;
             if (!par_cstr.str)                return; const char *str = par_cstr.str;
             if (po_trait_of(par) != po_str_t) return;
+            po_str_push_front_raw(par, str, len);
+}
 
-            if (len < par->front) po_str_rsv_front(par, len);
-            if (len < par->front) return;
+void
+    po_str_push_front_raw
+        (po_str* par, const char* par_str, u64_t par_len) {
+            if (po_trait_of(par) != po_str_t) return;
+            if (!par_str)                     return;
+            if (!par_len)                     return;
 
-			par->front -= len;
-			par->len   += len;
+            if (par_len < par->front) po_str_rsv_front(par, par_len);
+            if (par_len < par->front) return;
+
+            par->front -= par_len;
+            par->len   += par_len;
             po_mem_copy              (
-                par->mem + par->front, 
-                str                  ,
-                len
+                par->mem + par->front,
+                par_str              ,
+                par_len
             );
+
 }
 
 void
@@ -151,10 +187,11 @@ void
         (po_str* par, u64_t par_off, po_str* par_push)   {
             if (!par_push)                         return;
             if (po_trait_of(par_push) != po_str_t) return;
-            po_str_push_cstr                             (
+            po_str_push_raw                              (
                 par                    ,
                 par_off                ,
-                po_str_as_cstr(par_push)
+                po_str_as_raw(par_push),
+                po_str_len   (par_push)
             );
 }
 
@@ -164,25 +201,34 @@ void
             if (!par_cstr.len)                return; u64_t       len = par_cstr.len;
             if (!par_cstr.str)                return; const char *str = par_cstr.str;
             if (po_trait_of(par) != po_str_t) return; u64_t       off = par->front  ;
-            
-            if (par_off > par->len) return po_str_push_back_cstr (par, par_cstr);
-			if (par_off == 0)       return po_str_push_front_cstr(par, par_cstr);
-			u8_t *ret = po_mem_new(par->res, len + par->size + 1);
+            po_str_push_raw(par, off, str, len);
+}
+
+void
+    po_str_push_raw
+        (po_str* par, u64_t par_off, const char* par_str, u64_t par_len)            {
+            if (po_trait_of(par) != po_str_t) return;
+            if (!par_str)                     return;
+            if (!par_len)                     return;
+
+            if (par_off > par->len) return po_str_push_back_raw (par, par_str, par_len);
+            if (par_off == 0)       return po_str_push_front_raw(par, par_str, par_len);
+            u8_t *ret = po_mem_new(par->res, par_len + par->size + 1);
             u8_t *old = par->mem;
             if  (!ret) return;
 
-			par->size = par_cstr.len + par->size + 1;
+            par->size = par_len + par->size + 1;
             par->mem  = ret                         ;
 
-            po_mem_set (ret, 0x00     , par->size)         ;
-            po_mem_copy(ret, old + off, par_off)           ; ret += par_off; off += par_off   ;
-            po_mem_copy(ret, str      , len)               ; ret += len    ; off += par->front;
-            po_mem_copy(ret, old + off, par->len - par_off);
+            po_mem_set (ret, 0x00         , par->size)         ;
+            po_mem_copy(ret, old + par_off, par_off)           ; ret += par_off; par_off += par_off   ;
+            po_mem_copy(ret, par_str      , par_len)           ; ret += par_len; par_off += par->front;
+            po_mem_copy(ret, old + par_off, par->len - par_off);
 
             po_mem_del (par->res, old);
-			par->len  += len;
-            par->front =   0;
-            par->back  = len;
+            par->len  += par_len;
+            par->front =       0;
+            par->back  = par_len;
 }
 
 void
@@ -264,14 +310,24 @@ u64_t
             if (!par_cstr.str)                return -1; const char *str = par_cstr.str;
             if (!par_cstr.len)                return -1; u64_t       len = par_cstr.len;
             if (po_trait_of(par) != po_str_t) return -1; u64_t       off = par_off     ;
-            if (par->len < off)         return -1;
-            if (par->len < (off + len)) return -1;
+            return po_str_find_raw(par, off, str, len);
+}
 
-            u8_t* find = par->mem + par->front + off             ;
-            u64_t ran  = par->len - par_off                      ;
-            u64_t ret  = po_mem_find(find, (void*) str, ran, len);
+u64_t
+    po_str_find_raw
+        (po_str* par, u64_t par_off, const char* par_str, u64_t par_len) {
+            if (po_trait_of(par) != po_str_t) return -1;
+            if (!par_str)                     return -1;
+            if (!par_len)                     return -1;
+
+            if (par->len <  par_off)            return -1;
+            if (par->len < (par_off + par_len)) return -1;
+
+            u8_t* find = par->mem + par->front + par_off                 ;
+            u64_t ran  = par->len - par_off                              ;
+            u64_t ret  = po_mem_find(find, (void*) par_str, ran, par_len);
             if (ret == -1) return -1;
-			return off + ret;
+            return par_off + ret;
 }
 
 bool_t
@@ -344,7 +400,11 @@ bool_t
         (po_str* par, po_str* par_cmp)                          {
             if (po_trait_of(par_cmp) != po_str_t) return false_t;
             if (po_trait_of(par)     != po_str_t) return false_t;
-            return po_str_starts_cstr(par, po_str_as_cstr(par_cmp));
+            return po_str_starts_raw                            (
+                par                   ,
+                po_str_as_raw(par_cmp),
+                po_str_len   (par_cmp)
+            );
 }
 
 bool_t
@@ -353,12 +413,25 @@ bool_t
             if (!par_cstr.str)                return false_t; const char* str = par_cstr.str;
             if (!par_cstr.len)                return false_t; u64_t       len = par_cstr.len;
             if (po_trait_of(par) != po_str_t) return false_t;
-            if (len > po_str_len(par))        return false_t;
-			return po_mem_eq			                    (
-                par->mem + par->front, 
-                str				     ,
+            return po_str_starts_raw                        (
+                par,
+                str,
                 len
-			);
+            );
+}
+
+bool_t
+    po_str_starts_raw
+        (po_str* par, const char* par_str, u64_t par_len)   {
+            if (po_trait_of(par) != po_str_t) return false_t;
+            if (!par_str)                     return false_t;
+            if (!par_len)                     return false_t;
+            if (par_len > po_str_len(par))    return false_t;
+            return po_mem_eq			                    (
+                    par->mem + par->front,
+                    par_str				 ,
+                    par_len
+           );
 }
 
 bool_t
@@ -366,7 +439,11 @@ bool_t
         (po_str* par, po_str* par_cmp)                          {
             if (po_trait_of(par_cmp) != po_str_t) return false_t;
             if (po_trait_of(par)     != po_str_t) return false_t;
-            return po_str_ends_cstr(par, po_str_as_cstr(par_cmp));
+            return po_str_ends_raw                              (
+                par                   ,
+                po_str_as_raw(par_cmp),
+                po_str_len   (par_cmp)
+                );
 }
 
 bool_t
@@ -375,12 +452,25 @@ bool_t
             if (!par_cstr.str)                return false_t; const char* str = par_cstr.str;
             if (!par_cstr.len)                return false_t; u64_t       len = par_cstr.len;
             if (po_trait_of(par) != po_str_t) return false_t;
-            if (len > par->len)               return false_t;
-			return po_mem_eq					            (
-				par->mem + par->back - len,
-                str                       ,
+            return po_str_ends_raw                          (
+                par,
+                str,
                 len
-			);
+            );
+}
+
+bool_t
+    po_str_ends_raw
+        (po_str* par, const char* par_str, u64_t par_len)   {
+            if (po_trait_of(par) != po_str_t) return false_t;
+            if (!par_str)                     return false_t;
+            if (!par_len)                     return false_t;
+            if (par_len > par->len)           return false_t;
+            return po_mem_eq					            (
+                    par->mem + par->back - par_len,
+                    par_str                       ,
+                    par_len
+            );
 }
 
 bool_t

@@ -19,19 +19,19 @@ typedef struct       po_write  {
     u64_t           off ;
 }   po_write;
 
-bool_t      po_write_new             (po_write*, u32_t, va_list);
-bool_t      po_write_clone           (po_write*, po_write*)     ;
-void        po_write_del             (po_write*)                ;
+bool_t      po_write_new       (po_write*, u32_t, va_list);
+bool_t      po_write_clone     (po_write*, po_write*)     ;
+void        po_write_del       (po_write*)                ;
 
-po_buf_vec* po_write_to_buf_vec      (po_write*)                ;
-po_buf_vec* po_write_to_buf          (po_write*, po_buf*)       ;
-void        po_write_to              (po_write*, u8_t*, u64_t)  ;
+po_buf_vec* po_write_to_buf_vec(po_write*)                ;
+po_buf_vec* po_write_to_buf    (po_write*, po_buf*)       ;
+void        po_write_to        (po_write*, u8_t*, u64_t)  ;
 
-void        po_write_ready           (po_write*)                ;
-void        po_write_err             (po_write*, u64_t)         ;
+void        po_write_ready     (po_write*)                ;
+void        po_write_err       (po_write*, u64_t)         ;
 
-u8_t*       po_write_buf             (po_write*)                ;
-u64_t       po_write_len             (po_write*)                ;
-po_fut*     po_write_fut             (po_write*)                ;
+u8_t*       po_write_buf       (po_write*)                ;
+u64_t       po_write_len       (po_write*)                ;
+po_fut*     po_write_fut       (po_write*)                ;
 
 #endif

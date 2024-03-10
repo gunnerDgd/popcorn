@@ -34,10 +34,13 @@ typedef u64_t u256_t[4];
 typedef i64_t i256_t[4];
 
 #define        cstr(par) { .str = par, .len = sizeof(par) - 1 }
-typedef struct cstr_t    { 
+typedef struct cstr_t    {
     const char *str;
-    u64_t       len; 
+    u64_t       len;
 }   cstr_t;
+
+#define cstr_as_va(par)     par.str, par.len
+#define cstr_from_va(par) { .str = va_arg(par, void*), .len = va_arg(par, u64_t) }
 
 #if PRESET_ARCH_BIT == 64
 typedef u64_t reg_t;
