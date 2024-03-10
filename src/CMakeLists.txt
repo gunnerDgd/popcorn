@@ -11,6 +11,9 @@ add_kernel_source     (popcorn-core
         fut.h
         fut.c
 
+        buf.h
+        buf.c
+
         mem.h
         mem.c
 

@@ -65,8 +65,42 @@ u64_t
             return par->len;
 }
 
+po_buf_vec*
+    po_write_to_buf_vec
+        (po_write* par)                                            {
+            if (po_trait_of(par)       != po_write_t) return null_t;
+            if (po_trait_of(par->file) != po_file_t)  return null_t;
+            u64_t off = par->off      ;
+            u64_t len = par->len - off;
+            u8_t* buf = par->buf + off;
+
+            po_buf_vec* ret = po_buf_vec_from_user (
+                buf  ,
+                len  ,
+                null_t
+            );
+
+            if (po_trait_of(ret) != po_buf_vec_t) return null_t;
+            return ret;
+
+}
+
+po_buf_vec*
+    po_write_to_buf
+        (po_write* par, po_buf* par_buf)                           {
+            if (po_trait_of(par)       != po_write_t) return null_t;
+            if (po_trait_of(par_buf)   != po_buf_t)   return null_t;
+            if (po_trait_of(par->file) != po_file_t)  return null_t;
+            po_buf_vec* ret = po_write_to_buf_vec(par);
+
+            if (po_trait_of(ret) != po_buf_vec_t) return false_t;
+            po_buf_push(par_buf, ret);
+            po_del     (ret)         ;
+            return      ret          ;
+}
+
 void
-    po_write_from
+    po_write_to
         (po_write* par, u8_t* par_buf, u64_t par_len)       {
             if (po_trait_of(par)       != po_write_t) return;
             if (po_trait_of(par->file) != po_file_t)  return;

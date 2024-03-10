@@ -16,6 +16,7 @@ add_library(popcorn-include STATIC
     task.h
     print.h
     type.h
+    buf.h
 
     ops/arith.h
     ops/bit.h
