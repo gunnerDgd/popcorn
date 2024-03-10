@@ -36,7 +36,8 @@ static int
             par_file->private_data = file;
             return 0;
     open_err:
-            po_del(file)  ;
+            po_del(file->type);
+            po_del(file)      ;
             return -EINVAL;
 }
 
