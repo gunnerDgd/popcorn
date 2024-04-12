@@ -1,10 +1,9 @@
 #ifndef __PO_DEV_CLASS_H__
 #define __PO_DEV_CLASS_H__
 
-#include <obj.h>
-#include <str.h>
-#include <list.h>
+#include <core.h>
 
+#include <collections.h>
 #include <linux/device.h>
 
 struct po_dev;
@@ -28,8 +27,7 @@ bool_t         po_class_new      (po_class*, u32_t, va_list);
 bool_t         po_class_clone    (po_class*, po_class*)     ;
 void           po_class_del      (po_class*)                ;
 
-struct po_dev* po_class_find_cstr(po_class*, cstr_t)            ;
-struct po_dev* po_class_find_raw (po_class*, const char*, u64_t);
+struct po_dev* po_class_find_cstr(po_class*, const char*, u64_t);
 struct po_dev* po_class_find     (po_class*, po_str*)           ;
 
 #endif

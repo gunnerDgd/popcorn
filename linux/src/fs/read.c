@@ -41,36 +41,6 @@ void
 }
 
 void
-    po_read_from_buf_vec
-        (po_read* par, po_buf_vec* par_buf)                 {
-            if (po_trait_of(par_buf) != po_buf_vec_t) return;
-            if (po_trait_of(par)     != po_buf_t)     return;
-            u64_t off = par->off      ;
-            u64_t len = par->len - off;
-            u8_t* buf = par->buf + off;
-            par->off += po_buf_vec_copy_user (
-                par_buf,
-                buf    ,
-                len
-            );
-}
-
-void
-    po_read_from_buf
-        (po_read* par, po_buf* par_buf)                     {
-            if (po_trait_of(par_buf) != po_buf_vec_t) return;
-            if (po_trait_of(par)     != po_buf_t)     return;
-            u64_t off = par->off      ;
-            u64_t len = par->len - off;
-            u8_t* buf = par->buf + off;
-            par->off += po_buf_copy_user (
-                par_buf,
-                buf    ,
-                len
-            );
-}
-
-void
     po_read_from
         (po_read* par, u8_t* par_buf, u64_t par_len)       {
             if (po_trait_of(par)       != po_read_t) return;

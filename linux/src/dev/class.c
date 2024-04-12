@@ -5,15 +5,11 @@ int
     po_class_do_add
         (struct device *par)                                                                                            {
             po_class *class = container_of(par->class, po_class, class); if (po_trait_of(class) != po_class_t) return -1;
-            po_dev   *dev   = po_new      (po_dev)                     ; if (!dev)                             return -1;
-            dev->head.trait = po_dev_t    ;
-            dev->head.ref   = 1           ;
-            dev->head.mem   = po_get_mem();
-            dev->dev        = par         ;
-
+            po_dev   *dev   = po_make     (po_dev) from (0)            ; if (po_trait_of(dev)   != po_dev_t)   return -1;
+            dev->dev        = get_device(par);
             if (!class->ops->add(class->obj, dev)) {
-                po_drop(dev);
-                return    -1;
+                po_del(dev);
+                return   -1;
             }
 
             po_ref(class);
@@ -24,17 +20,12 @@ void
     po_class_do_del
         (struct device *par)                                                                                         {
             po_class *class = container_of(par->class, po_class, class); if (po_trait_of(class) != po_class_t) return;
-            po_dev   *dev   = po_new      (po_dev)                     ; if (!dev)                             return;
-            dev->head.trait = po_dev_t    ;
-            dev->head.ref   = 1           ;
-            dev->head.mem   = po_get_mem();
-            dev->dev        = par         ;
-
+            po_dev   *dev   = po_make     (po_dev) from (0)            ; if (po_trait_of(dev)   != po_dev_t)   return;
+            dev->dev        = get_device(par);
             if (!class->ops->add(class->obj, dev)) {
-                po_drop(dev);
+                po_del(dev);
                 return;
             }
-
             po_del(class);
 }
 
@@ -56,17 +47,15 @@ po_obj_trait *po_class_t = &po_class_trait;
 
 bool_t
     po_class_new
-        (po_class* par_cls, u32_t par_count, va_list par) {
-            cstr_t name = cstr_from_va(par);
-            if (!name.str)   return false_t;
-            if (!name.len)   return false_t;
-
-            po_class_ops *ops  = null_t; if (par_count > 2) ops  = va_arg(par, po_class_ops*);
-            po_obj       *obj  = null_t; if (par_count > 3) obj  = va_arg(par, po_obj*)      ;
+        (po_class* par_cls, u32_t par_count, va_list par)                                    {
+            po_str       *name = null_t; if (par_count > 0) name = va_arg(par, po_str*)      ;
+            po_class_ops *ops  = null_t; if (par_count > 1) ops  = va_arg(par, po_class_ops*);
+            po_obj       *obj  = null_t; if (par_count > 2) obj  = va_arg(par, po_obj*)      ;
+            if (po_trait_of(name) != po_str_t)                 return false_t;
             if (!po_make_at (&par_cls->name, po_str) from (0)) return false_t;
-            po_str_push_back_cstr(&par_cls->name, name);
+            po_str_push_back(&par_cls->name, name);
 
-            par_cls->class.name = po_str_as_raw(&par_cls->name);
+            par_cls->class.name = po_str_ptr(&par_cls->name);
             if (class_register(&par_cls->class)) goto new_err;
             if (par_count == 2)                              {
                 par_cls->obj = po_ref(obj);
@@ -111,33 +100,16 @@ void
 
 struct po_dev*
     po_class_find_cstr
-        (po_class* par, cstr_t par_find)                     {
-            if (po_trait_of(par) != po_class_t) return null_t;
-            if (!par_find.str)                  return null_t;
-            if (!par_find.len)                  return null_t;
-            return po_class_find_raw                         (
-                par         ,
-                par_find.str,
-                par_find.len
-            );
-}
-
-struct po_dev*
-    po_class_find_raw
         (po_class* par, const char* par_str, u64_t par_len)  {
             if (po_trait_of(par) != po_class_t) return null_t;
             if (!par_str)                       return null_t;
             if (!par_len)                       return null_t;
 
             struct device *dev = class_find_device_by_name(&par->class, par_str); if (IS_ERR(dev)) return null_t;
-            po_dev        *ret = po_new(po_dev)                                 ; if (!ret)        return null_t;
-            ret->head.trait = po_dev_t    ;
-            ret->head.mem   = po_get_mem();
-            ret->head.ref   = 1           ;
-
+            po_dev        *ret = po_make (po_dev) from (0)                      ; if (!ret)        return null_t;
             ret->dev = get_device(dev);
             if (!ret->dev)            {
-                po_drop (ret);
+                po_del  (ret);
                 return null_t;
             }
 
@@ -149,10 +121,10 @@ struct po_dev*
         (po_class* par, po_str* par_find)                         {
             if (po_trait_of(par_find) != po_str_t)   return null_t;
             if (po_trait_of(par)      != po_class_t) return null_t;
-            return po_class_find_raw                              (
-                par                    ,
-                po_str_as_raw(par_find),
-                po_str_len   (par_find)
+            return po_class_find_cstr                             (
+                par                 ,
+                po_str_ptr(par_find),
+                po_str_len(par_find)
             );
 }
 

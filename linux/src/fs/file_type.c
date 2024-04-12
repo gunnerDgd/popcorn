@@ -1,7 +1,7 @@
 #include "file_type.h"
 #include "file.h"
 
-#include "../sync/not.h"
+#include "../thread/not.h"
 #include "control.h"
 #include "write.h"
 #include "read.h"
@@ -17,13 +17,9 @@ static int
             if (!type->trait) return -EINVAL;
             if (!type->ops)   return -EINVAL;
 
-            po_file* file = po_new(po_file); if (!file) return -ENOMEM;
-            file->head.trait = po_file_t   ;
-            file->head.mem   = po_get_mem();
-            file->head.ref   = 1           ;
-
-            file->type = (po_file_type*) po_ref(type);
-            file->file = par_file    ;
+            po_file* file = po_make(po_file) from (0)   ; if (!file) return -ENOMEM;
+            file->type    = (po_file_type*) po_ref(type);
+            file->file    = par_file;
 
             file->obj  = po_obj_new (null_t, type->trait, 2, type, file);
             if (!file->obj)       goto open_err;

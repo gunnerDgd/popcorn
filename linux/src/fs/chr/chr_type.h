@@ -1,10 +1,8 @@
 #ifndef __PO_FS_CHR_CHR_TYPE_H__
 #define __PO_FS_CHR_CHR_TYPE_H__
 
-#include <obj.h>
-#include <str.h>
-#include <set.h>
-
+#include <core.h>
+#include <collections.h>
 #include <linux/cdev.h>
 #include <linux/fs.h>
 

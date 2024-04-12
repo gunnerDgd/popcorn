@@ -7,8 +7,6 @@
 bool_t
     ModInit(po_obj* par_mod, u32_t par_count, va_list par) {
         po_info("Hello World !!");
-        cstr_t  name  = cstr("block")          ;
-        po_com* class = po_com_class_cstr(name);
         return true_t;
 }
 

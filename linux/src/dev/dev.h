@@ -1,8 +1,8 @@
 #ifndef __PO_DEV_DEV_H__
 #define __PO_DEV_DEV_H__
 
-#include <obj.h>
-#include <str.h>
+#include <core.h>
+#include <collections.h>
 #include <linux/device.h>
 
 struct po_class;
@@ -14,7 +14,6 @@ typedef struct       po_dev  {
 
 bool_t po_dev_new  (po_dev*, u32_t, va_list);
 bool_t po_dev_clone(po_dev*, po_dev*)       ;
-bool_t po_dev_ref  (po_dev*)                ;
 void   po_dev_del  (po_dev*)                ;
 
 #endif

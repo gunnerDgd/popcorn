@@ -1,7 +1,8 @@
 #ifndef __PO_FS_FILE_TYPE_H__
 #define __PO_FS_FILE_TYPE_H__
 
-#include <obj.h>
+#include <core.h>
+#include <collections.h>
 #include <linux/fs.h>
 
 struct po_control;

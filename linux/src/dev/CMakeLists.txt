@@ -7,4 +7,4 @@ add_kernel_source(popcorn-linux-dev
 )
 
 target_include_directories(popcorn-linux-dev PRIVATE ../../../include)
-target_include_directories(popcorn-linux-dev PRIVATE ${PRESET_KERNEL_HEADER})
+target_include_directories(popcorn-linux-dev PRIVATE /lib/modules/${CMAKE_HOST_SYSTEM_VERSION}/build/include)

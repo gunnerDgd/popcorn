@@ -1,7 +1,8 @@
 #ifndef __PO_FS_FILE_H__
 #define __PO_FS_FILE_H__
 
-#include <obj.h>
+#include <core.h>
+#include <collections.h>
 
 struct po_file_type;
 
@@ -15,7 +16,6 @@ typedef struct       po_file  {
 
 bool_t po_file_new  (po_file*, u32_t, va_list);
 bool_t po_file_clone(po_file*, po_file*)      ;
-bool_t po_file_ref  (po_file*)                ;
 void   po_file_del  (po_file*)                ;
 
 #endif

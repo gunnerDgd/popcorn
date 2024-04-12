@@ -1,9 +1,8 @@
 #ifndef __PO_FS_CHR_CHR_H__
 #define __PO_FS_CHR_CHR_H__
 
-#include <obj.h>
-#include <str.h>
-
+#include <core.h>
+#include <collections.h>
 #include <linux/cdev.h>
 
 struct po_class;

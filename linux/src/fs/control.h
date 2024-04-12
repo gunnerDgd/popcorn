@@ -1,8 +1,8 @@
 #ifndef __PO_DEV_CHR_CON_H__
 #define __PO_DEV_CHR_CON_H__
 
-#include <obj.h>
-#include <fut.h>
+#include <core.h>
+#include <collections.h>
 
 struct po_chr_dev;
 

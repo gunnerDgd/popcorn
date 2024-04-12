@@ -19,17 +19,15 @@ po_obj_trait *po_chr_t = &po_chr_trait;
 
 bool_t
     po_chr_new
-        (po_chr* par_dev, u32_t par_count, va_list par) {
-            cstr_t name = cstr_from_va(par);
-            if (!name.str) return false_t;
-            if (!name.len) return false_t;
-
-            po_class     *class = null_t; if (par_count > 2) class = va_arg(par, po_class*)   ;
-            po_chr_type  *type  = null_t; if (par_count > 3) type  = va_arg(par, po_chr_type*);
-            dev_t         num   = -1    ; if (par_count > 4) num   = va_arg(par, dev_t)       ;
-            if (po_trait_of(class)      != po_class_t)     return false_t;
+        (po_chr* par_dev, u32_t par_count, va_list par)                                      {
+            po_str      *name  = null_t; if (par_count > 0) name  = va_arg(par, po_str*)     ;
+            po_class    *class = null_t; if (par_count > 1) class = va_arg(par, po_class*)   ;
+            po_chr_type *type  = null_t; if (par_count > 2) type  = va_arg(par, po_chr_type*);
+            dev_t        num   = -1    ; if (par_count > 3) num   = va_arg(par, dev_t)       ;
             if (po_trait_of(type)       != po_chr_type_t)  return false_t;
             if (po_trait_of(type->type) != po_file_type_t) return false_t;
+            if (po_trait_of(name)       != po_str_t)       return false_t;
+            if (po_trait_of(class)      != po_class_t)     return false_t;
 
             if (num == -1)      num = ida_simple_get(&type->ida, 0  , 0      , GFP_KERNEL);
             else                num = ida_simple_get(&type->ida, num, num + 1, GFP_KERNEL);
@@ -42,7 +40,7 @@ bool_t
                 null_t         ,
                 type->maj + num,
                 par_dev        ,
-                name.str
+                po_str_ptr(name)
             );
 
             par_dev->class = (po_class*)    po_ref(class);

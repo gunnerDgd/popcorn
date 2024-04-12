@@ -1,9 +1,7 @@
 #ifndef __PO_FS_CHR_CHR_H__
 #define __PO_FS_CHR_CHR_H__
 
-#include <obj.h>
-#include <str.h>
-
+#include <core.h>
 #include <linux/cdev.h>
 
 extern po_obj_trait *po_chr_t;

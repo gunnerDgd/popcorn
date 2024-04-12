@@ -1,0 +1,60 @@
+if (UNIX AND NOT APPLE)
+    add_kernel_source(popcorn-core
+        ../core.h
+        ../core.c
+
+        linux/atom.c
+        linux/bit.c
+        linux/print.c
+        linux/mod.c
+
+        type.h
+        bit.h
+        atom.h
+        print.h
+
+        fut.h
+        fut.c
+
+        mem.h
+        mem.c
+
+        obj.h
+        obj.c
+
+        box.h
+        box.c
+
+        endian.h
+        endian.c
+
+        ops.h
+        ops/arith.h
+        ops/arith.c
+
+        ops/cast.h
+        ops/cast.c
+
+        ops/bit.h
+        ops/bit.c
+
+        ops/cmp.h
+        ops/cmp.c
+
+        ops/logical.h
+        ops/logical.c
+
+        sync/spsc.h
+        sync/spsc.c
+
+        sync/spmc.h
+        sync/spmc.c
+
+        sync/mpsc.h
+        sync/mpsc.c
+
+        sync/mpmc.h
+        sync/mpmc.c
+    )
+    target_include_directories(popcorn-core PRIVATE /lib/modules/${CMAKE_HOST_SYSTEM_VERSION}/build/include)
+endif ()

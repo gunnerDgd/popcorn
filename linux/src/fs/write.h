@@ -1,10 +1,8 @@
 #ifndef __PO_FS_WRITE_H__
 #define __PO_FS_WRITE_H__
 
-#include <obj.h>
-#include <fut.h>
-#include <buf.h>
-
+#include <core.h>
+#include <collections.h>
 #include <linux/uaccess.h>
 
 struct po_chr_dev;
@@ -23,10 +21,7 @@ bool_t      po_write_new       (po_write*, u32_t, va_list);
 bool_t      po_write_clone     (po_write*, po_write*)     ;
 void        po_write_del       (po_write*)                ;
 
-po_buf_vec* po_write_to_buf_vec(po_write*)                ;
-po_buf_vec* po_write_to_buf    (po_write*, po_buf*)       ;
 void        po_write_to        (po_write*, u8_t*, u64_t)  ;
-
 void        po_write_ready     (po_write*)                ;
 void        po_write_err       (po_write*, u64_t)         ;
 

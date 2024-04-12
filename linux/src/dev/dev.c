@@ -1,8 +1,6 @@
 #include "dev.h"
 #include "class.h"
 
-#include <bit.h>
-#include <ops.h>
 #include <linux/fs.h>
 
 po_obj*
@@ -32,7 +30,7 @@ po_obj_ops po_dev_ops     = {
 po_obj_trait po_dev_trait = po_make_trait (
     po_dev_new    ,
     po_dev_clone  ,
-    po_dev_ref    ,
+    null_t        ,
     po_dev_del    ,
     sizeof(po_dev),
     &po_dev_ops
@@ -40,7 +38,12 @@ po_obj_trait po_dev_trait = po_make_trait (
 
 po_obj_trait *po_dev_t = &po_dev_trait;
 
-bool_t po_dev_new  (po_dev* par_dev, u32_t par_count, va_list par) { return false_t; }
-bool_t po_dev_clone(po_dev* par, po_dev* par_dev)                  { return false_t; }
-bool_t po_dev_ref  (po_dev* par)                                   { return false_t; }
-void   po_dev_del  (po_dev* par)                                   { put_device(par->dev); }
+bool_t
+    po_dev_new
+        (po_dev* par_dev, u32_t par_count, va_list par) {
+            par_dev->dev = null_t;
+            return true_t;
+}
+
+bool_t po_dev_clone(po_dev* par, po_dev* par_dev) { return false_t; }
+void   po_dev_del  (po_dev* par)                  { put_device(par->dev); }

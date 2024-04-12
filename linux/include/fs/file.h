@@ -1,7 +1,7 @@
 #ifndef __PO_FS_FILE_H__
 #define __PO_FS_FILE_H__
 
-#include <obj.h>
+#include <core.h>
 
 struct po_file_type;
 

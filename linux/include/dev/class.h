@@ -1,8 +1,7 @@
 #ifndef __PO_DEV_CLASS_H__
 #define __PO_DEV_CLASS_H__
 
-#include <obj.h>
-#include <str.h>
+#include <core.h>
 
 struct po_dev;
 typedef struct po_class_ops               {

@@ -1,10 +1,5 @@
 project    (popcorn-linux-include)
 add_library(popcorn-linux-include STATIC
-    com/com.h
-    com/dev.h
-    com/class.h
-    com/bus.h
-
     dev/class.h
     dev/dev.h
 
@@ -17,10 +12,9 @@ add_library(popcorn-linux-include STATIC
     fs/file_type.h
     fs/file.h
 
-    sync/not.h
-    sync/work.h
-    sync/mtx.h
+    thread/not.h
+    thread/work.h
 )
 
-set_target_properties     (popcorn-linux-include PROPERTIES LINKER_LANGUAGE C)
 target_include_directories(popcorn-linux-include PRIVATE ../../include)
+set_target_properties     (popcorn-linux-include PROPERTIES LINKER_LANGUAGE C)
