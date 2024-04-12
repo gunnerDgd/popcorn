@@ -1,8 +1,11 @@
-//
-// Created by enbay on 4/12/24.
-//
+#ifndef __PO_COLLECTIONS_H__
+#define __PO_COLLECTIONS_H__
 
-#ifndef POPCORN_COLLECTIONS_H
-#define POPCORN_COLLECTIONS_H
+#include "collections/str.h"
+#include "collections/set.h"
+#include "collections/list.h"
+#include "collections/map.h"
+#include "collections/node.h"
+#include "collections/seq.h"
 
-#endif //POPCORN_COLLECTIONS_H
+#endif
