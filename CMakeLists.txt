@@ -1,15 +1,12 @@
 cmake_minimum_required(VERSION 3.12)
 project(popcorn)
 
-if     (NOT EXISTS ${CMAKE_SOURCE_DIR}/lib/klever)
+if   (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
     if    (NOT EXISTS ${CMAKE_SOURCE_DIR}/lib)
         file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
     endif ()
     execute_process(COMMAND git clone https://github.com/gunnerDgd/klever WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
-endif()
-
-if   (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
-    include (${CMAKE_SOURCE_DIR}/lib/klever/klever.cmake)
+    include        (${CMAKE_SOURCE_DIR}/lib/klever/klever.cmake)
 endif()
 
 add_kernel_module    (popcorn)
