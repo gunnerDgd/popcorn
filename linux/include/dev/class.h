@@ -12,8 +12,7 @@ typedef struct po_class_ops               {
 extern po_obj_trait *po_class_t;
 typedef struct       po_class { u8_t class[512]; } po_class;
 
-struct po_dev* po_class_find_cstr(po_class*, cstr_t)            ;
-struct po_dev* po_class_find_raw (po_class*, const char*, u64_t);
+struct po_dev* po_class_find_cstr(po_class*, const char*, u64_t);
 struct po_dev* po_class_find     (po_class*, po_str*)           ;
 
 #endif
