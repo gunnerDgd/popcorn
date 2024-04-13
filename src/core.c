@@ -46,6 +46,11 @@ po_mem*
             return  ret;
 }
 
+#include <linux/module.h>
+MODULE_LICENSE("GPL");
+EXPORT_SYMBOL(po_get_mem);
+EXPORT_SYMBOL(po_set_mem);
+
 po_obj_trait po_core_trait = po_make_trait (
     po_core_new           ,
     po_core_clone         ,

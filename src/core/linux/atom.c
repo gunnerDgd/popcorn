@@ -17,6 +17,16 @@ u32_t po_xchg32     (u32_t* par, u32_t par_new)                { return atomic_x
 u32_t po_lock_cas32 (u32_t* par, u32_t par_old, u32_t par_new) { return atomic_cmpxchg((atomic_t*) par, par_old, par_new); }
 u32_t po_lock_xchg32(u32_t* par, u32_t par_new)                { return atomic_xchg   ((atomic_t*) par, par_new); }
 
+EXPORT_SYMBOL(po_lock_add32);
+EXPORT_SYMBOL(po_lock_sub32);
+EXPORT_SYMBOL(po_lock_inc32);
+EXPORT_SYMBOL(po_lock_dec32);
+
+EXPORT_SYMBOL(po_cas32);
+EXPORT_SYMBOL(po_xchg32);
+EXPORT_SYMBOL(po_lock_cas32);
+EXPORT_SYMBOL(po_lock_xchg32);
+
 #endif
 
 #if PRESET_ARCH_BIT >= 64
@@ -30,6 +40,16 @@ u64_t po_xchg64     (u64_t* par, u64_t par_new)                { return atomic64
 
 u64_t po_lock_cas64 (u64_t* par, u64_t par_old, u64_t par_new) { return atomic64_cmpxchg((atomic64_t*) par, par_old, par_new); }
 u64_t po_lock_xchg64(u64_t* par, u64_t par_new)                { return atomic64_xchg   ((atomic64_t*) par, par_new); }
+
+EXPORT_SYMBOL(po_lock_add64);
+EXPORT_SYMBOL(po_lock_sub64);
+EXPORT_SYMBOL(po_lock_inc64);
+EXPORT_SYMBOL(po_lock_dec64);
+
+EXPORT_SYMBOL(po_cas64);
+EXPORT_SYMBOL(po_xchg64);
+EXPORT_SYMBOL(po_lock_cas64);
+EXPORT_SYMBOL(po_lock_xchg64);
 
 #endif
 
@@ -141,5 +161,15 @@ u64_t
 
             return ret_dec;
 }
+
+EXPORT_SYMBOL(po_lock_cas_inc32);
+EXPORT_SYMBOL(po_lock_cas_inc64);
+EXPORT_SYMBOL(po_cas_inc32);
+EXPORT_SYMBOL(po_cas_inc64);
+
+EXPORT_SYMBOL(po_lock_cas_dec32);
+EXPORT_SYMBOL(po_lock_cas_dec64);
+EXPORT_SYMBOL(po_cas_dec32);
+EXPORT_SYMBOL(po_cas_dec64);
 
 #endif

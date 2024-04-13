@@ -178,4 +178,19 @@ u64_t
 #ifdef PRESET_LINUX
 #include <linux/module.h>
 MODULE_LICENSE("GPL");
+
+EXPORT_SYMBOL(po_obj_new);
+EXPORT_SYMBOL(po_obj_new_va);
+
+EXPORT_SYMBOL(po_obj_new_at);
+EXPORT_SYMBOL(po_obj_new_at_va);
+
+EXPORT_SYMBOL(po_obj_clone);
+EXPORT_SYMBOL(po_obj_clone_at);
+
+EXPORT_SYMBOL(po_obj_ref);
+EXPORT_SYMBOL(po_obj_del);
+
+EXPORT_SYMBOL(po_obj_get_trait);
+EXPORT_SYMBOL(po_obj_use_count);
 #endif

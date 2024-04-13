@@ -303,3 +303,36 @@ const char*
             if (po_trait_of(par) != po_str_t) return null_t;
             return po_seq_ptr(&par->str);
 }
+
+#ifdef PRESET_LINUX
+#include <linux/module.h>
+
+MODULE_LICENSE("GPL");
+
+EXPORT_SYMBOL(po_str_prep_front);
+EXPORT_SYMBOL(po_str_prep_back);
+EXPORT_SYMBOL(po_str_push_front_cstr);
+EXPORT_SYMBOL(po_str_push_front);
+EXPORT_SYMBOL(po_str_push_back_cstr);
+EXPORT_SYMBOL(po_str_push_back);
+EXPORT_SYMBOL(po_str_push);
+EXPORT_SYMBOL(po_str_pop_front);
+EXPORT_SYMBOL(po_str_pop_back);
+EXPORT_SYMBOL(po_str_pop);
+EXPORT_SYMBOL(po_str_find);
+EXPORT_SYMBOL(po_str_find_cstr);
+EXPORT_SYMBOL(po_str_eq_cstr);
+EXPORT_SYMBOL(po_str_eq);
+EXPORT_SYMBOL(po_str_lt_cstr);
+EXPORT_SYMBOL(po_str_lt);
+EXPORT_SYMBOL(po_str_gt_cstr);
+EXPORT_SYMBOL(po_str_gt);
+EXPORT_SYMBOL(po_str_begin_cstr);
+EXPORT_SYMBOL(po_str_begin);
+EXPORT_SYMBOL(po_str_end_cstr);
+EXPORT_SYMBOL(po_str_end);
+EXPORT_SYMBOL(po_str_empty);
+EXPORT_SYMBOL(po_str_len);
+EXPORT_SYMBOL(po_str_ptr);
+EXPORT_SYMBOL(po_str_t);
+#endif

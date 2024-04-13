@@ -121,3 +121,13 @@ po_fut*
                 par
             );
 }
+
+#include <linux/module.h>
+
+MODULE_LICENSE("GPL");
+EXPORT_SYMBOL(po_read_from);
+EXPORT_SYMBOL(po_read_err);
+EXPORT_SYMBOL(po_read_ready);
+EXPORT_SYMBOL(po_read_len);
+EXPORT_SYMBOL(po_read_fut);
+EXPORT_SYMBOL(po_read_t);

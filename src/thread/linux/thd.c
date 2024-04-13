@@ -90,3 +90,9 @@ po_fut*
                 par
             );
 }
+
+#include <linux/module.h>
+
+MODULE_LICENSE("GPL");
+EXPORT_SYMBOL(po_thd_fut);
+EXPORT_SYMBOL(po_thd_t);

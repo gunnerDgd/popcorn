@@ -26,20 +26,20 @@ typedef struct po_obj_trait                              {
 
 typedef struct po_obj { u8_t po_obj[64]; } po_obj;
 
-po_obj* po_obj_new      (struct po_mem*, po_obj_trait*, u32_t, ...)    ;
-po_obj* po_obj_new_va   (struct po_mem*, po_obj_trait*, u32_t, va_list);
+extern po_obj* po_obj_new      (struct po_mem*, po_obj_trait*, u32_t, ...)    ;
+extern po_obj* po_obj_new_va   (struct po_mem*, po_obj_trait*, u32_t, va_list);
 
-bool_t  po_obj_new_at   (po_obj*, po_obj_trait*, u32_t, ...)    ;
-bool_t  po_obj_new_at_va(po_obj*, po_obj_trait*, u32_t, va_list);
+extern bool_t  po_obj_new_at   (po_obj*, po_obj_trait*, u32_t, ...)    ;
+extern bool_t  po_obj_new_at_va(po_obj*, po_obj_trait*, u32_t, va_list);
 
-po_obj* po_obj_clone    (po_obj*)         ;
-bool_t  po_obj_clone_at (po_obj*, po_obj*);
+extern po_obj* po_obj_clone    (po_obj*)         ;
+extern bool_t  po_obj_clone_at (po_obj*, po_obj*);
 
-po_obj* po_obj_ref      (po_obj*);
-u64_t   po_obj_del		(po_obj*);
+extern po_obj* po_obj_ref      (po_obj*);
+extern u64_t   po_obj_del		(po_obj*);
 
-po_obj_trait* po_obj_get_trait(po_obj*);
-u64_t         po_obj_use_count(po_obj*);
+extern po_obj_trait* po_obj_get_trait(po_obj*);
+extern u64_t         po_obj_use_count(po_obj*);
 
 #ifndef __cplusplus
 #define po_make(par_type)           (par_type*)po_obj_new      (null_t          , ((po_obj_trait*)(par_type##_t)),

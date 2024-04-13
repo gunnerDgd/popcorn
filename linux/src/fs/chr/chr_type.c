@@ -50,3 +50,4 @@ void
 }
 
 MODULE_LICENSE("GPL");
+EXPORT_SYMBOL(po_chr_type_t);

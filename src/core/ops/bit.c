@@ -92,4 +92,12 @@ struct po_obj*
 #ifdef PRESET_LINUX
 #include <linux/module.h>
 MODULE_LICENSE("GPL");
+
+EXPORT_SYMBOL(po_op_and);
+EXPORT_SYMBOL(po_op_and_eq);
+EXPORT_SYMBOL(po_op_or);
+EXPORT_SYMBOL(po_op_or_eq);
+EXPORT_SYMBOL(po_op_xor);
+EXPORT_SYMBOL(po_op_xor_eq);
+EXPORT_SYMBOL(po_op_not);
 #endif

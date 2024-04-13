@@ -143,4 +143,8 @@ void
 #ifdef PRESET_LINUX
 #include <linux/module.h>
 MODULE_LICENSE("GPL");
+
+EXPORT_SYMBOL(po_set_acq);
+EXPORT_SYMBOL(po_set_rel);
+EXPORT_SYMBOL(po_set_t);
 #endif

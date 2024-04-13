@@ -11,6 +11,7 @@ endif()
 
 add_kernel_module    (popcorn)
 kernel_module_include(popcorn ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
 if     (KLEVER_ARCH STREQUAL "x86_64")
     add_compile_definitions(PRESET_ARCH_X86_64)
     add_compile_definitions(PRESET_ARCH_BIT=64)
@@ -21,26 +22,13 @@ if     (KLEVER_ARCH STREQUAL "x86_64")
     )
 endif()
 
-add_subdirectory(include)
-add_subdirectory(src)
-
 if   (UNIX AND NOT APPLE)
     add_compile_definitions(PRESET_LINUX)
     add_subdirectory       (linux)
 endif()
 
-if   (DEFINED PO_TARGET_KERNEL_MAJOR AND DEFINED PO_TARGET_KERNEL_MINOR)
-    add_kernel              (popcorn-kernel ${PO_TARGET_KERNEL_MAJOR} ${PO_TARGET_KERNEL_MINOR})
-    kernel_build            (popcorn-kernel)
-    kernel_module_build     (popcorn popcorn-kernel)
-
-    kernel_module_include   (popcorn /usr/src/${CMAKE_HOST_SYSTEM_VERSION}/include)
-    kernel_module_include   (popcorn /usr/src/kernels/${CMAKE_HOST_SYSTEM_VERSION}/include)
-else ()
-    kernel_module_build_host(popcorn)
-    kernel_module_include   (popcorn /usr/src/${CMAKE_HOST_SYSTEM_VERSION}/include)
-    kernel_module_include   (popcorn /usr/src/kernels/${CMAKE_HOST_SYSTEM_VERSION}/include)
-endif()
+add_subdirectory(include)
+add_subdirectory(src)
 
 if   (PRESET_BUILD_EXAMPLE)
     add_subdirectory(example)

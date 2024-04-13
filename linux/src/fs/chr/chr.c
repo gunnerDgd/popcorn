@@ -64,3 +64,5 @@ void
             po_del (par->class);
             po_del (par->type) ;
 }
+
+EXPORT_SYMBOL(po_chr_t);

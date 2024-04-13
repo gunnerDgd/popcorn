@@ -67,4 +67,7 @@ u64_t
 #ifdef PRESET_LINUX
 #include <linux/module.h>
 MODULE_LICENSE("GPL");
+EXPORT_SYMBOL(po_box_ptr);
+EXPORT_SYMBOL(po_box_size);
+EXPORT_SYMBOL(po_box_t);
 #endif

@@ -106,4 +106,11 @@ po_node*
 #ifdef PRESET_LINUX
 #include <linux/module.h>
 MODULE_LICENSE("GPL");
+EXPORT_SYMBOL(po_map_begin);
+EXPORT_SYMBOL(po_map_end);
+EXPORT_SYMBOL(po_map_empty);
+EXPORT_SYMBOL(po_map_find);
+EXPORT_SYMBOL(po_map_push);
+EXPORT_SYMBOL(po_map_pop);
+EXPORT_SYMBOL(po_map_t);
 #endif

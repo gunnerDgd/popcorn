@@ -64,4 +64,8 @@ void*
 #include <linux/module.h>
 MODULE_LICENSE("GPL");
 
+EXPORT_SYMBOL(po_fut_poll);
+EXPORT_SYMBOL(po_fut_ret);
+EXPORT_SYMBOL(po_fut_t);
+
 #endif

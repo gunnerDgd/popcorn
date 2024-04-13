@@ -217,3 +217,8 @@ void
     po_file_type_del
         (po_file_type* par) {
 }
+
+#include <linux/module.h>
+
+MODULE_LICENSE("GPL");
+EXPORT_SYMBOL(po_file_type_t);

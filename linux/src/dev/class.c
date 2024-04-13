@@ -128,8 +128,8 @@ struct po_dev*
             );
 }
 
-#ifdef PO_PRESET_LINUX
 #include <linux/module.h>
-
 MODULE_LICENSE("GPL");
-#endif
+EXPORT_SYMBOL(po_class_find_cstr);
+EXPORT_SYMBOL(po_class_find);
+EXPORT_SYMBOL(po_class_t);

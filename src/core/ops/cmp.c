@@ -95,4 +95,11 @@ bool_t
 #ifdef PRESET_LINUX
 #include <linux/module.h>
 MODULE_LICENSE("GPL");
+EXPORT_SYMBOL(po_op_gt);
+EXPORT_SYMBOL(po_op_gt_eq);
+EXPORT_SYMBOL(po_op_lt);
+EXPORT_SYMBOL(po_op_lt_eq);
+EXPORT_SYMBOL(po_op_eq);
+EXPORT_SYMBOL(po_op_ne);
+EXPORT_SYMBOL(po_op_ord);
 #endif

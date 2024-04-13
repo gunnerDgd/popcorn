@@ -132,4 +132,15 @@ struct po_obj*
 #ifdef PRESET_LINUX
 #include <linux/module.h>
 MODULE_LICENSE("GPL");
+
+EXPORT_SYMBOL(po_op_mod_eq);
+EXPORT_SYMBOL(po_op_mod);
+EXPORT_SYMBOL(po_op_add);
+EXPORT_SYMBOL(po_op_add_eq);
+EXPORT_SYMBOL(po_op_sub);
+EXPORT_SYMBOL(po_op_sub_eq);
+EXPORT_SYMBOL(po_op_mul);
+EXPORT_SYMBOL(po_op_mul_eq);
+EXPORT_SYMBOL(po_op_div);
+EXPORT_SYMBOL(po_op_div_eq);
 #endif

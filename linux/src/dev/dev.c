@@ -47,3 +47,8 @@ bool_t
 
 bool_t po_dev_clone(po_dev* par, po_dev* par_dev) { return false_t; }
 void   po_dev_del  (po_dev* par)                  { put_device(par->dev); }
+
+#include <linux/module.h>
+
+MODULE_LICENSE("GPL");
+EXPORT_SYMBOL(po_dev_t);

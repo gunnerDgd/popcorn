@@ -159,3 +159,21 @@ bool_t
             if (par_cmp_len < par_len) return false_t;
             return true_t;
 }
+
+#ifdef PRESET_LINUX
+#include <linux/module.h>
+MODULE_LICENSE("GPL");
+
+EXPORT_SYMBOL(po_mem_eq);
+EXPORT_SYMBOL(po_mem_gt);
+EXPORT_SYMBOL(po_mem_lt);
+
+EXPORT_SYMBOL(po_mem_set);
+EXPORT_SYMBOL(po_mem_copy);
+EXPORT_SYMBOL(po_mem_move);
+EXPORT_SYMBOL(po_mem_find);
+
+EXPORT_SYMBOL(po_mem_acq);
+EXPORT_SYMBOL(po_mem_rel);
+EXPORT_SYMBOL(po_mem_t);
+#endif

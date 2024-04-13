@@ -95,4 +95,13 @@ u64_t
 #ifdef PRESET_LINUX
 #include <linux/module.h>
 MODULE_LICENSE("GPL");
+EXPORT_SYMBOL(po_as_i8);
+EXPORT_SYMBOL(po_as_i16);
+EXPORT_SYMBOL(po_as_i32);
+EXPORT_SYMBOL(po_as_i64);
+EXPORT_SYMBOL(po_as_u8);
+EXPORT_SYMBOL(po_as_u16);
+EXPORT_SYMBOL(po_as_u32);
+EXPORT_SYMBOL(po_as_u64);
+EXPORT_SYMBOL(po_as);
 #endif

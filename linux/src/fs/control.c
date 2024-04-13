@@ -97,3 +97,10 @@ po_fut*
                 par
             );
 }
+
+#include <linux/module.h>
+EXPORT_SYMBOL(po_control_ready);
+EXPORT_SYMBOL(po_control_code);
+EXPORT_SYMBOL(po_control_arg);
+EXPORT_SYMBOL(po_control_fut);
+EXPORT_SYMBOL(po_control_t);

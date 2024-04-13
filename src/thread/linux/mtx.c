@@ -50,3 +50,10 @@ void
             if (po_trait_of(par) != po_mtx_t) return;
             mutex_unlock(&par->mtx);
 }
+
+#include <linux/module.h>
+
+MODULE_LICENSE("GPL");
+EXPORT_SYMBOL(po_mtx_unlock);
+EXPORT_SYMBOL(po_mtx_lock);
+EXPORT_SYMBOL(po_mtx_t);

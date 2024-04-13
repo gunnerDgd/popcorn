@@ -239,3 +239,19 @@ void
             par->end -= par_len;
             po_mem_set(par->ptr + par->end, 0x00, par_len);
 }
+
+#ifdef PRESET_LINUX
+#include <linux/module.h>
+
+EXPORT_SYMBOL(po_seq_push_front);
+EXPORT_SYMBOL(po_seq_push_back);
+EXPORT_SYMBOL(po_seq_push);
+EXPORT_SYMBOL(po_seq_pop_front);
+EXPORT_SYMBOL(po_seq_pop_back);
+EXPORT_SYMBOL(po_seq_pop);
+EXPORT_SYMBOL(po_seq_free_front);
+EXPORT_SYMBOL(po_seq_free_back);
+EXPORT_SYMBOL(po_seq_prep_front);
+EXPORT_SYMBOL(po_seq_prep_back);
+EXPORT_SYMBOL(po_seq_t);
+#endif
