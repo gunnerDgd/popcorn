@@ -1,8 +1,13 @@
-//
-// Created by enbay on 4/12/24.
-//
+#ifndef _PO_LINUX_FS_H__
+#define _PO_LINUX_FS_H__
 
-#ifndef POPCORN_FS_H
-#define POPCORN_FS_H
+#include "fs/control.h"
+#include "fs/file.h"
+#include "fs/file_type.h"
+#include "fs/read.h"
+#include "fs/write.h"
 
-#endif //POPCORN_FS_H
+#include "fs/chr/chr_type.h"
+#include "fs/chr/chr.h"
+
+#endif

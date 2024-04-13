@@ -1,8 +1,7 @@
-//
-// Created by enbay on 4/12/24.
-//
+#ifndef _PO_LINUX_DEV_H__
+#define _PO_LINUX_DEV_H__
 
-#ifndef POPCORN_DEV_H
-#define POPCORN_DEV_H
+#include "dev/class.h"
+#include "dev/dev.h"
 
-#endif //POPCORN_DEV_H
+#endif
