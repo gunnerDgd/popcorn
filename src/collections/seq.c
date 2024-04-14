@@ -14,10 +14,11 @@ po_obj_trait *po_seq_t = &po_seq_trait;
 bool_t
     po_seq_new
         (po_seq* par_seq, u32_t par_count, va_list par)                      {
-            u64_t   len = 16    ; if (par_count > 0) len = va_arg(par, u64_t);
+            u64_t   len = 16ull ; if (par_count > 0) len = va_arg(par, u64_t);
             po_mem* mem = null_t; if (par_count > 1) mem = va_arg(par, void*);
             if (po_trait_of(mem) != po_mem_t) mem = po_get_mem();
             if (po_trait_of(mem) != po_mem_t) return false_t ;
+            if (len < 16) len = 16;
 
             par_seq->ptr   = po_mem_acq (mem, null_t, len);
             par_seq->begin = 0  ;

@@ -18,7 +18,7 @@ bool_t
             if (po_trait_of(mem) != po_mem_t) mem = po_get_mem();
             if (po_trait_of(mem) != po_mem_t) return false_t;
 
-            if (!po_make_at(&par_str->str, po_seq) from (1, mem)) return false_t;
+            if (!po_make_at(&par_str->str, po_seq) from (2, 16, mem)) return false_t;
             return true_t;
 }
 

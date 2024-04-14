@@ -7,6 +7,7 @@ if (UNIX AND NOT APPLE)
         linux/bit.c
         linux/print.c
         linux/mod.c
+        linux/mem.c
 
         type.h
         bit.h
