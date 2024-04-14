@@ -22,7 +22,7 @@ void*
     po_heap_do_acq
         (any_t par, void* par_acq, u64_t par_len) {
             if (par != &po_heap_do) return null_t;
-            return kmalloc(par_len, GFP_KERNEL);
+            return kzalloc(roundup_pow_of_two(par_len), GFP_KERNEL);
 }
 
 void

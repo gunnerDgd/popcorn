@@ -51,13 +51,12 @@ bool_t
             po_str       *name = null_t; if (par_count > 0) name = va_arg(par, po_str*)      ;
             po_class_ops *ops  = null_t; if (par_count > 1) ops  = va_arg(par, po_class_ops*);
             po_obj       *obj  = null_t; if (par_count > 2) obj  = va_arg(par, po_obj*)      ;
-            if (po_trait_of(name) != po_str_t)                 return false_t;
-            if (!po_make_at (&par_cls->name, po_str) from (0)) return false_t;
-            po_str_push_back(&par_cls->name, name);
+            if (po_trait_of (name) != po_str_t)     return false_t;
+            if (!po_clone_at(&par_cls->name, name)) return false_t;
 
             par_cls->class.name = po_str_ptr(&par_cls->name);
             if (class_register(&par_cls->class)) goto new_err;
-            if (par_count == 2)                              {
+            if (par_count < 3)                               {
                 par_cls->obj = po_ref(obj);
                 par_cls->ops = null_t     ;
                 return true_t;

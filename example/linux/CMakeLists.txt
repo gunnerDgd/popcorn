@@ -1,6 +1,7 @@
-add_kernel   (example 6 7.1)
-kernel_build (example)
-kernel_config(example)
+add_kernel          (example 6 7.1)
+kernel_build        (example)
+kernel_build_bzimage(example)
+kernel_config       (example)
 
 add_kernel_image  (example-image)
 kernel_image_build(example-image)
