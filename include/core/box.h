@@ -1,8 +1,12 @@
-//
-// Created by enbay on 4/12/24.
-//
+#ifndef __PO_CORE_BOX_H__
+#define __PO_CORE_BOX_H__
 
-#ifndef POPCORN_BOX_H
-#define POPCORN_BOX_H
+#include "obj.h"
 
-#endif //POPCORN_BOX_H
+extern po_obj_trait* po_box_t;
+typedef struct       po_box  { u8_t po_box[64]; } po_box;
+
+void*  po_box_ptr  (po_box*);
+u64_t  po_box_size (po_box*);
+
+#endif

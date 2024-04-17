@@ -74,11 +74,11 @@ bool_t
 po_obj*	   
 	po_obj_clone   
 		(po_obj* par)									               {
-			po_obj		  *arg  = par		; if (!arg)   return null_t;
+			po_obj		 *arg   = par		; if (!arg)   return null_t;
 			po_obj_trait *trait = arg->trait; if (!trait) return null_t;
-			po_mem		  *mem  = par->mem  ;
-			if (!mem)					   	  mem = po_get_mem();
-			if (!mem)						  return null_t;
+			po_mem		 *mem   = par->mem  ;
+			if (po_trait_of(mem) != po_mem_t) mem = po_get_mem();
+			if (po_trait_of(mem) != po_mem_t) return null_t;
 			if (trait->size < sizeof(po_obj)) return null_t;
 			if (!arg->ref)					  return null_t;
 

@@ -20,8 +20,8 @@ bool_t
     po_chr_type_new
         (po_chr_type* par_chr, u32_t par_count, va_list par)                         {
             po_str *name = null_t    ; if (par_count > 0) name = va_arg(par, po_str*);
-            u64_t   maj  = 0         ; if (par_count > 2) maj  = va_arg(par, u64_t)  ;
-            u64_t   num  = shl(1, 19); if (par_count > 3) num  = va_arg(par, u64_t)  ;
+            u64_t   maj  = 0         ; if (par_count > 1) maj  = va_arg(par, u64_t)  ;
+            u64_t   num  = shl(1, 19); if (par_count > 2) num  = va_arg(par, u64_t)  ;
             if (po_trait_of (name) != po_str_t) return false_t;
             if (maj >= shl(1, 12))              return false_t;
             if (num >= shl(1, 20))              return false_t;
