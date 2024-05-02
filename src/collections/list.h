@@ -17,6 +17,9 @@ void     po_list_del       (po_list*)                ;
 po_node* po_list_push_front(po_list*, po_obj*)       ;
 po_node* po_list_push_back (po_list*, po_obj*)       ;
 
+po_node* po_list_move_front(po_list*, po_obj*)       ;
+po_node* po_list_move_back (po_list*, po_obj*)       ;
+
 po_obj*  po_list_pop_front (po_list*)                ;
 po_obj*  po_list_pop_back  (po_list*)                ;
 

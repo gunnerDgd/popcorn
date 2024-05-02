@@ -6,6 +6,9 @@
 extern po_obj_trait* po_list_t;
 typedef struct       po_list  { u8_t po_list[256]; } po_list;
 
+po_node* po_list_move_front(po_list*, po_obj*)       ;
+po_node* po_list_move_back (po_list*, po_obj*)       ;
+
 po_node* po_list_push_front(po_list*, po_obj*)       ;
 po_node* po_list_push_back (po_list*, po_obj*)       ;
 

@@ -93,6 +93,48 @@ po_node*
             return  ret;
 }
 
+po_node*
+    po_list_move_back
+        (po_list* par, po_obj* par_push)                    {
+            if (!par_push)                     return null_t;
+            if (!par)                          return null_t;
+            if (po_trait_of(par) != po_list_t) return null_t;
+            po_node *ret = (po_node*) po_obj_new            (
+                par->mem,
+                po_node_t,
+                1        ,
+                par_push
+            );
+
+            if (po_trait_of(ret) != po_node_t) return null_t;
+            po_del (par_push);
+
+            po_prev_as(ret, po_prev(&par->end));
+            po_prev_as(&par->end, ret)         ;
+            return  ret;
+}
+
+po_node*
+    po_list_move_front
+        (po_list* par, po_obj* par_push)                    {
+            if (!par_push)                     return null_t;
+            if (!par)                          return null_t;
+            if (po_trait_of(par) != po_list_t) return null_t;
+            po_node *ret = (po_node*) po_obj_new            (
+                par->mem ,
+                po_node_t,
+                1        ,
+                par_push
+            );
+
+            if (po_trait_of(ret) != po_node_t) return null_t;
+            po_del (par_push);
+
+            po_next_as(ret, po_next(&par->begin));
+            po_next_as(&par->begin, ret)         ;
+            return  ret;
+}
+
 po_obj*
     po_list_pop_front
         (po_list* par)                                      {
