@@ -20,6 +20,7 @@ bool_t
             any_t    arg  = 0     ; if (par_count > 2) arg  = va_arg(par, any_t)   ;
             if (po_trait_of(file) != po_file_t) return false_t;
 
+            par_con->stat = po_fut_pend;
             par_con->file = file;
             par_con->code = code;
             par_con->arg  = arg ;
