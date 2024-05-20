@@ -49,10 +49,10 @@ void
 
 any_t
     po_control_arg
-        (po_control* par)                                        {
-            if (po_trait_of(par)       != po_control_t) return -1;
-            if (po_trait_of(par->file) != po_file_t)    return -1;
-            if (par->stat != po_fut_pend)               return -1;
+        (po_control* par)                                            {
+            if (po_trait_of(par)       != po_control_t) return null_t;
+            if (po_trait_of(par->file) != po_file_t)    return null_t;
+            if (par->stat != po_fut_pend)               return null_t;
             return par->arg;
 }
 
