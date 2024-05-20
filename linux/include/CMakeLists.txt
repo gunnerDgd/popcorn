@@ -16,7 +16,6 @@ add_library(popcorn-linux-include STATIC
 
     thread/not.h
     thread/work.h
-    thread.h
 )
 
 target_include_directories(popcorn-linux-include PRIVATE ../../include)
