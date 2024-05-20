@@ -78,3 +78,6 @@ po_fut*
                 par
             );
 }
+
+EXPORT_SYMBOL(po_work_fut);
+EXPORT_SYMBOL(po_work_t);
