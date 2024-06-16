@@ -1,5 +1,5 @@
-if (UNIX AND NOT APPLE)
-    add_kernel_source(popcorn-core
+if (PRESET_LINUX)
+    ksrc(popcorn-core
         ../core.h
         ../core.c
 
@@ -7,6 +7,9 @@ if (UNIX AND NOT APPLE)
         linux/bit.c
         linux/print.c
         linux/mod.c
+
+        linux/heap_atomic.c
+        linux/heap.c
         linux/mem.c
 
         type.h
@@ -57,5 +60,4 @@ if (UNIX AND NOT APPLE)
         sync/mpmc.h
         sync/mpmc.c
     )
-    target_include_directories(popcorn-core PRIVATE /lib/modules/${CMAKE_HOST_SYSTEM_VERSION}/build/include)
-endif ()
+endif()

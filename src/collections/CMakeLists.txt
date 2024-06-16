@@ -1,4 +1,4 @@
-add_kernel_source(popcorn-collections
+ksrc(popcorn-collections
     ../collections.h
 
     list.h
@@ -13,11 +13,9 @@ add_kernel_source(popcorn-collections
     seq.h
     seq.c
 
-    set.h
-    set.c
+    bma.h
+    bma.c
 
     str.h
     str.c
 )
-
-target_include_directories(popcorn-collections PRIVATE /lib/modules/${CMAKE_HOST_SYSTEM_VERSION}/build/include)

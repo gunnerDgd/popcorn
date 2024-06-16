@@ -1,30 +1,8 @@
 cmake_minimum_required(VERSION 3.12)
 project(popcorn)
 
-if   (${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
-    if    (NOT EXISTS ${CMAKE_SOURCE_DIR}/lib)
-        file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
-    endif ()
-    execute_process(COMMAND git clone https://github.com/gunnerDgd/klever WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}/lib)
-    include        (${CMAKE_SOURCE_DIR}/lib/klever/klever.cmake)
-endif()
-
-add_kernel_module    (popcorn)
-kernel_module_include(popcorn ${CMAKE_CURRENT_SOURCE_DIR}/include)
-
-if     (KLEVER_ARCH STREQUAL "x86_64")
-    add_compile_definitions(PRESET_ARCH_X86_64)
-    add_compile_definitions(PRESET_ARCH_BIT=64)
-    kernel_module_define   (popcorn
-        PRESET_ARCH_X86_64
-        PRESET_ARCH_BIT=64
-        PRESET_LINUX
-    )
-endif()
-
 if   (UNIX AND NOT APPLE)
-    add_compile_definitions(PRESET_LINUX)
-    add_subdirectory       (linux)
+    add_subdirectory(linux)
 endif()
 
 add_subdirectory(include)

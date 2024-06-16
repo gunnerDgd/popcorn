@@ -1,5 +1,5 @@
 if   (UNIX AND NOT APPLE)
-    add_kernel_source(popcorn-thread
+    ksrc(popcorn-thread
         ../thread.h
 
         linux/thd.h
@@ -11,6 +11,4 @@ if   (UNIX AND NOT APPLE)
         thd.h
         mtx.h
     )
-
-    target_include_directories(popcorn-thread PRIVATE /lib/modules/${CMAKE_HOST_SYSTEM_VERSION}/build/include)
 endif()
