@@ -16,6 +16,7 @@
 #include "core/ops.h"
 #include "core/print.h"
 #include "core/macro.h"
+#include "core/task.h"
 #include "core/type.h"
 
 extern po_mem_ops *po_heap_ops_atomic;

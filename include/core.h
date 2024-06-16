@@ -15,6 +15,7 @@
 #include "core/obj.h"
 #include "core/ops.h"
 #include "core/print.h"
+#include "core/task.h"
 #include "core/type.h"
 
 #endif
