@@ -2,7 +2,7 @@
 #define __PO_MTX_H__
 
 #ifdef PRESET_LINUX
-#include "linux/mtx.h"
+#include "linux/mut.h"
 #endif
 
 #endif
