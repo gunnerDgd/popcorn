@@ -15,13 +15,18 @@
 #include "core/obj.h"
 #include "core/ops.h"
 #include "core/print.h"
+#include "core/macro.h"
 #include "core/type.h"
+
+extern po_mem_ops *po_heap_ops_atomic;
+extern po_mem_ops *po_heap_ops;
+
+extern po_mem     *po_heap_atomic;
+extern po_mem     *po_heap;
 
 extern po_obj_trait *po_core_t;
 struct               po_core  {
-    po_obj  head;
-    po_mem  heap;
-    po_mem *mem;
+    po_obj head;
 };
 
 extern struct po_core po_core;
