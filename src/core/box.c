@@ -13,61 +13,64 @@ po_obj_trait* po_box_t = &po_box_trait;
 
 bool_t
     po_box_new
-        (po_box* par_box, u32_t par_count, va_list par)                        {
-            u64_t   size = 0ull  ; if (par_count > 0) size = va_arg(par, u64_t);
-            po_mem *mem  = null_t; if (par_count > 1) mem  = va_arg(par, void*);
+        (po_box* self, u32_t count, va_list arg)                           {
+            u64_t   size = 0ull  ; if (count > 0) size = va_arg(arg, u64_t);
+            po_mem *mem  = null_t; if (count > 1) mem  = va_arg(arg, void*);
             if (po_trait_of(mem) != po_mem_t) mem = po_get_mem();
             if (po_trait_of(mem) != po_mem_t) return false_t;
             if (!size)                        return false_t;
+            self->ptr = po_mem_use(mem, null_t, size);
 
-            par_box->ptr  = po_mem_acq(mem, null_t, size); if (!par_box->ptr) return false_t;
-            par_box->mem  = (po_mem*) po_ref (mem);
-            par_box->size = size;
+            if (!self->ptr) return false_t;
+            self->mem = (po_mem*) po_ref (mem);
+            self->len = size;
             return true_t;
 }
 
 bool_t
     po_box_clone
-        (po_box* par, po_box* par_clone)                                                      {
-            par->ptr  = po_mem_acq(par->mem, null_t, par->size); if (!par->ptr) return false_t;
-            par->size = par_clone->size;
-            par->mem  = par_clone->mem ;
+        (po_box* self, po_box* clone)                            {
+            self->ptr  = po_mem_use(self->mem, null_t, self->len);
 
-            po_mem_copy(par->mem, par_clone->mem, par->size);
+            if (!self->ptr) return false_t;
+            self->len = clone->len;
+            self->mem = clone->mem;
+
+            po_mem_copy(self->mem, clone->mem, self->len);
             return true_t;
 }
 
 bool_t
     po_box_ref
-        (po_box* par)    {
+        (po_box* self)    {
             return true_t;
 }
 
 void
     po_box_del
-        (po_box* par)                                {
-            po_mem_rel(par->mem, par->ptr, par->size);
-            po_del    (par->mem);
+        (po_box* self)                                  {
+            po_mem_free(self->mem, self->ptr, self->len);
+            po_del     (self->mem);
 }
 
 void*
     po_box_ptr
-        (po_box* par)                                 {
-            if (po_trait_of(par) != po_box_t) return 0;
-            return par->mem;
+        (po_box* self)                                      {
+            if (po_trait_of(self) != po_box_t) return null_t;
+            return self->mem;
 }
 
 u64_t
-    po_box_size
-        (po_box* par)                                 {
-            if (po_trait_of(par) != po_box_t) return 0;
-            return par->size;
+    po_box_len
+        (po_box* self)                                 {
+            if (po_trait_of(self) != po_box_t) return 0;
+            return self->len;
 }
 
 #ifdef PRESET_LINUX
 #include <linux/module.h>
 MODULE_LICENSE("GPL");
 EXPORT_SYMBOL(po_box_ptr);
-EXPORT_SYMBOL(po_box_size);
+EXPORT_SYMBOL(po_box_len);
 EXPORT_SYMBOL(po_box_t);
 #endif

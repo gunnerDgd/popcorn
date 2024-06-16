@@ -7,8 +7,8 @@
 extern po_obj_trait* po_box_t;
 typedef struct       po_box  {
     po_obj  head;
-    u64_t   size;
     po_mem *mem;
+    u64_t   len;
     void*   ptr;
 }   po_box;
 
@@ -18,6 +18,6 @@ bool_t po_box_ref  (po_box*)                ;
 void   po_box_del  (po_box*)                ;
 
 void*  po_box_ptr  (po_box*);
-u64_t  po_box_size (po_box*);
+u64_t  po_box_len  (po_box*);
 
 #endif
