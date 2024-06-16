@@ -13,70 +13,66 @@ po_obj_trait* po_map_t = &po_map_trait;
 
 bool_t
     po_map_new
-        (po_map* par_map, u32_t par_count, va_list par)                   {
-            po_mem *mem = 0; if (par_count > 0) mem = va_arg(par, po_mem*);
+        (po_map* self, u32_t count, va_list arg)                      {
+            po_mem *mem = 0; if (count > 0) mem = va_arg(arg, po_mem*);
             if (po_trait_of(mem) != po_mem_t) mem = po_get_mem();
             if (po_trait_of(mem) != po_mem_t) return false_t;
 
-            if (!po_make_at(&par_map->map, po_list) from(1, mem)) return false_t;
+            if (!po_make_at(&self->map, po_list) from(1, mem)) return false_t;
             return true_t;
 }
 
 bool_t
     po_map_clone
-        (po_map* par, po_map* par_clone)                                {
-            if (!po_clone_at(&par->map, &par_clone->map)) return false_t;
+        (po_map* self, po_map* clone)                                {
+            if (!po_clone_at(&self->map, &clone->map)) return false_t;
             return true_t;
 }
 
 void
     po_map_del
-        (po_map* par)         {
-            po_del (&par->map);
+        (po_map* self)         {
+            po_del (&self->map);
 }
 
 po_node*
     po_map_push
-        (po_map* par, po_obj* par_push)                    {
-            if (!par)                         return null_t;
-            if (po_trait_of(par) != po_map_t) return null_t;
+        (po_map* self, po_obj* push)                        {
+            if (po_trait_of(self) != po_map_t) return null_t;
 
-            po_list_for (&par->map, push)                                  {
-                if (!push)                    continue                     ;
-                if (po_op_eq((po_obj*) push, po_value(push))) return null_t;
-                if (po_op_gt((po_obj*) push, po_value(push)))              {
-                    po_node *cur = po_make (po_node) from (1, par_push);
-                    if (!cur)                          return null_t;
-                    if (po_trait_of(cur) != po_node_t) return null_t;
-                    return po_next_as((po_node*) par_push, push);
-                }
+            po_list_for (&self->map, pos)                       {
+                if (po_op_eq(push, po_value(pos))) return null_t;
+                if (po_op_gt(push, po_value(pos))) continue;
+                po_node *cur = po_make (po_node) from (1, push);
+
+                if (po_trait_of(cur) != po_node_t) return null_t;
+                return po_next_as(cur, pos);
             }
-            return po_list_push_back(&par->map, par_push);
+
+            return po_list_push_back(&self->map, push);
 }
 
 void
     po_map_pop
-        (po_map* par, po_obj* par_pop)              {
-            if (!par)                         return;
-            if (po_trait_of(par) != po_map_t) return;
+        (po_map* self, any_t key)                    {
+            if (po_trait_of(self) != po_map_t) return;
+            po_node *pop = po_map_find(self, key);
 
-            po_node *pop = po_map_find(par, par_pop);
-            if (!pop)                          return;
             if (po_trait_of(pop) != po_node_t) return;
             po_del(pop);
 }
 
 po_node*
     po_map_find
-        (po_map* par, po_obj* par_key)                     {
-            if (!par)                         return null_t;
-            if (po_trait_of(par) != po_map_t) return null_t;
-            po_list_for (&par->map, find)                      {
-                if (po_op_ne(po_value(find), par_key)) continue;
-                return find;
+        (po_map* self, any_t key)                           {
+            if (po_trait_of(self) != po_map_t) return null_t;
+
+            po_list_for (&self->map, pos)                     {
+                if (po_op_ne_arg(po_value(pos), key)) continue;
+                return pos;
             }
 
-            return po_map_end(par);
+            return po_map_end(self);
 }
 
 bool_t
