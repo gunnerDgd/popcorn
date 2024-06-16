@@ -4,15 +4,15 @@
 #include "type.h"
 
 #if PRESET_ARCH_BIT >= 32
-u32_t po_lock_add32(u32_t*, u32_t);
-u32_t po_lock_sub32(u32_t*, u32_t);
-u32_t po_lock_inc32(u32_t*);
-u32_t po_lock_dec32(u32_t*);
+u32_t po_lock_add32    (u32_t*, u32_t);
+u32_t po_lock_sub32    (u32_t*, u32_t);
+u32_t po_lock_inc32    (u32_t*);
+u32_t po_lock_dec32    (u32_t*);
 
-u32_t po_cas_inc32(u32_t*);
-u32_t po_cas_dec32(u32_t*);
-u32_t po_cas32    (u32_t*, u32_t, u32_t);
-u32_t po_xchg32   (u32_t*, u32_t);
+u32_t po_cas_inc32     (u32_t*);
+u32_t po_cas_dec32     (u32_t*);
+u32_t po_cas32         (u32_t*, u32_t, u32_t);
+u32_t po_xchg32        (u32_t*, u32_t);
 
 u32_t po_lock_cas_inc32(u32_t*);
 u32_t po_lock_cas_dec32(u32_t*);
@@ -21,15 +21,15 @@ u32_t po_lock_xchg32   (u32_t*, u32_t);
 #endif
 
 #if PRESET_ARCH_BIT >= 64
-u64_t po_lock_add64(u64_t*, u64_t);
-u64_t po_lock_sub64(u64_t*, u64_t);
-u64_t po_lock_inc64(u64_t*);
-u64_t po_lock_dec64(u64_t*);
+u64_t po_lock_add64    (u64_t*, u64_t);
+u64_t po_lock_sub64    (u64_t*, u64_t);
+u64_t po_lock_inc64    (u64_t*);
+u64_t po_lock_dec64    (u64_t*);
 
-u64_t po_cas_inc64(u64_t*);
-u64_t po_cas_dec64(u64_t*);
-u64_t po_cas64    (u64_t*, u64_t, u64_t);
-u64_t po_xchg64   (u64_t*, u64_t);
+u64_t po_cas_inc64     (u64_t*);
+u64_t po_cas_dec64     (u64_t*);
+u64_t po_cas64         (u64_t*, u64_t, u64_t);
+u64_t po_xchg64        (u64_t*, u64_t);
 
 u64_t po_lock_cas_inc64(u64_t*);
 u64_t po_lock_cas_dec64(u64_t*);
