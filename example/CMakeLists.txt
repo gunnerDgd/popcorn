@@ -1,3 +1,3 @@
-if   (UNIX AND NOT APPLE)
+if   (PRESET_LINUX)
     add_subdirectory(linux)
 endif()

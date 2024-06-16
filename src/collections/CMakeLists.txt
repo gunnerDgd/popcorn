@@ -1,4 +1,5 @@
-ksrc(popcorn-collections
+kernel_source           (
+    popcorn-collections
     ../collections.h
 
     list.h

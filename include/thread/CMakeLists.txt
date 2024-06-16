@@ -1,5 +1,5 @@
 add_library(popcorn-include-thread STATIC
-    mtx.h
+        mut.h
     thd.h
 )
 

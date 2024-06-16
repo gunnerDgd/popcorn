@@ -1,14 +1,15 @@
-if   (UNIX AND NOT APPLE)
-    ksrc(popcorn-thread
+if   (PRESET_LINUX)
+    kernel_source     (
+        popcorn-thread
         ../thread.h
 
         linux/thd.h
         linux/thd.c
 
-        linux/mtx.h
-        linux/mtx.c
+        linux/mut.h
+        linux/mut.c
 
         thd.h
-        mtx.h
+        mut.h
     )
 endif()

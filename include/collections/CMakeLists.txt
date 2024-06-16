@@ -1,8 +1,9 @@
 add_library(popcorn-collections-include STATIC
+    ../collections.h
     list.h
     map.h
     node.h
-    set.h
+    bma.h
     str.h
     seq.h
 )

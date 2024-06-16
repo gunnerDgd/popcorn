@@ -1,5 +1,6 @@
 if (PRESET_LINUX)
-    ksrc(popcorn-core
+    kernel_source           (
+        popcorn-core
         ../core.h
         ../core.c
 
@@ -28,6 +29,9 @@ if (PRESET_LINUX)
 
         box.h
         box.c
+
+        task.h
+        task.c
 
         endian.h
         endian.c

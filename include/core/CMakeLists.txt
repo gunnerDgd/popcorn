@@ -8,6 +8,7 @@ add_library(popcorn-core-include
     obj.h
     print.h
     type.h
+    task.h
     box.h
     mem.h
 
