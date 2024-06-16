@@ -20,7 +20,7 @@ bool_t
             if (po_trait_of(mem) != po_mem_t) return false_t ;
             if (len < 16) len = 16;
 
-            par_seq->ptr   = po_mem_acq (mem, null_t, len);
+            par_seq->ptr   = po_mem_use (mem, null_t, len);
             par_seq->begin = 0  ;
             par_seq->end   = 0  ;
             par_seq->mem   = mem;
@@ -36,15 +36,19 @@ bool_t
             par->len   = par_clone->len  ;
             par->mem   = par_clone->mem  ;
 
-            par->ptr = po_mem_acq(par->mem, null_t, par->len); if (!par->ptr) return false_t;
+            par->ptr = po_mem_use(par->mem, null_t, par->len); if (!par->ptr) return false_t;
             po_mem_copy(par->ptr, par_clone->ptr, par->len);
             return true_t;
 }
 
 void
     po_seq_del
-        (po_seq* par)                               {
-            po_mem_rel(par->mem, par->ptr, par->len);
+        (po_seq* par)   {
+            po_mem_free (
+                par->mem,
+                par->ptr,
+                par->len
+            );
 }
 
 void
@@ -53,13 +57,13 @@ void
             if (po_trait_of(par) != po_seq_t) return;
             if (!par_len)                     return;
 
-            u8_t *ptr = po_mem_acq(par->mem, null_t, par->len + par_len);
+            u8_t *ptr = po_mem_use(par->mem, null_t, par->len + par_len);
             u8_t *dst = ptr      + par->begin + par_len;
             u8_t *src = par->ptr + par->begin;
             u64_t len = po_seq_len(par);
+            po_mem_copy (dst, src, len);
 
-            po_mem_copy(dst, src, len)               ;
-            po_mem_rel (par->mem, par->ptr, par->len);
+            po_mem_free(par->mem, par->ptr, par->len);
             par->begin += par_len;
             par->end   += par_len;
             par->len   += len;
@@ -72,13 +76,13 @@ void
             if (po_trait_of(par) != po_seq_t) return;
             if (!par_len)                     return;
 
-            u8_t *ptr = po_mem_acq(par->mem, null_t, par->len + par_len);
+            u8_t *ptr = po_mem_use(par->mem, null_t, par->len + par_len);
             u8_t *dst = ptr      + par->begin;
             u8_t *src = par->ptr + par->begin;
             u64_t len = po_seq_len(par);
-
             po_mem_copy(dst, src, len);
-            po_mem_rel (par->mem, par->ptr, par->len);
+
+            po_mem_free(par->mem, par->ptr, par->len);
             par->len += par_len;
             par->ptr  = ptr    ;
 }
@@ -91,7 +95,7 @@ void
 
             if (par_off >= po_seq_len(par)) { po_seq_prep_back (par, par_len); return; }
             if (par_off == 0)               { po_seq_prep_front(par, par_len); return; }
-            u8_t *ptr = po_mem_acq(par->mem, null_t, par_len + par->len);
+            u8_t *ptr = po_mem_use(par->mem, null_t, par_len + par->len);
             u8_t *dst = ptr      + par->begin;
             u8_t *src = par->ptr + par->begin;
             u64_t len = par_off;
@@ -102,7 +106,7 @@ void
             src += (par_off);
 
             po_mem_copy(dst, src, len)               ;
-            po_mem_rel (par->mem, par->ptr, par->len);
+            po_mem_free(par->mem, par->ptr, par->len);
             par->end += par_len;
             par->ptr  = ptr    ;
             par->len += par_len;
