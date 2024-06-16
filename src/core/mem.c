@@ -14,54 +14,55 @@ po_obj_trait *po_mem_t = &po_mem_trait;
 
 bool_t
     po_mem_new
-        (po_mem* par_mem, u32_t par_count, va_list par)                                {
-            po_mem_ops *ops = null_t; if (par_count > 0) ops = va_arg(par, po_mem_ops*);
-            if (!ops)         return false_t;
-            if (!ops->on_acq) return false_t;
-            if (!ops->on_rel) return false_t;
-            if (!ops->on_new) return false_t;
-            if (!ops->on_del) return false_t;
+        (po_mem* self, u32_t count, va_list arg)                                   {
+            po_mem_ops *ops = null_t; if (count > 0) ops = va_arg(arg, po_mem_ops*);
+            if (!ops)          return false_t;
+            if (!ops->on_use)  return false_t;
+            if (!ops->on_free) return false_t;
+            if (!ops->on_new)  return false_t;
+            if (!ops->on_del)  return false_t;
 
-            par_mem->mem = ops->on_new(par_count - 1, par);
-            par_mem->ops = ops;
+            self->mem = ops->on_new(count - 1, arg);
+            self->ops = ops;
 
-            if (!par_mem->mem) return false_t;
+            if (!self->mem) return false_t;
             return true_t;
 }
 
 bool_t
     po_mem_clone
-        (po_mem* par, po_mem* par_clone) {
+        (po_mem* self, po_mem* clone) {
             return false_t;
 }
 
 void
     po_mem_del
-        (po_mem* par)                 {
-            par->ops->on_del(par->mem);
+        (po_mem* self)                  {
+            self->ops->on_del(self->mem);
 }
 
 void*
-    po_mem_acq
-        (po_mem* par, void* par_hint, u64_t par_len)       {
-            if (po_trait_of(par) != po_mem_t) return null_t;
-            if (!par_len)                     return null_t;
-            return par->ops->on_acq                        (
-                par->mem,
-                par_hint,
-                par_len
+    po_mem_use
+        (po_mem* self, void* hint, u64_t len)                     {
+            if (po_trait_of(self) != po_mem_t) self = po_get_mem();
+            if (po_trait_of(self) != po_mem_t) return null_t;
+            if (!len)                          return null_t;
+            return self->ops->on_use                        (
+                self->mem,
+                hint,
+                len
             );
 }
 
 void
-    po_mem_rel
-        (po_mem* par, void* par_rel, u64_t par_len) {
-            if (po_trait_of(par) != po_mem_t) return;
-            if (!par_rel)                     return;
-            return par->ops->on_rel                 (
-                par->mem,
-                par_rel ,
-                par_len
+    po_mem_free
+        (po_mem* self, void* free, u64_t len)        {
+            if (po_trait_of(self) != po_mem_t) return;
+            if (!free)                         return;
+            return self->ops->on_free                (
+                self->mem,
+                free     ,
+                len
             );
 }
 
@@ -71,7 +72,7 @@ void
 #include <linux/module.h>
 MODULE_LICENSE("GPL");
 
-EXPORT_SYMBOL(po_mem_acq);
-EXPORT_SYMBOL(po_mem_rel);
+EXPORT_SYMBOL(po_mem_free);
+EXPORT_SYMBOL(po_mem_use);
 EXPORT_SYMBOL(po_mem_t);
 #endif

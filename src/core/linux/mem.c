@@ -5,80 +5,74 @@
 
 void
     po_mem_set
-        (void* par, u8_t par_set, u64_t par_size)      {
-            if (!par_size) return; u64_t len = par_size;
-            if (!par)      return; u8_t* dst = par     ;
-            memset(dst, par_set, len);
+        (void* des, u8_t set, u64_t len) {
+            if (!len) return;
+            if (!des) return;
+
+            memset(des, set, len);
 }
 
 void
     po_mem_copy
-        (void* par, void* par_src, u64_t par_size)    {
-            if(!par_size) return; u64_t len = par_size;
-            if(!par_src)  return; u8_t *src = par_src ;
-            if(!par)      return; u8_t *dst = par     ;
-            memcpy(dst, src, len);
+        (void* des, void* src, u64_t len) {
+            if (!des) return;
+            if (!src) return;
+            if (!len) return;
+
+            memcpy(des, src, len);
 }
 
 void
     po_mem_move
-        (void* par, void* par_src, u64_t par_size)    {
-            if(!par_size) return; u64_t len = par_size;
-            if(!par_src)  return; u8_t *src = par_src ;
-            if(!par)      return; u8_t *dst = par     ;
-            memmove(dst, src, len);
+        (void* des, void* src, u64_t len) {
+            if (!des) return;
+            if (!src) return;
+            if (!len) return;
+
+            memmove(des, src, len);
 }
 
 u64_t
     po_mem_find
-        (void* par, void* par_cmp, u64_t par_len, u64_t par_cmp_len)           {
-            if (!par_cmp_len)      return -1; u64_t cmp_len = par_cmp_len      ;
-            if (!par_len)          return -1; u64_t src_len = par_len          ;
-            if (!par_cmp)          return -1; u8_t *cmp     = par_cmp          ;
-            if (!par)              return -1; u8_t *src     = par              ;
-            if (src_len < cmp_len) return -1; u64_t len     = src_len - cmp_len;
-            for(u8_t i = 0 ; i <= len ; ++i)                                   {
-                if (po_mem_eq(src + i, cmp, src_len, cmp_len))
-                    return i;
-            }
-            return -1;
+        (void* des, void* src, u64_t dlen, u64_t slen) {
+            if (dlen > slen) return -1;
+            return (u64_t) strstr     (
+                des,
+                src
+            );
 }
 
-bool_t
-    po_mem_eq
-        (void* par, void* par_cmp, u64_t par_len, u64_t par_cmp_len)       {
-            if (!par_cmp)               return false_t; u8_t *cmp = par_cmp;
-            if (!par)                   return false_t; u8_t *src = par    ;
-            if (par_cmp_len != par_len) return false_t; u64_t len = par_len;
+po_ord_t
+    po_mem_ord
+        (void* des, void* ord, u64_t len) {
+            if (!des) return po_ord_err;
+            if (!ord) return po_ord_err;
+            if (!len) return po_ord_err;
 
-            if (memcmp(src, cmp, len)) return false_t;
-            return true_t;
+            int ret = memcmp (des, ord, len);
+            if (ret < 0) return po_ord_lt;
+            if (ret > 0) return po_ord_gt;
+            return po_ord_eq;
 }
 
-bool_t
-    po_mem_gt
-        (void* par, void* par_cmp, u64_t par_len, u64_t par_cmp_len)     {
-            if (!par_cmp)     return false_t; u8_t *cmp = par_cmp;
-            if (!par)         return false_t; u8_t *src = par    ;
-            if (!par_cmp_len) return false_t;
-            if (!par_len)     return false_t;
+bool_t po_mem_eq(void* des, void* ord, u64_t len) { return po_mem_ord(des, ord,len) == po_ord_eq; }
+bool_t po_mem_gt(void* des, void* ord, u64_t len) { return po_mem_ord(des, ord,len) == po_ord_gt; }
+bool_t po_mem_lt(void* des, void* ord, u64_t len) { return po_mem_ord(des, ord,len) == po_ord_lt; }
 
-            u64_t len = min(par_cmp_len, par_len);
-            if (memcmp(src, cmp, len) <= 0) return true_t;
-            return false_t;
+static po_mem *mem;
+
+po_mem*
+    po_get_mem()  {
+        return mem;
 }
 
-bool_t
-    po_mem_lt
-        (void* par, void* par_cmp, u64_t par_len, u64_t par_cmp_len)     {
-            if (!par_cmp)     return false_t; u8_t *cmp = par_cmp;
-            if (!par)         return false_t; u8_t *src = par    ;
-            if (!par_cmp_len) return false_t;
-            if (!par_len)     return false_t;
-
-            u64_t len = min(par_cmp_len, par_len);
-            if (memcmp(src, cmp, len) >= 0) return true_t;
-            return false_t;
+po_mem*
+    po_set_mem
+        (po_mem* set)                                      {
+            if (po_trait_of(set) != po_mem_t) return null_t;
+            po_mem* ret = mem;
+            mem   = set;
+            return  ret;
 }
 
 EXPORT_SYMBOL(po_mem_eq);
@@ -89,3 +83,6 @@ EXPORT_SYMBOL(po_mem_set);
 EXPORT_SYMBOL(po_mem_copy);
 EXPORT_SYMBOL(po_mem_move);
 EXPORT_SYMBOL(po_mem_find);
+
+EXPORT_SYMBOL(po_get_mem);
+EXPORT_SYMBOL(po_set_mem);
