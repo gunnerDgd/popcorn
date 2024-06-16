@@ -33,6 +33,5 @@ void   po_fut_del  (po_fut*)                ;
 
 u64_t  po_fut_poll (po_fut*);
 void*  po_fut_ret  (po_fut*);
-void*  po_fut_wait (po_fut*);
 
 #endif
