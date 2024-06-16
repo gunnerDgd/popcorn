@@ -31,6 +31,9 @@ void        po_str_pop		       (po_str*, u64_t, u64_t);
 u64_t       po_str_find		       (po_str*, u64_t, po_str*)           ;
 u64_t       po_str_find_cstr	   (po_str*, u64_t, const char*, u64_t);
 
+po_ord_t    po_str_ord_cstr        (po_str*, const char*, u64_t);
+po_ord_t    po_str_ord             (po_str*, po_str*)           ;
+
 bool_t      po_str_eq		       (po_str*, po_str*)  ;
 bool_t      po_str_gt		       (po_str*, po_str*)  ;
 bool_t      po_str_lt		       (po_str*, po_str*)  ;

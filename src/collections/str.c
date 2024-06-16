@@ -159,81 +159,42 @@ u64_t
             );
 }
 
-bool_t
-    po_str_eq
-        (po_str* par, po_str* par_cmp)                                {
-            if (po_trait_of(par_cmp) != po_str_t)       return false_t;
-            if (po_trait_of(par)     != po_str_t)       return false_t;
-            if (po_str_len(par) != po_str_len(par_cmp)) return false_t;
-            return po_mem_eq                                          (
-                po_str_ptr(par)    ,
-                po_str_ptr(par_cmp),
-                po_str_len(par)    ,
-                po_str_len(par_cmp)
+po_ord_t
+    po_str_ord_cstr
+        (po_str* self, const char* ord, u64_t len)              {
+            if (po_trait_of(self) != po_str_t) return po_ord_err;
+            if (po_str_len (self) != len)      return po_ord_err;
+            len = min(po_str_len(self), len);
+
+            return po_mem_ord   (
+                po_str_ptr(self),
+                ord             ,
+                len
             );
 }
 
-bool_t
-    po_str_gt
-        (po_str* par, po_str* par_cmp)                          {
-            if (po_trait_of(par_cmp) != po_str_t) return false_t;
-            if (po_trait_of(par)     != po_str_t) return false_t;
-            return po_mem_gt                                    (
-                po_str_ptr(par)    ,
-                po_str_ptr(par_cmp),
-                po_str_len(par)    ,
-                po_str_len(par_cmp)
+po_ord_t
+    po_str_ord
+        (po_str* self, po_str* ord)                             {
+            if (po_trait_of(self) != po_str_t) return po_ord_err;
+            if (po_trait_of(ord)  != po_str_t) return po_ord_err;
+            u64_t len = min(po_str_len(self), po_str_len(ord));
+
+            return po_mem_ord   (
+                po_str_ptr(self),
+                po_str_ptr(ord) ,
+                len
             );
 }
 
-bool_t
-    po_str_lt
-        (po_str* par, po_str* par_cmp)                          {
-            if (po_trait_of(par_cmp) != po_str_t) return false_t;
-            if (po_trait_of(par)     != po_str_t) return false_t;
-            return po_mem_lt                                    (
-                po_str_ptr(par)    ,
-                po_str_ptr(par_cmp),
-                po_str_len(par)    ,
-                po_str_len(par_cmp)
-            );
-}
 
-bool_t
-    po_str_eq_cstr
-        (po_str* par, const char* par_cmp, u64_t par_len)   {
-            if (po_trait_of(par) != po_str_t) return false_t;
-            return po_mem_eq                                (
-                po_str_ptr(par),
-                par_cmp        ,
-                po_str_len(par),
-                par_len
-    );
-}
+bool_t po_str_eq(po_str* self, po_str* ord) { return po_str_ord(self, ord) == po_ord_eq; }
+bool_t po_str_gt(po_str* self, po_str* ord) { return po_str_ord(self, ord) == po_ord_gt; }
+bool_t po_str_lt(po_str* self, po_str* ord) { return po_str_ord(self, ord) == po_ord_lt; }
 
-bool_t
-    po_str_gt_cstr
-        (po_str* par, const char* par_cmp, u64_t par_len)   {
-            if (po_trait_of(par) != po_str_t) return false_t;
-            return po_mem_gt                                (
-                po_str_ptr(par),
-                par_cmp     ,
-                po_str_len(par),
-                par_len
-            );
-}
-
-bool_t
-    po_str_lt_cstr
-        (po_str* par, const char* par_cmp, u64_t par_len)   {
-            if (po_trait_of(par) != po_str_t) return false_t;
-            return po_mem_lt                                (
-                po_str_ptr(par),
-                par_cmp     ,
-                po_str_len(par),
-                par_len
-            );
-}
+bool_t po_str_eq_cstr(po_str* self, const char* ord, u64_t len) { return po_str_ord_cstr(self, ord, len) == po_ord_eq; }
+bool_t po_str_gt_cstr(po_str* self, const char* ord, u64_t len) { return po_str_ord_cstr(self, ord, len) == po_ord_gt; }
+bool_t po_str_lt_cstr(po_str* self, const char* ord, u64_t len) { return po_str_ord_cstr(self, ord, len) == po_ord_lt; }
 
 bool_t
     po_str_begin
@@ -311,22 +272,32 @@ MODULE_LICENSE("GPL");
 
 EXPORT_SYMBOL(po_str_prep_front);
 EXPORT_SYMBOL(po_str_prep_back);
+
 EXPORT_SYMBOL(po_str_push_front_cstr);
 EXPORT_SYMBOL(po_str_push_front);
+
 EXPORT_SYMBOL(po_str_push_back_cstr);
 EXPORT_SYMBOL(po_str_push_back);
 EXPORT_SYMBOL(po_str_push);
+
 EXPORT_SYMBOL(po_str_pop_front);
 EXPORT_SYMBOL(po_str_pop_back);
 EXPORT_SYMBOL(po_str_pop);
-EXPORT_SYMBOL(po_str_find);
+
 EXPORT_SYMBOL(po_str_find_cstr);
-EXPORT_SYMBOL(po_str_eq_cstr);
+EXPORT_SYMBOL(po_str_find);
+
+EXPORT_SYMBOL(po_str_ord_cstr);
+EXPORT_SYMBOL(po_str_ord);
+
 EXPORT_SYMBOL(po_str_eq);
-EXPORT_SYMBOL(po_str_lt_cstr);
 EXPORT_SYMBOL(po_str_lt);
-EXPORT_SYMBOL(po_str_gt_cstr);
 EXPORT_SYMBOL(po_str_gt);
+
+EXPORT_SYMBOL(po_str_eq_cstr);
+EXPORT_SYMBOL(po_str_lt_cstr);
+EXPORT_SYMBOL(po_str_gt_cstr);
+
 EXPORT_SYMBOL(po_str_begin_cstr);
 EXPORT_SYMBOL(po_str_begin);
 EXPORT_SYMBOL(po_str_end_cstr);
