@@ -13,21 +13,21 @@ po_obj*
 
 po_obj*
     po_obj_new_va
-		(po_mem* par_mem, po_obj_trait* par_trait, u32_t par_count, va_list par) 		    {
-			po_obj_trait *trait = par_trait; if (!trait)				       return null_t;
-			po_mem       *mem   = par_mem  ; if (trait->size < sizeof(po_obj)) return null_t;
+		(po_mem* mem, po_obj_trait* trait, u32_t count, va_list arg) {
+			if (!trait)				          return null_t;
+			if (trait->size < sizeof(po_obj)) return null_t;
 			if (!mem) mem = po_get_mem();
-			if (!mem) return   null_t;
+			if (!mem) return null_t;
 			
-			po_obj    *ret = po_mem_acq(mem, null_t, trait->size); if (!ret) return null_t;
+			po_obj    *ret = po_mem_use(mem, null_t, trait->size); if (!ret) return null_t;
 			po_mem_set(ret, 0x00, trait->size);
 			ret->trait = trait;
 			ret->mem   = mem  ;
 			ret->ref   = 1	  ;
 
-			if (!trait->on_new)			   return ret;
-			if (!trait->on_new(ret, par_count, par)) {
-				po_mem_rel(mem, ret, trait->size);
+			if (!trait->on_new)         return ret;
+			if (!trait->on_new(ret, count, arg))  {
+				po_mem_free(mem, ret, trait->size);
 				return null_t;
 			}
 
@@ -36,35 +36,35 @@ po_obj*
 
 bool_t
 	po_obj_new_at
-		(po_obj* par_po_obj, po_obj_trait* par_trait, u32_t par_count, ...) {
-			va_list  par;
-			va_start(par, par_count); 
+		(po_obj* at, po_obj_trait* trait, u32_t count, ...) {
+			va_list  arg;
+			va_start(arg, count);
 			bool_t ret = po_obj_new_at_va (
-				par_po_obj  , 
-				par_trait,
-				par_count,
-				par
+			    at   ,
+				trait,
+				count,
+				arg
 			);
 			
-			va_end (par);
+			va_end (arg);
 			return  ret ;
 }
 
 bool_t 
 	po_obj_new_at_va
-		(po_obj* par_po_obj, po_obj_trait* par_trait, u32_t par_count, va_list par) {
-			po_obj		 *ret   = par_po_obj; if (!ret)   return false_t;
-			po_obj_trait *trait = par_trait ; if (!trait) return false_t;
+		(po_obj* at, po_obj_trait* trait, u32_t count, va_list arg) {
+		    if (!trait) return false_t;
+		    if (!at)    return false_t;
+
 			if (trait->size < sizeof(po_obj)) return false_t;
+			po_mem_set(at, 0x00, trait->size);
+            at->trait = trait;
+            at->mem   = 0;
+            at->ref   = 1;
 
-			po_mem_set(ret, 0x00, trait->size);
-			ret->trait = par_trait;
-			ret->mem   = 0		  ;
-			ret->ref   = 1		  ;
-
-			if (!trait->on_new)			return true_t;
-			if (!trait->on_new(ret, par_count, par)) {
-				po_mem_set(ret, 0x00, trait->size);
+			if (!trait->on_new)     return true_t;
+			if (!trait->on_new(at, count, arg))  {
+				po_mem_set(at, 0x00, trait->size);
 				return false_t;
 			}
 
@@ -73,16 +73,16 @@ bool_t
 
 po_obj*	   
 	po_obj_clone   
-		(po_obj* par)									               {
-			po_obj		 *arg   = par		; if (!arg)   return null_t;
+		(po_obj* self)									               {
+			po_obj		 *arg   = self      ; if (!arg)   return null_t;
 			po_obj_trait *trait = arg->trait; if (!trait) return null_t;
-			po_mem		 *mem   = par->mem  ;
+			po_mem		 *mem   = self->mem ;
 			if (po_trait_of(mem) != po_mem_t) mem = po_get_mem();
 			if (po_trait_of(mem) != po_mem_t) return null_t;
 			if (trait->size < sizeof(po_obj)) return null_t;
 			if (!arg->ref)					  return null_t;
 
-			po_obj *ret = po_mem_acq(par->mem, null_t, par->trait->size); if (!ret) return null_t;
+			po_obj *ret = po_mem_use(self->mem, null_t, self->trait->size); if (!ret) return null_t;
 			ret->trait = trait;
 			ret->mem   = mem  ;
 			ret->ref   = 1	  ;
@@ -95,32 +95,31 @@ po_obj*
 			if (!trait->on_clone(ret, arg)) goto clone_failed;
 			return ret;
 	clone_failed:
-			po_mem_rel(mem, ret, trait->size);
+			po_mem_free(mem, ret, trait->size);
 			return null_t;
 }
 
 bool_t     
 	po_obj_clone_at
-		(po_obj* par, po_obj* par_clone)								{
-			po_obj		  *arg  = par_clone ; if (!arg)   return false_t;
-			po_obj		  *ret  = par	    ; if (!ret)   return false_t;
-			po_obj_trait *trait = arg->trait; if (!trait) return false_t;
-			if (po_trait_of(ret)) return false_t;
-			if (!arg->ref)	      return false_t;
+		(po_obj* self, po_obj* clone)               {
+		    if (!po_trait_of (clone)) return false_t;
+		    if (!po_use_count(clone)) return false_t;
+		    if (!clone)               return false_t;
+		    if (!self)                return false_t;
 
-			par->trait = trait;
-			par->mem   = 0	  ;
-			par->ref   = 1	  ;
+			po_obj_trait *trait = clone->trait;
+            self->trait = trait ;
+            self->mem   = null_t;
+            self->ref   = 1;
 
-			if (!par_clone->trait->on_clone)      {
-				po_mem_copy(ret, arg, trait->size);
+			if (!self->trait->on_clone)              {
+				po_mem_copy(self, clone, trait->size);
 				return true_t;
 			}
 
-			if(!trait->on_clone(ret, arg)) goto clone_failed;
+			if(!trait->on_clone(self, clone)) goto err;
 			return true_t;
-	clone_failed:
-			po_mem_set(ret, 0x00, trait->size);
+	err:    po_mem_set(self, 0x00, trait->size);
 			return false_t;
 }
 
@@ -155,24 +154,22 @@ u64_t
 				return 0;
 			}
 
-			po_mem_rel(par->mem, par, par->trait->size);
+			po_mem_free(par->mem, par, par->trait->size);
 			return 0;
 }
 
 po_obj_trait* 
 	po_obj_get_trait
-		(po_obj* par)		      {
-			if (!par) return 0;
-			return par->trait;
+		(po_obj* self)              {
+			if (!self) return null_t;
+			return self->trait;
 }
 
 u64_t 
 	po_obj_use_count
-		(po_obj* par)					 {
-			if (!par)		 return 0;
-			if (!par->trait) return 0;
-
-			return par->ref;
+		(po_obj* self)                      {
+		    if (!po_trait_of(self)) return 0;
+			return self->ref;
 }
 
 #ifdef PRESET_LINUX
