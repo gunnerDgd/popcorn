@@ -14,8 +14,8 @@ bool_t po_mem_new  (po_mem*, u32_t, va_list);
 bool_t po_mem_clone(po_mem*, po_mem*)       ;
 void   po_mem_del  (po_mem*)                ;
 
-void*  po_mem_acq  (po_mem*, void*, u64_t);
-void   po_mem_rel  (po_mem*, void*, u64_t);
+void   po_mem_free (po_mem*, void*, u64_t);
+void*  po_mem_use  (po_mem*, void*, u64_t);
 
 void   po_mem_set  (void*, u8_t , u64_t)       ;
 void   po_mem_copy (void*, void*, u64_t)       ;
@@ -36,8 +36,8 @@ extern po_mem po_page     ;
 #define GB *(1ull << 30ull)
 
 #ifndef __cplusplus
-#define po_new(par)  po_mem_acq(po_get_mem(), null_t, sizeof(par))
-#define po_drop(par) po_mem_rel(po_get_mem(), par   , 0)
+#define po_new(par)  po_mem_use (null_t, null_t, sizeof(par))
+#define po_drop(par) po_mem_free(null_t, par   , 0)
 #endif
 
 #endif
