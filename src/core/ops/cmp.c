@@ -2,104 +2,62 @@
 #include "../obj.h"
 
 po_ord_t
-    po_op_ord(struct po_obj* par, any_t par_arg)                {
-        po_obj*       cmp    = par       ; if (!cmp)    return 0;
-        any_t         arg    = par_arg   ; if (!arg)    return 0;
-        po_obj_trait *trait  = cmp->trait; if (!trait)  return 0;
-        po_obj_ops   *po_ops = trait->ops; if (!po_ops) return 0;
+    po_op_ord_arg
+        (struct po_obj* self, any_t arg)             {
+            if (!po_trait_of(self)) return po_ord_err;
 
-        if (!po_ops->cmp)      return 0;
-        if (!po_ops->cmp->ord) return 0;
-        return po_ops->cmp->ord(cmp, arg);
+            po_obj_ops *ops = self->trait->ops; if (!ops) return po_ord_err;
+            po_ops_cmp *cmp = ops ->cmp;        if (!cmp) return po_ord_err;
+
+            if (!cmp->ord) return po_ord_err;
+            return cmp->ord_arg(self, arg);
 }
 
-bool_t 
-    po_op_gt(struct po_obj* par, any_t par_arg)                       {
-        po_obj*       cmp    = par       ; if (!cmp)    return false_t;
-        any_t         arg    = par_arg   ; if (!arg)    return false_t;
-        po_obj_trait *trait  = cmp->trait; if (!trait)  return false_t;
-        po_obj_ops   *po_ops = trait->ops; if (!po_ops) return false_t;
+po_ord_t
+    po_op_ord
+        (struct po_obj* self, struct po_obj* arg)    {
+            if (!po_trait_of(self)) return po_ord_err;
+            if (!po_trait_of(arg))  return po_ord_err;
 
-        if (!po_ops->cmp)      return false_t;
-        if (!po_ops->cmp->ord) return false_t;
-        return po_op_ord(cmp, arg) == po_ord_gt;
+            po_obj_ops *ops = self->trait->ops; if (!ops) return po_ord_err;
+            po_ops_cmp *cmp = ops ->cmp;        if (!cmp) return po_ord_err;
+
+            if (!cmp->ord) return po_ord_err;
+            return cmp->ord_arg(self, arg);
 }
 
-bool_t 
-    po_op_gt_eq(struct po_obj* par, any_t par_arg)                    {
-        po_obj*       cmp    = par       ; if (!cmp)    return false_t;
-        any_t         arg    = par_arg   ; if (!arg)    return false_t;
-        po_obj_trait *trait  = cmp->trait; if (!trait)  return false_t;
-        po_obj_ops   *po_ops = trait->ops; if (!po_ops) return false_t;
-        if (!po_ops->cmp)      return false_t;
-        if (!po_ops->cmp->ord) return false_t;
-        po_ord_t ord = po_op_ord(cmp, arg);
+bool_t   po_op_gt_eq(struct po_obj* self, struct po_obj* arg) { return po_op_ord(self, arg) == po_ord_gt | po_op_ord(self, arg) == po_ord_eq; }
+bool_t   po_op_lt_eq(struct po_obj* self, struct po_obj* arg) { return po_op_ord(self, arg) == po_ord_lt | po_op_ord(self, arg) == po_ord_eq; }
+bool_t   po_op_gt   (struct po_obj* self, struct po_obj* arg) { return po_op_ord(self, arg) == po_ord_gt; }
+bool_t   po_op_lt   (struct po_obj* self, struct po_obj* arg) { return po_op_ord(self, arg) == po_ord_lt; }
+bool_t   po_op_eq   (struct po_obj* self, struct po_obj* arg) { return po_op_ord(self, arg) == po_ord_eq; }
+bool_t   po_op_ne   (struct po_obj* self, struct po_obj* arg) { return po_op_ord(self, arg) != po_ord_eq; }
 
-        if (ord == po_ord_err) return false_t;
-        if (ord == po_ord_lt)  return false_t;
-        return true_t;
-}
-
-
-bool_t 
-    po_op_lt(struct po_obj* par, any_t par_arg)                       {
-        po_obj*       cmp    = par       ; if (!cmp)    return false_t;
-        any_t         arg    = par_arg   ; if (!arg)    return false_t;
-        po_obj_trait *trait  = cmp->trait; if (!trait)  return false_t;
-        po_obj_ops   *po_ops = trait->ops; if (!po_ops) return false_t;
-
-        if (!po_ops->cmp)      return false_t;
-        if (!po_ops->cmp->ord) return false_t;
-        return po_op_ord(cmp, arg) == po_ord_lt;
-}
-
-bool_t 
-    po_op_lt_eq(struct po_obj* par, any_t par_arg)                    {
-        po_obj*       cmp    = par       ; if (!cmp)    return false_t;
-        any_t         arg    = par_arg   ; if (!arg)    return false_t;
-        po_obj_trait *trait  = cmp->trait; if (!trait)  return false_t;
-        po_obj_ops   *po_ops = trait->ops; if (!po_ops) return false_t;
-        if (!po_ops->cmp)                     return false_t;
-        if (!po_ops->cmp->ord)                return false_t;
-        po_ord_t ord = po_op_ord(cmp, arg);
-
-        if (ord == po_ord_err) return false_t;
-        if (ord == po_ord_gt)  return false_t;
-        return true_t;
-}
-
-bool_t 
-    po_op_eq(struct po_obj* par, any_t par_arg)                       {
-        po_obj*       cmp    = par       ; if (!cmp)    return false_t;
-        any_t         arg    = par_arg   ; if (!arg)    return false_t;
-        po_obj_trait *trait  = cmp->trait; if (!trait)  return false_t;
-        po_obj_ops   *po_ops = trait->ops; if (!po_ops) return false_t;
-
-        if (!po_ops->cmp)      return false_t;
-        if (!po_ops->cmp->ord) return false_t;
-        return po_op_ord(cmp, arg) == po_ord_eq;
-}
-
-bool_t 
-    po_op_ne(struct po_obj* par, any_t par_arg)                       {
-        po_obj*       cmp    = par       ; if (!cmp)    return false_t;
-        any_t         arg    = par_arg   ; if (!arg)    return false_t;
-        po_obj_trait *trait  = cmp->trait; if (!trait)  return false_t;
-        po_obj_ops   *po_ops = trait->ops; if (!po_ops) return false_t;
-
-        if (!po_ops->cmp)      return false_t;
-        if (!po_ops->cmp->ord) return false_t;
-        return po_op_ord(cmp, arg) != po_ord_eq;
-}
+bool_t   po_op_gt_eq_arg(struct po_obj* self, any_t arg) { return po_op_ord_arg(self, arg) == po_ord_gt | po_op_ord_arg(self, arg) == po_ord_eq; }
+bool_t   po_op_lt_eq_arg(struct po_obj* self, any_t arg) { return po_op_ord_arg(self, arg) == po_ord_lt | po_op_ord_arg(self, arg) == po_ord_eq; }
+bool_t   po_op_gt_arg   (struct po_obj* self, any_t arg) { return po_op_ord_arg(self, arg) == po_ord_gt; }
+bool_t   po_op_lt_arg   (struct po_obj* self, any_t arg) { return po_op_ord_arg(self, arg) == po_ord_lt; }
+bool_t   po_op_eq_arg   (struct po_obj* self, any_t arg) { return po_op_ord_arg(self, arg) == po_ord_eq; }
+bool_t   po_op_ne_arg   (struct po_obj* self, any_t arg) { return po_op_ord_arg(self, arg) != po_ord_eq; }
 
 #ifdef PRESET_LINUX
 #include <linux/module.h>
 MODULE_LICENSE("GPL");
-EXPORT_SYMBOL(po_op_gt);
+
+EXPORT_SYMBOL(po_op_ord_arg);
+EXPORT_SYMBOL(po_op_ord);
+
+EXPORT_SYMBOL(po_op_gt_eq_arg);
+EXPORT_SYMBOL(po_op_lt_eq_arg);
+EXPORT_SYMBOL(po_op_gt_arg);
+EXPORT_SYMBOL(po_op_lt_arg);
+EXPORT_SYMBOL(po_op_eq_arg);
+EXPORT_SYMBOL(po_op_ne_arg);
+
 EXPORT_SYMBOL(po_op_gt_eq);
-EXPORT_SYMBOL(po_op_lt);
 EXPORT_SYMBOL(po_op_lt_eq);
+EXPORT_SYMBOL(po_op_gt);
+EXPORT_SYMBOL(po_op_lt);
 EXPORT_SYMBOL(po_op_eq);
 EXPORT_SYMBOL(po_op_ne);
-EXPORT_SYMBOL(po_op_ord);
 #endif
