@@ -12,10 +12,8 @@
 extern po_obj_trait *po_thd_t;
 typedef struct       po_thd  {
     po_obj              head;
-    po_str              name;
     u64_t               stat;
-    void*             (*func)(void*);
-    void               *arg;
+    po_task            *task;
     void               *ret;
     struct task_struct *thd;
 }   po_thd;
@@ -24,5 +22,9 @@ bool_t  po_thd_new  (po_thd*, u32_t, va_list);
 bool_t  po_thd_clone(po_thd*, po_thd*)       ;
 void    po_thd_del  (po_thd*)                ;
 po_fut* po_thd_fut  (po_thd*)                ;
+
+any_t   po_await_until(po_fut*, u32_t);
+any_t   po_await      (po_fut*)       ;
+void    po_yield      (void)          ;
 
 #endif
