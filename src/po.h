@@ -1,5 +1,5 @@
-#ifndef __PO_CORE_H__
-#define __PO_CORE_H__
+#ifndef __PO_H__
+#define __PO_H__
 
 #include "core/sync/spsc.h"
 #include "core/sync/spmc.h"
@@ -25,16 +25,11 @@ extern po_mem_ops *po_heap_ops;
 extern po_mem     *po_heap_atomic;
 extern po_mem     *po_heap;
 
-extern po_obj_trait *po_core_t;
-struct               po_core  {
+extern po_obj_trait *po_t;
+struct               po  {
     po_obj head;
 };
 
-extern struct po_core po_core;
-
-bool_t po_core_new  (struct po_core*, u32_t, va_list) ;
-bool_t po_core_clone(struct po_core*, struct po_core*);
-bool_t po_core_ref  (struct po_core*);
-void   po_core_del  (struct po_core*);
+extern struct po po;
 
 #endif

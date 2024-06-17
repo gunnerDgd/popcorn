@@ -1,6 +1,7 @@
 kernel_source           (
     popcorn-collections
     ../collections.h
+    ../collections.c
 
     list.h
     list.c
