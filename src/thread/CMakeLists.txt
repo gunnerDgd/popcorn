@@ -1,5 +1,5 @@
 if   (PRESET_LINUX)
-    kernel_source     (
+    add_kernel_source (
         popcorn-thread
         ../thread.h
 

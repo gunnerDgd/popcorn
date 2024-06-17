@@ -1,4 +1,4 @@
-kernel_source           (
+add_kernel_source      (
     popcorn-collections
     ../collections.h
     ../collections.c
