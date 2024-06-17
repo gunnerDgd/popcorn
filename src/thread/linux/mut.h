@@ -1,7 +1,7 @@
 #ifndef __PO_SYNC_MTX_H__
 #define __PO_SYNC_MTX_H__
 
-#include "../../core.h"
+#include "../../po.h"
 #include <linux/mutex.h>
 
 extern po_obj_trait *po_mut_t;

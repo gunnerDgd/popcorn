@@ -1,8 +1,8 @@
 if (PRESET_LINUX)
     kernel_source           (
         popcorn-core
-        ../core.h
-        ../core.c
+            ../po.h
+            ../po.c
 
         linux/atom.c
         linux/bit.c
