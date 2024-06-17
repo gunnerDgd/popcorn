@@ -1,9 +1,9 @@
 #include <linux/module.h>
-#include "../../core.h"
+#include "../../po.h"
 
 static int
-    po_init(void)                                                      {
-        if (!po_obj_new_at((po_obj*) &po_core, po_core_t, 0)) return -1;
+    po_init(void)                                             {
+        if (!po_make_at((po_obj*) &po, po) from (0)) return -1;
         po_info("[Popcorn] POPCORN subsystem Initialized");
         return 0;
 }
@@ -11,7 +11,7 @@ static int
 static void
     po_deinit(void)                                      {
         po_info("[Popcorn] POPCORN subsystem Terminated");
-        po_del(&po_core);
+        po_del(&po);
 }
 
 module_init(po_init)  ;

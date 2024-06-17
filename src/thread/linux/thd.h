@@ -1,7 +1,7 @@
 #ifndef __LINUX_THD_H__
 #define __LINUX_THD_H__
 
-#include "../../core.h"
+#include "../../po.h"
 #include "../../collections.h"
 
 #include <linux/kthread.h>

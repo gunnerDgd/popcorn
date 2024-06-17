@@ -1,7 +1,7 @@
 #ifndef __SET_H__
 #define __SET_H__
 
-#include "../core.h"
+#include "../po.h"
 
 extern po_obj_trait *po_bma_t;
 typedef struct       po_bma  {

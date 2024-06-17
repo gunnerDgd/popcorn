@@ -1,7 +1,7 @@
 #ifndef __PO_COLLECTIONS_NODE_H__
 #define __PO_COLLECTIONS_NODE_H__
 
-#include "../core.h"
+#include "../po.h"
 
 extern po_obj_trait *po_node_t ;
 typedef struct       po_node   {
