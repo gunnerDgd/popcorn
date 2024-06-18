@@ -1,5 +1,5 @@
 #include <linux/module.h>
-#include "../../po.h"
+#include "../../core.h"
 
 static int
     po_init(void)                                             {

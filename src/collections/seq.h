@@ -1,7 +1,7 @@
 #ifndef __PO_COLLECTIONS_SEQ_H__
 #define __PO_COLLECTIONS_SEQ_H__
 
-#include "../po.h"
+#include "../core.h"
 
 extern po_obj_trait *po_seq_t;
 typedef struct       po_seq  {
