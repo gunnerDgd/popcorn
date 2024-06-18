@@ -16,13 +16,10 @@ static int
     mod_init (void)                {
         po_info("Hello Popcorn !!");
 
-        if (!po_make_at (&name, po_str) from (0)) return -1;
-        po_str_push_back_cstr(&name, "HelloThread", 11);
-
         po_task *task = po_make (po_task) from (1, do_run);
         po_thd  *thd  = po_make (po_thd)  from (
             2    ,
-            &name,
+            "thd",
             task
         );
 
