@@ -26,16 +26,15 @@ static int
 
 bool_t
     po_thd_new
-        (po_thd* self, u32_t count, va_list arg)                            {
-            po_str  *name = null_t; if (count > 0) name = va_arg(arg, any_t);
-            po_task *task = null_t; if (count > 1) task = va_arg(arg, any_t);
+        (po_thd* self, u32_t count, va_list arg)                               {
+            const char *name = null_t; if (count > 0) name = va_arg(arg, any_t);
+            po_task    *task = null_t; if (count > 1) task = va_arg(arg, any_t);
             if (po_trait_of(task) != po_task_t) return false_t;
-            if (po_trait_of(name) != po_str_t)  return false_t;
 
             self->task = (po_task*) po_ref(task);
             self->stat = po_fut_pend;
 
-            self->thd  = kthread_run (do_run, (any_t) self, po_str_ptr(name));
+            self->thd  = kthread_run (do_run, (any_t) self, name);
             if (!self->thd) return false_t;
             return true_t;
 }
