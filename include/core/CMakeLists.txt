@@ -11,9 +11,8 @@ add_library(popcorn-core-include
     task.h
     box.h
     mem.h
-    mod.h
 
-    sync/spsc.h
+        sync/spsc.h
     sync/spmc.h
     sync/mpsc.h
     sync/mpmc.h

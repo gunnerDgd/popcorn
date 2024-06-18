@@ -1,8 +1,8 @@
 if (PRESET_LINUX)
     add_kernel_source (
         popcorn-core
-            ../core.h
-            ../core.c
+        ../core.h
+        ../core.c
 
         linux/atom.c
         linux/bit.c
@@ -17,9 +17,6 @@ if (PRESET_LINUX)
         bit.h
         atom.h
         print.h
-
-        mod.h
-        mod.c
 
         fut.h
         fut.c
