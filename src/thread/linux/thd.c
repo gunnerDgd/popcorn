@@ -48,7 +48,7 @@ bool_t
 void
     po_thd_del
         (po_thd* self)                                     {
-            for ( ; self->stat != po_fut_pend ; schedule());
+            for ( ; self->stat == po_fut_pend ; schedule());
             po_del(self->task);
 }
 
@@ -91,7 +91,7 @@ any_t
         (po_fut* fut)                                      {
             if (po_trait_of(fut) != po_fut_t) return null_t;
 
-            for ( ; po_fut_poll(fut) != po_fut_pend ; po_yield());
+            for ( ; po_fut_poll(fut) == po_fut_pend ; po_yield());
             any_t  ret = po_fut_ret(fut);
             po_del(fut);
             return ret;
