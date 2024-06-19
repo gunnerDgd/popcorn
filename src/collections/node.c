@@ -13,11 +13,11 @@ po_obj_trait* po_node_t = &po_node_trait;
 
 bool_t
     po_node_new
-        (po_node* par_cur, u32_t par_count, va_list par)                                {
-            po_obj* node  = null_t      ; if (par_count > 0) node = va_arg(par, po_obj*);
-            par_cur->node = po_ref(node);
-            par_cur->next = null_t      ;
-            par_cur->prev = null_t      ;
+        (po_node* self, u32_t count, va_list arg)                          {
+            po_obj* node = null_t; if (count > 0) node = va_arg(arg, any_t);
+            self->node = po_ref(node);
+            self->next = null_t      ;
+            self->prev = null_t      ;
             return true_t;
 }
 
@@ -45,32 +45,26 @@ po_obj*
 
 po_node*
     po_node_next
-        (po_node* par, po_node* par_next)                      {
-            if (!par)                             return null_t;
-            if (po_trait_of(par) != po_node_t)    return null_t;
-            if (par_next)                                            {
-                if (po_trait_of(par_next) != po_node_t) return null_t;
-                par     ->next = par_next;
-                par_next->prev = par     ;
-                return par_next;
-            }
+        (po_node* self, po_node* next)                           {
+            if (po_trait_of(self) != po_node_t) return     null_t;
+            if (!next)                          return self->next;
 
-            return par->next;
+            if (po_trait_of(next) != po_node_t) return null_t;
+            self->next = next;
+            next->prev = self;
+            return next;
 }
 
 po_node*
     po_node_prev
-        (po_node* par, po_node* par_prev)                            {
-            if (!par)                                   return null_t;
-            if (po_trait_of(par) != po_node_t)          return null_t;
-            if (par_prev)                                            {
-                if (po_trait_of(par_prev) != po_node_t) return null_t;
-                par     ->prev = par_prev;
-                par_prev->next = par     ;
-                return par_prev;
-            }
+        (po_node* self, po_node* prev)                           {
+            if (po_trait_of(self) != po_node_t) return     null_t;
+            if (!prev)                          return self->prev;
 
-            return par->prev;
+            if (po_trait_of(prev) != po_node_t) return null_t;
+            self->prev = prev;
+            prev->next = self;
+            return prev;
 }
 
 #ifdef PRESET_LINUX
