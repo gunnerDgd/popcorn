@@ -15,11 +15,18 @@ add_kernel_feature(hello example)
 add_kernel_source (thread thread.c)
 add_kernel_feature(thread example thread)
 
+add_kernel_source (map map.c)
+add_kernel_feature(map example map)
+
+
 kernel_feature_include(hello  example ${ROOT_LIB}/popcorn/include)
 kernel_feature_include(thread example ${ROOT_LIB}/popcorn/include)
+kernel_feature_include(map    example ${ROOT_LIB}/popcorn/include)
+
 
 kernel_feature_source (hello   example hello)
 kernel_feature_source (thread  example thread)
+kernel_feature_source (map     example map)
 kernel_feature_source (popcorn example
     popcorn-core
     popcorn-collections
