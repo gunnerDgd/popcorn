@@ -61,8 +61,8 @@ po_node*
             );
 
             if (po_trait_of(ret) != po_node_t) return null_t;
-            po_prev_as(ret, po_prev(&self->end));
-            po_prev_as(&self->end, ret)         ;
+            po_next_as(po_prev(&self->end), ret);
+            po_prev_as(&self->end         , ret);
             return  ret;
 }
 
@@ -79,8 +79,8 @@ po_node*
             );
 
             if (po_trait_of(ret) != po_node_t) return null_t;
-            po_next_as(ret, po_next(&self->begin));
-            po_next_as(&self->begin, ret)         ;
+            po_prev_as(po_next(&self->begin), ret);
+            po_next_as(&self->begin         , ret);
             return  ret;
 }
 
