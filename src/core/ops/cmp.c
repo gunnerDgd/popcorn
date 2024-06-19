@@ -9,7 +9,7 @@ po_ord_t
             po_obj_ops *ops = self->trait->ops; if (!ops) return po_ord_err;
             po_ops_cmp *cmp = ops ->cmp;        if (!cmp) return po_ord_err;
 
-            if (!cmp->ord) return po_ord_err;
+            if (!cmp->ord_arg) return po_ord_err;
             return cmp->ord_arg(self, arg);
 }
 
@@ -23,7 +23,7 @@ po_ord_t
             po_ops_cmp *cmp = ops ->cmp;        if (!cmp) return po_ord_err;
 
             if (!cmp->ord) return po_ord_err;
-            return cmp->ord_arg(self, arg);
+            return cmp->ord(self, arg);
 }
 
 bool_t   po_op_gt_eq(struct po_obj* self, struct po_obj* arg) { return po_op_ord(self, arg) == po_ord_gt | po_op_ord(self, arg) == po_ord_eq; }

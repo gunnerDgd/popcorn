@@ -52,6 +52,17 @@ po_node*
             return po_list_push_back(&self->map, push);
 }
 
+po_node*
+    po_map_move
+        (po_map *self, po_obj* push)                        {
+            if (po_trait_of(self) != po_map_t) return null_t;
+            po_node *ret = po_map_push(self, push);
+
+            if (po_trait_of(ret) != po_node_t) return null_t;
+            po_del (push);
+            return  ret  ;
+}
+
 void
     po_map_pop
         (po_map* self, any_t key)                    {
@@ -78,7 +89,6 @@ po_node*
 bool_t
     po_map_empty
         (po_map* par)                                       {
-            if (!par)                         return false_t;
             if (po_trait_of(par) != po_map_t) return false_t;
             return po_list_empty(&par->map);
 }
@@ -86,7 +96,6 @@ bool_t
 po_node*
     po_map_begin
         (po_map* par)                                      {
-            if (!par)                         return null_t;
             if (po_trait_of(par) != po_map_t) return null_t;
             return po_list_begin(&par->map);
 }
@@ -94,7 +103,6 @@ po_node*
 po_node*
     po_map_end
         (po_map* par)                                      {
-            if (!par)                         return null_t;
             if (po_trait_of(par) != po_map_t) return null_t;
             return po_list_end(&par->map);
 }
@@ -106,6 +114,7 @@ EXPORT_SYMBOL(po_map_begin);
 EXPORT_SYMBOL(po_map_end);
 EXPORT_SYMBOL(po_map_empty);
 EXPORT_SYMBOL(po_map_find);
+EXPORT_SYMBOL(po_map_move);
 EXPORT_SYMBOL(po_map_push);
 EXPORT_SYMBOL(po_map_pop);
 EXPORT_SYMBOL(po_map_t);

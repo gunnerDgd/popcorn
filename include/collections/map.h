@@ -7,6 +7,7 @@ extern po_obj_trait* po_map_t;
 typedef struct       po_map  { u8_t po_map[256]; } po_map;
 
 po_node*  po_map_push (po_map*, po_obj*)       ;
+po_node*  po_map_move (po_map*, po_obj*)       ;
 void      po_map_pop  (po_map*, po_obj*)       ;
 po_node*  po_map_find (po_map*, po_obj*)       ;
 
