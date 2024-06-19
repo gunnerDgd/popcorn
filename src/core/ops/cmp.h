@@ -17,8 +17,8 @@ typedef struct po_ops_cmp                     {
     po_ord_t (*ord)    (struct po_obj*, any_t);
 }   po_ops_cmp;
 
-#define po_make_cmp_ops(do_ord, do_ord_arg)                      { \
-    .ord_arg = ((po_ord_t (*)(struct po_obj*, any_t))(do_ord_arg)) \
+#define po_make_cmp_ops(do_ord, do_ord_arg)                       {\
+    .ord_arg = ((po_ord_t (*)(struct po_obj*, any_t))(do_ord_arg)),\
     .ord     = ((po_ord_t (*)(struct po_obj*, any_t))(do_ord))     \
 }
 

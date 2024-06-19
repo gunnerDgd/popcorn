@@ -12,11 +12,15 @@ typedef enum po_ord_t {
     po_ord_gt  =  2
 }   po_ord_t;
 
-typedef struct po_ops_cmp                 {
-    po_ord_t (*ord)(struct po_obj*, any_t);
+typedef struct po_ops_cmp                     {
+    po_ord_t (*ord_arg)(struct po_obj*, any_t);
+    po_ord_t (*ord)    (struct po_obj*, any_t);
 }   po_ops_cmp;
 
-#define  po_make_cmp_ops(par_ord) { .ord = ((po_ord_t (*)(struct po_obj*, any_t))(par_ord)) }
+#define po_make_cmp_ops(do_ord, do_ord_arg)                       { \
+    .ord_arg = ((po_ord_t (*)(struct po_obj*, any_t))(do_ord_arg)), \
+    .ord     = ((po_ord_t (*)(struct po_obj*, any_t))(do_ord))     \
+}
 
 po_ord_t po_op_ord  (struct po_obj*, any_t);
 bool_t   po_op_gt   (struct po_obj*, any_t);
