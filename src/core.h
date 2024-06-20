@@ -1,11 +1,6 @@
 #ifndef __PO_H__
 #define __PO_H__
 
-#include "core/sync/spsc.h"
-#include "core/sync/spmc.h"
-#include "core/sync/mpsc.h"
-#include "core/sync/mpmc.h"
-
 #include "core/atom.h"
 #include "core/bit.h"
 #include "core/box.h"
@@ -18,6 +13,7 @@
 #include "core/macro.h"
 #include "core/task.h"
 #include "core/type.h"
+#include "core/this.h"
 
 extern po_mem_ops *po_heap_ops_atomic;
 extern po_mem_ops *po_heap_ops;

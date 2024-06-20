@@ -23,8 +23,4 @@ bool_t  po_thd_clone(po_thd*, po_thd*)       ;
 void    po_thd_del  (po_thd*)                ;
 po_fut* po_thd_fut  (po_thd*)                ;
 
-any_t   po_await_until(po_fut*, u32_t);
-any_t   po_await      (po_fut*)       ;
-void    po_yield      (void)          ;
-
 #endif

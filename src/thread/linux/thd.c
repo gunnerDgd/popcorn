@@ -52,11 +52,24 @@ void
             po_del(self->task);
 }
 
-static u64_t      do_poll(po_thd* self) { if (po_trait_of(self) != po_thd_t) return po_fut_err; return self->stat; }
-static any_t      do_ret (po_thd* self) { if (po_trait_of(self) != po_thd_t) return null_t;     return self->ret;  }
-static po_fut_ops do_fut = po_make_fut_ops (
-    do_poll,
+static u64_t
+    do_poll
+        (po_thd* self)                                          {
+            if (po_trait_of(self) != po_thd_t) return po_fut_err;
+            return self->stat;
+}
+
+static any_t
     do_ret
+        (po_thd* self)                                      {
+            if (po_trait_of(self) != po_thd_t) return null_t;
+            return self->ret;
+}
+
+static po_fut_ops
+    do_fut = po_make_fut_ops (
+        do_poll,
+        do_ret
 );
 
 po_fut*
@@ -70,43 +83,9 @@ po_fut*
             );
 }
 
-any_t
-    po_await_until
-        (po_fut* fut, u32_t until)                         {
-            if (po_trait_of(fut) != po_fut_t) return null_t;
-            until += jiffies;
-
-            for ( ; time_before(jiffies, until) ; po_yield())
-                if (po_fut_poll(fut) != po_fut_pend) {
-                    any_t  ret = po_fut_ret(fut);
-                    po_del(fut);
-                    return ret;
-                }
-
-            return null_t;
-}
-
-any_t
-    po_await
-        (po_fut* fut)                                      {
-            if (po_trait_of(fut) != po_fut_t) return null_t;
-
-            for ( ; po_fut_poll(fut) == po_fut_pend ; po_yield());
-            any_t  ret = po_fut_ret(fut);
-            po_del(fut);
-            return ret;
-}
-
-void
-    po_yield(void) {
-        schedule();
-}
 
 #include <linux/module.h>
 
 MODULE_LICENSE("GPL");
 EXPORT_SYMBOL(po_thd_fut);
-EXPORT_SYMBOL(po_await_until);
-EXPORT_SYMBOL(po_await);
-EXPORT_SYMBOL(po_yield);
 EXPORT_SYMBOL(po_thd_t);

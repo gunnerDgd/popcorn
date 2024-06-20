@@ -1,11 +1,6 @@
 #ifndef __PO_CORE_H__
 #define __PO_CORE_H__
 
-#include "core/sync/spsc.h"
-#include "core/sync/spmc.h"
-#include "core/sync/mpsc.h"
-#include "core/sync/mpmc.h"
-
 #include "core/atom.h"
 #include "core/bit.h"
 #include "core/box.h"
@@ -17,5 +12,6 @@
 #include "core/print.h"
 #include "core/task.h"
 #include "core/type.h"
+#include "core/this.h"
 
 #endif
