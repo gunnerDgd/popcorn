@@ -3,11 +3,13 @@ if (PRESET_LINUX)
         popcorn-core
         ../core.h
         ../core.c
+        this.h
 
         linux/atom.c
         linux/bit.c
         linux/print.c
         linux/mod.c
+        linux/this.c
 
         linux/heap_atomic.c
         linux/heap.c
@@ -51,17 +53,5 @@ if (PRESET_LINUX)
 
         ops/logical.h
         ops/logical.c
-
-        sync/spsc.h
-        sync/spsc.c
-
-        sync/spmc.h
-        sync/spmc.c
-
-        sync/mpsc.h
-        sync/mpsc.c
-
-        sync/mpmc.h
-        sync/mpmc.c
     )
 endif()

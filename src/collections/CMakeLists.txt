@@ -17,6 +17,9 @@ add_kernel_source      (
     bma.h
     bma.c
 
+    scq.h
+    scq.c
+
     str.h
     str.c
 )

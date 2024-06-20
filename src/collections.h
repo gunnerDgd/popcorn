@@ -7,5 +7,6 @@
 #include "collections/map.h"
 #include "collections/node.h"
 #include "collections/seq.h"
+#include "collections/scq.h"
 
 #endif
