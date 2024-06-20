@@ -6,6 +6,7 @@ add_library(popcorn-collections-include STATIC
     bma.h
     str.h
     seq.h
+    scq.h
 )
 
 set_target_properties(popcorn-collections-include PROPERTIES LINKER_LANGUAGE C)

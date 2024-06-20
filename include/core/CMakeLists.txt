@@ -9,13 +9,9 @@ add_library(popcorn-core-include
     print.h
     type.h
     task.h
+    this.h
     box.h
     mem.h
-
-        sync/spsc.h
-    sync/spmc.h
-    sync/mpsc.h
-    sync/mpmc.h
 
     ops.h
     ops/arith.h
