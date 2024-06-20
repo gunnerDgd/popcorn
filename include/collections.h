@@ -7,5 +7,6 @@
 #include "collections/seq.h"
 #include "collections/bma.h"
 #include "collections/str.h"
+#include "collections/scq.h"
 
 #endif
