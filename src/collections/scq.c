@@ -52,6 +52,14 @@ static po_obj_trait
 po_obj_trait *po_scq_t = &do_obj;
 
 bool_t
+    po_scq_empty
+        (po_scq* self)                                       {
+            if (po_trait_of(self) != po_scq_t) return false_t;
+            if (self->sqe == self->cqe) return true_t;
+            return false_t;
+}
+
+bool_t
     po_enq_lock_try
         (po_scq* self, po_obj* enq)                          {
             if (po_trait_of(self) != po_scq_t) return false_t;
