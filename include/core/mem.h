@@ -7,6 +7,20 @@
 extern po_obj_trait *po_mem_t;
 typedef struct po_mem { u8_t po_mem[64]; } po_mem;
 
+typedef struct po_mem_ops                {
+    void* (*on_use) (any_t, void*, u64_t);
+    void  (*on_free)(any_t, void*, u64_t);
+    any_t (*on_new) (u32_t, va_list);
+    void  (*on_del) (any_t);
+}   po_mem_ops;
+
+#define po_make_mem_ops(do_use, do_free, do_new, do_del)  {\
+    .on_use  = ((void* (*)(any_t, void*, u64_t))(do_use)) ,\
+    .on_free = ((void  (*)(any_t, void*, u64_t))(do_free)),\
+    .on_new  = ((any_t (*)(u32_t, va_list))     (do_new)) ,\
+    .on_del  = ((void  (*)(any_t))              (do_del)) ,\
+}
+
 po_mem*   po_get_mem  (void);
 po_mem*   po_set_mem  (po_mem*);
 
