@@ -8,7 +8,7 @@ static bool_t
 
             if (po_trait_of(mem) != po_mem_t) mem = po_get_mem();
             if (po_trait_of(mem) != po_mem_t) return false_t;
-            if (!num)                         return false_t;
+            if (num < 16)                     return false_t;
             u64_t len = sizeof (any_t) * num;
 
             self->scq = po_mem_use (mem, null_t, len);
