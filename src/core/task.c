@@ -39,3 +39,11 @@ any_t
             if (po_trait_of(self) != po_task_t) return null_t;
             return self->fun(self->arg);
 }
+
+#ifdef PRESET_LINUX
+#include <linux/module.h>
+
+MODULE_LICENSE("GPL");
+EXPORT_SYMBOL(po_task_t);
+EXPORT_SYMBOL(po_task_run);
+#endif

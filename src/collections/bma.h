@@ -1,5 +1,5 @@
-#ifndef __SET_H__
-#define __SET_H__
+#ifndef __BMA_H__
+#define __BMA_H__
 
 #include "../core.h"
 

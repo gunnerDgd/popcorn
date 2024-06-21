@@ -176,6 +176,7 @@ po_obj*
 #include <linux/module.h>
 
 EXPORT_SYMBOL(po_scq_t);
+EXPORT_SYMBOL(po_scq_empty);
 
 EXPORT_SYMBOL(po_deq_lock_try);
 EXPORT_SYMBOL(po_deq_lock);
