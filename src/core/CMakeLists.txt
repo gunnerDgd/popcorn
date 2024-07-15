@@ -1,57 +1,43 @@
-if (PRESET_LINUX)
-    add_kernel_source (
-        popcorn-core
-        ../core.h
-        ../core.c
-        this.h
+add_kernel_source (
+    popcorn-core
 
-        linux/atom.c
-        linux/bit.c
-        linux/print.c
-        linux/mod.c
-        linux/this.c
+    ops/arith.h
+    ops/arith.c
 
-        linux/heap_atomic.c
-        linux/heap.c
-        linux/mem.c
+    ops/cast.h
+    ops/cast.c
 
-        type.h
-        bit.h
-        atom.h
-        print.h
+    ops/bit.h
+    ops/bit.c
 
-        fut.h
-        fut.c
+    ops/cmp.h
+    ops/cmp.c
+    ops.h
 
-        mem.h
-        mem.c
+    this.h
+    type.h
+    bit.h
+    atom.h
+    print.h
 
-        obj.h
-        obj.c
+    fut.h
+    fut.c
 
-        box.h
-        box.c
+    mem.h
+    mem.c
 
-        task.h
-        task.c
+    obj.h
+    obj.c
 
-        endian.h
-        endian.c
+    box.h
+    box.c
 
-        ops.h
-        ops/arith.h
-        ops/arith.c
+    task.h
+    task.c
 
-        ops/cast.h
-        ops/cast.c
+    endian.h
+    endian.c
 
-        ops/bit.h
-        ops/bit.c
-
-        ops/cmp.h
-        ops/cmp.c
-
-        ops/logical.h
-        ops/logical.c
-    )
-endif()
+    ../core.h
+    ../core.c
+)

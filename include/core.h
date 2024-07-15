@@ -1,5 +1,5 @@
-#ifndef __PO_CORE_H__
-#define __PO_CORE_H__
+#ifndef CORE_H
+#define CORE_H
 
 #include "core/atom.h"
 #include "core/bit.h"

@@ -5,7 +5,7 @@
 #include "collections/bma.h"
 #include "collections/list.h"
 #include "collections/map.h"
-#include "collections/node.h"
+#include "collections/pos.h"
 #include "collections/seq.h"
 #include "collections/scq.h"
 

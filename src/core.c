@@ -1,48 +1,50 @@
 #include "core.h"
 #include <linux/slab.h>
 
-struct po po;
-
-#ifdef PRESET_LINUX
-#include <linux/module.h>
-MODULE_LICENSE("GPL");
-#endif
+struct pp pp;
 
 static bool_t
     do_new
-        (struct po* self, u32_t count, va_list arg)                                        {
-            if (!po_make_at(po_heap_atomic, po_mem) from (1, po_heap_ops_atomic)) return false_t;
-            if (!po_make_at(po_heap       , po_mem) from (1, po_heap_ops))        return false_t;
-            po_set_mem(po_heap);
+        (struct pp* self, u32_t count, va_list arg)                                             {
+            if (!pp_make_at(pp_heap_atomic, pp_mem) from (1, pp_heap_ops_atomic)) return false_t;
+            if (!pp_make_at(pp_heap       , pp_mem) from (1, pp_heap_ops))        return false_t;
+            pp_set_mem(pp_heap);
             return true_t;
 }
 
 static bool_t
     do_clone
-        (struct po* self, struct po* clone) {
+        (struct pp* self, struct pp* clone) {
             return false_t;
 }
 
 static bool_t
     do_ref
-        (struct po* self) {
+        (struct pp* self) {
             return false_t;
 }
 
-void
+static void
     do_del
         (struct po* self)         {
-            po_del(po_heap_atomic);
-            po_del(po_heap);
+            pp_del(pp_heap_atomic);
+            pp_del(pp_heap);
 }
 
-po_obj_trait po_trait = po_make_trait (
-    do_new           ,
-    do_clone         ,
-    do_ref           ,
-    do_del           ,
-    sizeof(struct po),
-    null_t
+static pp_obj_trait
+    do_obj = pp_make_trait (
+        do_new           ,
+        do_clone         ,
+        do_ref           ,
+        do_del           ,
+        sizeof(struct pp),
+        null_t
 );
 
-po_obj_trait *po_t = &po_trait;
+pp_obj_trait *pp_t = &do_obj;
+
+#ifdef PRESET_LINUX
+#include <linux/module.h>
+MODULE_LICENSE("GPL");
+EXPORT_SYMBOL(pp_t);
+#endif

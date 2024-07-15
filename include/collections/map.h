@@ -1,18 +1,18 @@
-#ifndef __MAP_H__
-#define __MAP_H__
+#ifndef COLLECTIONS_MAP_H
+#define COLLECTIONS_MAP_H
 
 #include "list.h"
 
-extern po_obj_trait* po_map_t;
-typedef struct       po_map  { u8_t po_map[256]; } po_map;
+extern pp_obj_trait* pp_map_t;
+typedef struct       pp_map  { u8_t pp_map[256]; } pp_map;
 
-po_node*  po_map_push (po_map*, po_obj*)       ;
-po_node*  po_map_move (po_map*, po_obj*)       ;
-void      po_map_pop  (po_map*, po_obj*)       ;
-po_node*  po_map_find (po_map*, po_obj*)       ;
+pp_pos* pp_map_push (pp_map*, pp_obj*);
+pp_pos* pp_map_move (pp_map*, pp_obj*);
+void    pp_map_pop  (pp_map*, any_t);
+pp_pos* pp_map_find (pp_map*, any_t);
 
-bool_t    po_map_empty(po_map*)                ;
-po_node*  po_map_begin(po_map*)                ;
-po_node*  po_map_end  (po_map*)                ;
+bool_t  pp_map_empty(pp_map*);
+pp_pos* pp_map_begin(pp_map*);
+pp_pos* pp_map_end  (pp_map*);
 
 #endif

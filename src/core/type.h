@@ -1,5 +1,5 @@
-#ifndef __TYPE_H__
-#define __TYPE_H__
+#ifndef CORE_TYPE_H
+#define CORE_TYPE_H
 
 #ifdef PRESET_LINUX
 #include <linux/types.h>

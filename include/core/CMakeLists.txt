@@ -1,5 +1,11 @@
-add_library(popcorn-core-include
+inc(popcorn-core-include
     ../core.h
+
+    ops/arith.h
+    ops/cast.h
+    ops/bit.h
+    ops/cmp.h
+    ops.h
 
     atom.h
     bit.h
@@ -12,13 +18,4 @@ add_library(popcorn-core-include
     this.h
     box.h
     mem.h
-
-    ops.h
-    ops/arith.h
-    ops/bit.h
-    ops/cast.h
-    ops/cmp.h
-    ops/logical.h
 )
-
-set_target_properties(popcorn-core-include PROPERTIES LINKER_LANGUAGE C)

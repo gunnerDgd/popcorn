@@ -1,309 +1,274 @@
 #include "str.h"
 
-po_obj_trait po_str_trait = po_make_trait (
-    po_str_new    ,
-    po_str_clone  ,
-    null_t        ,
-    po_str_del    ,
-    sizeof(po_str),
-    null_t
+static pp_str*
+    do_add
+        (pp_str* self, pp_str* arg)                         {
+            if (pp_trait_of(self) != pp_str_t) return null_t;
+            if (pp_trait_of(arg)  != pp_str_t) return null_t;
+            pp_str* ret = pp_make (pp_str) from (0);
+
+            if (pp_trait_of(ret) != pp_str_t) return null_t;
+            pp_seq_push_back(&ret->str, &self->str, pp_str_len(self));
+            pp_seq_push_back(&ret->str, &arg ->str, pp_str_len(arg)) ;
+            return ret;
+}
+
+static pp_str*
+    do_add_eq
+        (pp_str* self, pp_str* arg)                         {
+            if (pp_trait_of(self) != pp_str_t) return null_t;
+            if (pp_trait_of(arg)  != pp_str_t) return null_t;
+
+            pp_seq_push_back(&self->str, &arg->str, pp_str_len(arg));
+            return self;
+}
+
+static pp_str*
+    do_mul
+        (pp_str* self, u64_t num)                           {
+            if (pp_trait_of(self) != pp_str_t) return null_t;
+            if (!num)                          return null_t;
+            pp_str* ret = pp_make (pp_str) from (0);
+
+            if (pp_trait_of(ret) != pp_str_t) return null_t;
+            while (num --) pp_seq_push_back(&ret->str, &self->str, pp_str_len(self));
+            return ret;
+}
+
+static pp_arith
+    do_arith = pp_make_arith (
+        do_add   ,
+        null_t   ,
+        do_mul   ,
+        null_t   ,
+        null_t   ,
+        do_add_eq,
+        null_t   ,
+        null_t   ,
+        null_t   ,
+        null_t
 );
 
-po_obj_trait *po_str_t = &po_str_trait;
+static pp_ord_t
+    do_ord
+        (pp_str* self, pp_str* arg)                             {
+            if (pp_trait_of(self) != pp_str_t) return pp_ord_err;
+            if (pp_trait_of(arg)  != pp_str_t) return pp_ord_err;
+            u64_t len;
 
-bool_t
-    po_str_new
-        (po_str* par_str, u32_t par_count, va_list par)                      {
-            po_mem *mem = null_t; if (par_count > 0) mem = va_arg(par, void*);
-            if (po_trait_of(mem) != po_mem_t) mem = po_get_mem();
-            if (po_trait_of(mem) != po_mem_t) return false_t;
+            len = min (pp_str_len(self), pp_str_len(arg));
+            return pp_mem_ord    (
+                pp_str_ptr(self),
+                pp_str_ptr(arg) ,
+                len
+            );
+}
 
-            if (!po_make_at(&par_str->str, po_seq) from (2, 16, mem)) return false_t;
+static pp_ord_t
+    do_ord_arg
+        (pp_str* self, const char* arg)                         {
+            if (pp_trait_of(self) != pp_str_t) return pp_ord_err;
+            if (!arg)                          return pp_ord_err;
+            u64_t len = pp_str_len(self);
+            u8_t* pos = pp_str_ptr(self);
+
+            for (u64_t i = 0 ; i < len ; ++i)        {
+                if (pos[i] > arg[i]) return pp_ord_gt;
+                if (pos[i] < arg[i]) return pp_ord_lt;
+                if (arg[i] == '\0')  return pp_ord_gt;
+            }
+
+            if (arg[len] != '\0') return pp_ord_lt;
+            return pp_ord_eq;
+}
+
+static pp_cmp
+    do_cmp = pp_make_cmp (
+        do_ord_arg,
+        do_ord
+);
+
+static pp_obj_ops
+    do_ops =              {
+        .arith = &do_arith,
+        .cmp   = &do_cmp
+};
+
+static bool_t
+    do_new
+        (pp_str* self, u32_t count, va_list arg)                         {
+            pp_mem *mem = null_t; if (count > 0) mem = va_arg(arg, any_t);
+            if (pp_trait_of(mem) != pp_mem_t) mem = pp_get_mem();
+            if (pp_trait_of(mem) != pp_mem_t) return false_t;
+
+            if (!pp_make_at(&self->str, pp_seq) from (2, 16, mem)) return false_t;
             return true_t;
 }
 
-bool_t po_str_clone(po_str* par, po_str* par_clone) { return po_clone_at(&par->str, &par_clone->str); }
-void   po_str_del  (po_str* par)		            { po_del(&par->str); }
+static bool_t
+    do_clone
+        (pp_str* self, pp_str* clone)                  {
+            return pp_clone_at(&self->str, &clone->str);
+}
+
+static void
+    do_del
+        (pp_str* self)        {
+            pp_del(&self->str);
+}
+
+static pp_obj_trait
+    do_obj = pp_make_trait (
+        do_new        ,
+        do_clone      ,
+        null_t        ,
+        do_del        ,
+        sizeof(pp_str),
+        &do_ops
+);
+
+pp_obj_trait *pp_str_t = &do_obj;
+
 
 void
-    po_str_push_back
-        (po_str* par, po_str* par_push)                  {
-            if (po_trait_of(par_push) != po_str_t) return;
-            if (po_trait_of(par_push) != po_str_t) return;
-            u64_t   len = po_seq_len(&par_push->str);
-            void   *src = po_seq_ptr(&par_push->str);
-            po_seq *dst = &par->str;
-
-            po_seq_push_back(dst, src, len);
-}
-
-void
-    po_str_push_front
-        (po_str* par, po_str* par_push)                  {
-            if (po_trait_of(par_push) != po_str_t) return;
-            if (po_trait_of(par_push) != po_str_t) return;
-            u64_t   len = po_seq_len(&par_push->str);
-            void   *src = po_seq_ptr(&par_push->str);
-            po_seq *dst = &par->str;
-
-            po_seq_push_front(dst, src, len);
-}
-
-void
-    po_str_push
-        (po_str* par, po_str* par_push, u64_t par_off)   {
-            if (po_trait_of(par_push) != po_str_t) return;
-            if (po_trait_of(par_push) != po_str_t) return;
-            u64_t len = po_seq_len(&par_push->str);
-            void *src = po_seq_ptr(&par_push->str);
-            po_seq  *dst = &par->str;
-
-            po_seq_push(dst, src, len, par_off);
-}
-
-void
-    po_str_push_front_cstr
-        (po_str* par, const char* par_push, u64_t par_len) {
-            if (po_trait_of(par) != po_str_t) return;
-            po_seq_push_front                       (
-                &par->str,
-                par_push ,
-                par_len
-            );
-}
-
-void
-    po_str_push_back_cstr
-        (po_str* par, const char* par_push, u64_t par_len) {
-            if (po_trait_of(par) != po_str_t) return;
-            po_seq_push_back                        (
-                &par->str,
-                par_push ,
-                par_len
-            );
-}
-
-void
-    po_str_push_cstr
-        (po_str* par, const char* par_push, u64_t par_len, u64_t par_off) {
-            if (po_trait_of(par) != po_str_t) return;
-            po_seq_push                             (
-                &par->str,
-                par_push ,
-                par_len  ,
-                par_off
-            );
-}
-
-void
-    po_str_pop_front
-        (po_str* par, u64_t par_len)                {
-            if (po_trait_of(par) != po_str_t) return;
-            po_seq_pop_front(&par->str, par_len);
-}
-
-void
-    po_str_pop_back
-        (po_str* par, u64_t par_len)                {
-            if (po_trait_of(par) != po_str_t) return;
-            po_seq_pop_back(&par->str, par_len);
-}
-
-void
-    po_str_pop
-        (po_str* par, u64_t par_len, u64_t par_off) {
-            if (po_trait_of(par) != po_str_t) return;
-            po_seq_pop                              (
-                &par->str,
-                par_len,
-                par_off
-            );
-}
-
-void
-po_str_prep_front
-        (po_str* par, u64_t par_len)                {
-            if (po_trait_of(par) != po_str_t) return;
-            po_seq_prep_front(&par->str, par_len);
-}
-
-void
-    po_str_prep_back
-        (po_str* par, u64_t par_len)                {
-            if (po_trait_of(par) != po_str_t) return;
-            po_seq_prep_back (&par->str, par_len);
-}
-
-u64_t
-    po_str_find
-        (po_str* par, u64_t par_off, po_str* par_find)      {
-            if (po_trait_of(par_find) != po_str_t) return -1;
-            if (po_trait_of(par)      != po_str_t) return -1;
-            return po_mem_find                              (
-                po_str_ptr(par) + par_off,
-                po_str_ptr(par_find)     ,
-                po_str_len(par)          ,
-                po_str_len(par_find)
-            );
-}
-
-u64_t
-    po_str_find_cstr
-        (po_str* par, u64_t par_off, const char* par_find, u64_t par_len) {
-            if (po_trait_of(par_find) != po_str_t) return -1;
-            return po_mem_find                              (
-                po_str_ptr(par) + par_off,
-                par_find              ,
-                po_str_len(par)          ,
-                par_len
-            );
-}
-
-po_ord_t
-    po_str_ord_cstr
-        (po_str* self, const char* ord, u64_t len)              {
-            if (po_trait_of(self) != po_str_t) return po_ord_err;
-            if (po_str_len (self) != len)      return po_ord_err;
-            len = min(po_str_len(self), len);
-
-            return po_mem_ord   (
-                po_str_ptr(self),
-                ord             ,
+    pp_str_push_front
+        (pp_str* self, const char* push, u64_t len)  {
+            if (pp_trait_of(self) != pp_str_t) return;
+            pp_seq_push_front   (
+                &self->str,
+                push      ,
                 len
             );
 }
 
-po_ord_t
-    po_str_ord
-        (po_str* self, po_str* ord)                             {
-            if (po_trait_of(self) != po_str_t) return po_ord_err;
-            if (po_trait_of(ord)  != po_str_t) return po_ord_err;
-            u64_t len = min(po_str_len(self), po_str_len(ord));
-
-            return po_mem_ord   (
-                po_str_ptr(self),
-                po_str_ptr(ord) ,
+void
+    pp_str_push_back
+        (pp_str* self, const char* push, u64_t len)  {
+            if (pp_trait_of(self) != pp_str_t) return;
+            pp_seq_push_back    (
+                &self->str,
+                push      ,
                 len
             );
 }
 
+void
+    pp_str_push
+        (pp_str* self, const char* push, u64_t len, u64_t off) {
+            if (pp_trait_of(self) != pp_str_t) return;
+            pp_seq_push    (
+                &self->str,
+                push      ,
+                len       ,
+                off
+            );
+}
 
-bool_t po_str_eq(po_str* self, po_str* ord) { return po_str_ord(self, ord) == po_ord_eq; }
-bool_t po_str_gt(po_str* self, po_str* ord) { return po_str_ord(self, ord) == po_ord_gt; }
-bool_t po_str_lt(po_str* self, po_str* ord) { return po_str_ord(self, ord) == po_ord_lt; }
+void
+    pp_str_pop_front
+        (pp_str* self, u64_t len)                    {
+            if (pp_trait_of(self) != pp_str_t) return;
+            pp_seq_pop_front(&self->str, len);
+}
 
-bool_t po_str_eq_cstr(po_str* self, const char* ord, u64_t len) { return po_str_ord_cstr(self, ord, len) == po_ord_eq; }
-bool_t po_str_gt_cstr(po_str* self, const char* ord, u64_t len) { return po_str_ord_cstr(self, ord, len) == po_ord_gt; }
-bool_t po_str_lt_cstr(po_str* self, const char* ord, u64_t len) { return po_str_ord_cstr(self, ord, len) == po_ord_lt; }
+void
+    pp_str_pop_back
+        (pp_str* self, u64_t len)                    {
+            if (pp_trait_of(self) != pp_str_t) return;
+            pp_seq_pop_back(&self->str, len);
+}
 
-bool_t
-    po_str_begin
-        (po_str* par, po_str* par_cmp)                          {
-            if (po_trait_of(par_cmp) != po_str_t) return false_t;
-            if (po_trait_of(par)     != po_str_t) return false_t;
-            u64_t  ret = po_str_find(par, 0, par_cmp);
-            return ret == 0;
+void
+    pp_str_pop
+        (pp_str* self, u64_t len, u64_t off)         {
+            if (pp_trait_of(self) != pp_str_t) return;
+            pp_seq_pop     (
+                &self->str,
+                len       ,
+                off
+            );
+}
+
+void
+    pp_str_prep_front
+        (pp_str* self, u64_t len)                    {
+            if (pp_trait_of(self) != pp_str_t) return;
+            pp_seq_prep_front(&self->str, len);
+}
+
+void
+    pp_str_prep_back
+        (pp_str* self, u64_t len)                    {
+            if (pp_trait_of(self) != pp_str_t) return;
+            pp_seq_prep_back (&self->str, len);
+}
+
+u64_t
+    pp_str_find
+        (pp_str* self, u64_t off, const char* find, u64_t len) {
+            if (pp_trait_of(self) != pp_str_t) return -1;
+            return pp_mem_find                          (
+                pp_str_ptr(self) + off,
+                find                  ,
+                pp_str_len(self)      ,
+                len
+            );
 }
 
 bool_t
-    po_str_end
-        (po_str* par, po_str* par_cmp)                          {
-            if (po_trait_of(par_cmp) != po_str_t) return false_t;
-            if (po_trait_of(par)     != po_str_t) return false_t;
-            u64_t  off = po_str_len (par) - po_str_len(par_cmp);
-            u64_t  ret = po_str_find(par, off, par_cmp);
-            return ret == off;
-}
-
-bool_t
-    po_str_begin_cstr
-        (po_str* par, const char* par_cmp, u64_t par_len)   {
-            if (po_trait_of(par) != po_str_t) return false_t;
-            u64_t ret = po_str_find_cstr                    (
-                par    ,
-                0      ,
-                par_cmp,
-                par_len
+    pp_str_begin
+        (pp_str* self, const char* cmp, u64_t len)           {
+            if (pp_trait_of(self) != pp_str_t) return false_t;
+            u64_t ret = pp_str_find          (
+                self,
+                0   ,
+                cmp ,
+                len
             );
 
             return ret == 0;
 }
 
 bool_t
-    po_str_end_cstr
-        (po_str* par, const char* par_cmp, u64_t par_len)   {
-            if (po_trait_of(par) != po_str_t) return false_t;
-            u64_t  off = po_str_len (par) - par_len;
-            u64_t  ret = po_str_find_cstr          (
-                par    ,
-                off    ,
-                par_cmp,
-                par_len
+    pp_str_end
+        (pp_str* self, const char* cmp, u64_t len)           {
+            if (pp_trait_of(self) != pp_str_t) return false_t;
+            u64_t  off = pp_str_len  (self) - len;
+            u64_t  ret = pp_str_find (
+                self,
+                off ,
+                cmp ,
+                len
             );
 
             return ret == off;
 }
 
-bool_t
-    po_str_empty
-        (po_str* par)                                      {
-            if (po_trait_of(par) != po_str_t) return true_t;
-            return po_seq_empty(&par->str);
-}
-
-u64_t
-    po_str_len
-        (po_str* par)                                 {
-            if (po_trait_of(par) != po_str_t) return 0;
-            return po_seq_len(&par->str);
-}
-
-const char*
-    po_str_ptr
-        (po_str* par)                                      {
-            if (po_trait_of(par) != po_str_t) return null_t;
-            return po_seq_ptr(&par->str);
-}
+bool_t      pp_str_empty(pp_str* self) { if (pp_trait_of(self) != pp_str_t) return true_t; return pp_seq_empty(&self->str); }
+u64_t       pp_str_len  (pp_str* self) { if (pp_trait_of(self) != pp_str_t) return 0;      return pp_seq_len  (&self->str); }
+const char* pp_str_ptr  (pp_str* self) { if (pp_trait_of(self) != pp_str_t) return null_t; return pp_seq_ptr  (&self->str); }
 
 #ifdef PRESET_LINUX
 #include <linux/module.h>
 
 MODULE_LICENSE("GPL");
 
-EXPORT_SYMBOL(po_str_prep_front);
-EXPORT_SYMBOL(po_str_prep_back);
+EXPORT_SYMBOL(pp_str_prep_front);
+EXPORT_SYMBOL(pp_str_prep_back);
 
-EXPORT_SYMBOL(po_str_push_front_cstr);
-EXPORT_SYMBOL(po_str_push_front);
+EXPORT_SYMBOL(pp_str_push_front);
+EXPORT_SYMBOL(pp_str_push_back);
+EXPORT_SYMBOL(pp_str_push);
 
-EXPORT_SYMBOL(po_str_push_back_cstr);
-EXPORT_SYMBOL(po_str_push_back);
-EXPORT_SYMBOL(po_str_push);
+EXPORT_SYMBOL(pp_str_pop_front);
+EXPORT_SYMBOL(pp_str_pop_back);
+EXPORT_SYMBOL(pp_str_pop);
 
-EXPORT_SYMBOL(po_str_pop_front);
-EXPORT_SYMBOL(po_str_pop_back);
-EXPORT_SYMBOL(po_str_pop);
-
-EXPORT_SYMBOL(po_str_find_cstr);
-EXPORT_SYMBOL(po_str_find);
-
-EXPORT_SYMBOL(po_str_ord_cstr);
-EXPORT_SYMBOL(po_str_ord);
-
-EXPORT_SYMBOL(po_str_eq);
-EXPORT_SYMBOL(po_str_lt);
-EXPORT_SYMBOL(po_str_gt);
-
-EXPORT_SYMBOL(po_str_eq_cstr);
-EXPORT_SYMBOL(po_str_lt_cstr);
-EXPORT_SYMBOL(po_str_gt_cstr);
-
-EXPORT_SYMBOL(po_str_begin_cstr);
-EXPORT_SYMBOL(po_str_begin);
-EXPORT_SYMBOL(po_str_end_cstr);
-EXPORT_SYMBOL(po_str_end);
-EXPORT_SYMBOL(po_str_empty);
-EXPORT_SYMBOL(po_str_len);
-EXPORT_SYMBOL(po_str_ptr);
-EXPORT_SYMBOL(po_str_t);
+EXPORT_SYMBOL(pp_str_find);
+EXPORT_SYMBOL(pp_str_begin);
+EXPORT_SYMBOL(pp_str_end);
+EXPORT_SYMBOL(pp_str_empty);
+EXPORT_SYMBOL(pp_str_len);
+EXPORT_SYMBOL(pp_str_ptr);
+EXPORT_SYMBOL(pp_str_t);
 #endif

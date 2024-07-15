@@ -1,10 +1,10 @@
-#ifndef __PRINT_H__
-#define __PRINT_H__
+#ifndef CORE_PRINT_H
+#define CORE_PRINT_H
 
 #include "obj.h"
 
-void po_info(const char*);
-void po_crit(const char*);
-void po_err (const char*);
+extern void pp_info(const char*);
+extern void pp_crit(const char*);
+extern void pp_err (const char*);
 
 #endif

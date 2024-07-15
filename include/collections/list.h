@@ -1,30 +1,26 @@
-#ifndef __LIST_H__
-#define __LIST_H__
+#ifndef COLLECTIONS_LIST_H
+#define COLLECTIONS_LIST_H
 
-#include "node.h"
+#include "pos.h"
 
-extern po_obj_trait* po_list_t;
-typedef struct       po_list  { u8_t po_list[256]; } po_list;
+extern pp_obj_trait* pp_list_t;
+typedef struct       pp_list  { u8_t pp_list[256]; } pp_list;
 
-po_node* po_list_move_front(po_list*, po_obj*)       ;
-po_node* po_list_move_back (po_list*, po_obj*)       ;
+pp_pos* pp_list_push_front(pp_list*, any_t);
+pp_pos* pp_list_push_back (pp_list*, any_t);
 
-po_node* po_list_push_front(po_list*, po_obj*)       ;
-po_node* po_list_push_back (po_list*, po_obj*)       ;
+pp_pos* pp_list_move_front(pp_list*, any_t*);
+pp_pos* pp_list_move_back (pp_list*, any_t*);
 
-po_obj*  po_list_pop_front (po_list*)                ;
-po_obj*  po_list_pop_back  (po_list*)                ;
+any_t   pp_list_pop_front (pp_list*);
+any_t   pp_list_pop_back  (pp_list*);
 
-bool_t   po_list_empty     (po_list*)                ;
-po_node* po_list_begin     (po_list*)                ;
-po_node* po_list_end       (po_list*)                ;
+bool_t  pp_list_empty     (pp_list*);
+pp_pos* pp_list_begin     (pp_list*);
+pp_pos* pp_list_end       (pp_list*);
 
-#define po_list_for(par, par_it)                                           \
-    po_node* par_it = po_list_begin(par), *par_it##_end = po_list_end(par);\
-    for( ; par_it && (par_it != par_it##_end) ; par_it = po_next(par_it))
-
-#define po_list_while(par, par_it)                                         \
-    po_node* par_it = po_list_begin(par), *par_it##_end = po_list_end(par);\
-    while(par_it && (par_it != par_it##_end))
+#define pp_list_for(list, pos)                                            \
+    pp_pos* pos = pp_list_begin((list)), *pos##_end = pp_list_end((list));\
+    for( ; pos && (pos != pos##_end) ; pos = pp_next(pos))
 
 #endif
