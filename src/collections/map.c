@@ -41,9 +41,9 @@ pp_pos*
         (pp_map* self, pp_obj* push)                        {
             if (pp_trait_of(self) != pp_map_t) return null_t;
 
-            pp_list_for (&self->map, pos)                     {
-                if (pp_eq_arg(push, pp_as_any(pos))) return null_t;
-                if (pp_gt_arg(push, pp_as_any(pos))) continue;
+            pp_list_for (&self->map, pos)                                   {
+                if (pp_eq_arg(push, pp_as_any((pp_obj*) pos))) return null_t;
+                if (pp_gt_arg(push, pp_as_any((pp_obj*) pos))) continue;
                 pp_pos *cur = pp_make (pp_pos) from (1, push);
 
                 if (pp_trait_of(cur) != pp_pos_t) return null_t;
@@ -79,8 +79,8 @@ pp_pos*
         (pp_map* self, any_t key)                           {
             if (pp_trait_of(self) != pp_map_t) return null_t;
 
-            pp_list_for (&self->map, pos)                   {
-                if (pp_ne_arg(pp_as_any(pos), key)) continue;
+            pp_list_for (&self->map, pos)                             {
+                if (pp_ne_arg(pp_as_any((pp_obj*) pos), key)) continue;
                 return pos;
             }
 

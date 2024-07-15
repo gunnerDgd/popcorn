@@ -27,7 +27,7 @@ static bool_t
             if (!pp_prev_as(&self->end  , &clone->begin)) return false_t;
             self->mem = clone->mem;
 
-            pp_list_for(clone, push) pp_list_push_back(self, pp_as_any(push));
+            pp_list_for(clone, push) pp_list_push_back(self, pp_as_any((pp_obj*) push));
             return true_t;
 }
 
@@ -125,7 +125,7 @@ any_t
             if (pp_list_empty(self))              return null_t;
 
             pp_pos *pos = pp_prev  (&self->end);
-            pp_obj *ret = pp_as_any(pos);
+            pp_obj *ret = pp_as_any((pp_obj*)pos);
 
             pp_del(pos);
             return ret;
