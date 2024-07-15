@@ -1,23 +1,18 @@
-#ifndef __BOX_H__
-#define __BOX_H__
+#ifndef CORE_BOX_H
+#define CORE_BOX_H
 
 #include "obj.h"
 #include "mem.h"
 
-extern po_obj_trait* po_box_t;
-typedef struct       po_box  {
-    po_obj  head;
-    po_mem *mem;
+extern pp_obj_trait* pp_box_t;
+typedef struct       pp_box  {
+    pp_obj  head;
+    pp_mem *mem;
     u64_t   len;
     void*   ptr;
-}   po_box;
+}   pp_box;
 
-bool_t po_box_new  (po_box*, u32_t, va_list);
-bool_t po_box_clone(po_box*, po_box*)       ;
-bool_t po_box_ref  (po_box*)                ;
-void   po_box_del  (po_box*)                ;
-
-void*  po_box_ptr  (po_box*);
-u64_t  po_box_len  (po_box*);
+void*  pp_box_ptr  (pp_box*);
+u64_t  pp_box_len  (pp_box*);
 
 #endif

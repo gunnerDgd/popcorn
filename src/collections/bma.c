@@ -1,80 +1,81 @@
 #include "bma.h"
 
-po_obj_trait po_bma_trait = po_make_trait (
-    po_bma_new    ,
-    po_bma_clone  ,
-    null_t        ,
-    po_bma_del    ,
-    sizeof(po_bma),
-    null_t
-);
-
-po_obj_trait *po_bma_t = &po_bma_trait;
-
-bool_t
-    po_bma_new
-        (po_bma* self, u32_t count, va_list arg) {
+static bool_t
+    do_new
+        (pp_bma* self, u32_t count, va_list arg) {
             self->in  = (reg_t) -1;
             self->out = 0;
             return true_t;
 }
 
-bool_t po_bma_clone(po_bma* self, po_bma* clone) { return false_t; }
-void   po_bma_del  (po_bma* self)                {                 }
+static bool_t do_clone(pp_bma* self, pp_bma* clone) { return false_t; }
+static void   do_del  (pp_bma* self)                {                 }
+
+static pp_obj_trait
+    do_obj = pp_make_trait (
+        do_new        ,
+        do_clone      ,
+        null_t        ,
+        do_del        ,
+        sizeof(pp_bma),
+        null_t
+);
+
+pp_obj_trait *pp_bma_t = &do_obj;
 
 bool_t
-    po_bma_in_lock
-        (po_bma* self, any_t in)                             {
-            if (po_trait_of(self) != po_bma_t) return false_t;
+    pp_bma_lock_in
+        (pp_bma* self, any_t in)                             {
+            if (pp_trait_of(self) != pp_bma_t) return false_t;
             if (!self->in)                     return false_t;
-            u64_t pos = po_bsr64 (self->in);
+            reg_t pos = pp_bsr(self->in);
 
-            if (!po_lock_btr64(&self->in , pos)) return false_t;
+            if (!pp_lock_btr(&self->in , pos)) return false_t;
             self->bma[pos] = in;
 
-            if (po_lock_bts64(&self->out, pos)) return false_t;
+            if (pp_lock_bts(&self->out, pos)) return false_t;
             return true_t;
 }
 
 bool_t
-    po_bma_in
-        (po_bma* self, any_t in)                             {
-            if (po_trait_of(self) != po_bma_t) return false_t;
+    pp_bma_in
+        (pp_bma* self, any_t in)                             {
+            if (pp_trait_of(self) != pp_bma_t) return false_t;
             if (!self->in)                     return false_t;
-            u64_t pos = po_bsr64 (self->in);
+            reg_t pos = pp_bsr (self->in);
 
-            if (!po_btr64(&self->in , pos)) return false_t;
+            if (!pp_btr(&self->in, pos)) return false_t;
             self->bma[pos] = in;
 
-            po_bts64(&self->out, pos);
+            pp_bts(&self->out, pos);
             return true_t;
 }
 
 bool_t
-    po_bma_out_lock
-        (po_bma* self, any_t* out)                           {
-            if (po_trait_of(self) != po_bma_t) return false_t;
+    pp_bma_lock_out
+        (pp_bma* self, any_t* out)                           {
+            if (pp_trait_of(self) != pp_bma_t) return false_t;
             if (!out)                          return false_t;
-            u64_t pos = po_bsr64 (self->out);
+            reg_t pos = pp_bsr (self->out);
 
-            if (!po_lock_btr64(&self->out, pos)) return false_t;
+            if (!pp_lock_btr(&self->out, pos)) return false_t;
             *out = self->bma[pos];
 
-            if (po_lock_bts64(&self->in , pos)) return false_t;
+            if (pp_lock_bts(&self->in , pos)) return false_t;
             return true_t;
 }
 
 bool_t
-    po_bma_out
-        (po_bma* self, any_t* out)                           {
-            if (po_trait_of(self) != po_bma_t) return false_t;
+    pp_bma_out
+        (pp_bma* self, any_t* out)                           {
+            if (pp_trait_of(self) != pp_bma_t) return false_t;
             if (!out)                    return false_t;
-            u64_t pos = po_bsr64 (self->out);
+            reg_t pos = pp_bsr(self->out);
 
-            if (!po_btr64(&self->out, pos)) return null_t;
+            if (!pp_btr(&self->out, pos)) return null_t;
             *out = self->bma[pos];
 
-            po_bts64(&self->in , pos);
+            pp_bts(&self->in , pos);
             return true_t;
 }
 
@@ -82,9 +83,10 @@ bool_t
 #include <linux/module.h>
 MODULE_LICENSE("GPL");
 
-EXPORT_SYMBOL(po_bma_out_lock);
-EXPORT_SYMBOL(po_bma_out);
-EXPORT_SYMBOL(po_bma_in_lock);
-EXPORT_SYMBOL(po_bma_in);
-EXPORT_SYMBOL(po_bma_t);
+EXPORT_SYMBOL(pp_bma_lock_out);
+EXPORT_SYMBOL(pp_bma_lock_in);
+
+EXPORT_SYMBOL(pp_bma_out);
+EXPORT_SYMBOL(pp_bma_in);
+EXPORT_SYMBOL(pp_bma_t);
 #endif

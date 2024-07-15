@@ -1,12 +1,10 @@
-add_library(popcorn-collections-include STATIC
+inc(popcorn-collections-include
     ../collections.h
     list.h
     map.h
-    node.h
+        pos.h
     bma.h
     str.h
     seq.h
     scq.h
 )
-
-set_target_properties(popcorn-collections-include PROPERTIES LINKER_LANGUAGE C)

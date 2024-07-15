@@ -1,5 +1,5 @@
-#ifndef __PO_CORE_MACRO_H__
-#define __PO_CORE_MACRO_H__
+#ifndef CORE_MACRO_H
+#define CORE_MACRO_H
 
 #ifndef max
 #define max(a, b) (a > b) ? a : b;

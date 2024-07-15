@@ -8,8 +8,8 @@ add_kernel_source      (
     map.h
     map.c
 
-    node.h
-    node.c
+        pos.h
+        pos.c
 
     seq.h
     seq.c
