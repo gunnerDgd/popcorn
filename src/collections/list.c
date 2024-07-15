@@ -112,7 +112,7 @@ any_t
             if (pp_list_empty(self))              return null_t;
 
             pp_pos *pos = pp_next  (&self->begin);
-            any_t   ret = pp_as_any(pos);
+            any_t   ret = pp_as_any((pp_obj*)pos);
 
             pp_del(pos);
             return ret;
