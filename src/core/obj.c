@@ -130,23 +130,23 @@ pp_obj*
 			if (!par->trait) return 0;
 			if (!par->ref)	 return 0;
 
-			if (!par->trait->on_ref)      {
-				pp_lock_inc_ptr(&par->ref);
+			if (!par->trait->on_ref)  {
+				pp_lock_inc(&par->ref);
 				return par;
 			}
 			
-			if   (!par->trait->on_ref(par)) return 0; pp_lock_inc_ptr(&par->ref);
+			if   (!par->trait->on_ref(par)) return 0; pp_lock_inc(&par->ref);
 			return par;
 }
 
 u64_t
 	pp_obj_del
-		(pp_obj* par)			           {
+		(pp_obj* par)			       {
 			if(!par)		   return 0;
 			if(!par->trait)    return 0;
 			if (par->ref == 0) return 0;
 
-			u64_t ref = pp_lock_cas_dec_ptr(&par->ref);
+			u64_t ref = pp_lock_cas_dec(&par->ref);
 			if (ref) return ref;
 			if (par->trait->on_del) par->trait->on_del(par);
 			if (!par->mem)						       {
