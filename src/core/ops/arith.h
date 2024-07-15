@@ -27,12 +27,12 @@ typedef struct pp_arith                            {
     .mul    = ((struct pp_obj*(*)(struct pp_obj*, any_t))(par_mul)),   \
     .div    = ((struct pp_obj*(*)(struct pp_obj*, any_t))(par_div)),   \
     .mod    = ((struct pp_obj*(*)(struct pp_obj*, any_t))(par_mod)),   \
-                                                                 \
-    .add_eq = ((struct pp_obj*(*)(struct pp_obj*, any_t))(par_add_eq)),\
-    .sub_eq = ((struct pp_obj*(*)(struct pp_obj*, any_t))(par_sub_eq)),\
-    .mul_eq = ((struct pp_obj*(*)(struct pp_obj*, any_t))(par_mul_eq)),\
-    .div_eq = ((struct pp_obj*(*)(struct pp_obj*, any_t))(par_div_eq)),\
-    .mod_eq = ((struct pp_obj*(*)(struct pp_obj*, any_t))(par_mod_eq)),\
+                                                             \
+    .add_eq = ((void(*)(struct pp_obj*, any_t))(par_add_eq)),\
+    .sub_eq = ((void(*)(struct pp_obj*, any_t))(par_sub_eq)),\
+    .mul_eq = ((void(*)(struct pp_obj*, any_t))(par_mul_eq)),\
+    .div_eq = ((void(*)(struct pp_obj*, any_t))(par_div_eq)),\
+    .mod_eq = ((void(*)(struct pp_obj*, any_t))(par_mod_eq)),\
 }
 
 #endif
