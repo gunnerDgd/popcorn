@@ -17,6 +17,14 @@ void pp_str_pop_front(pp_str*, u64_t);
 void pp_str_pop_back (pp_str*, u64_t);
 void pp_str_pop	     (pp_str*, u64_t, u64_t);
 
+pp_ord_t pp_str_ord  (pp_str*, const char*, u64_t);
+bool_t   pp_str_gt_eq(pp_str*, const char*, u64_t);
+bool_t   pp_str_lt_eq(pp_str*, const char*, u64_t);
+bool_t   pp_str_gt   (pp_str*, const char*, u64_t);
+bool_t   pp_str_lt   (pp_str*, const char*, u64_t);
+bool_t   pp_str_eq   (pp_str*, const char*, u64_t);
+bool_t   pp_str_ne   (pp_str*, const char*, u64_t);
+
 u64_t       pp_str_find (pp_str*, u64_t, const char*, u64_t);
 bool_t      pp_str_begin(pp_str*, const char*, u64_t);
 bool_t	    pp_str_end  (pp_str*, const char*, u64_t);

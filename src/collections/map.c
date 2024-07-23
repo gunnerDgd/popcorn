@@ -11,7 +11,7 @@ static bool_t
 
             if (!pp_make_at(&self->map, pp_list) from(1, mem)) goto err;
             if (!cmp->ord)                                     goto err;
-            self->mem = (pp_obj*) pp_ref(mem);
+            self->mem = (pp_mem*) pp_ref(mem);
             self->cmp = cmp;
 
             return true_t;
@@ -54,7 +54,8 @@ pp_pos*
                 if (ord == pp_ord_err) return null_t;
                 if (ord == pp_ord_eq)  return null_t;
                 if (ord == pp_ord_gt)  continue;
-                pp_pos *cur = pp_obj_new      (
+
+                pp_pos *cur = (pp_pos*) pp_obj_new (
                     self->mem,
                     pp_pos_t ,
                     1        ,
