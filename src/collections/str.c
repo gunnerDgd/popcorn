@@ -64,27 +64,8 @@ static pp_ord_t
             );
 }
 
-static pp_ord_t
-    do_ord_arg
-        (pp_str* self, const char* arg)                         {
-            if (pp_trait_of(self) != pp_str_t) return pp_ord_err;
-            if (!arg)                          return pp_ord_err;
-            u64_t len = pp_str_len(self);
-            u8_t* pos = pp_str_ptr(self);
-
-            for (u64_t i = 0 ; i < len ; ++i)        {
-                if (pos[i] > arg[i]) return pp_ord_gt;
-                if (pos[i] < arg[i]) return pp_ord_lt;
-                if (arg[i] == '\0')  return pp_ord_gt;
-            }
-
-            if (arg[len] != '\0') return pp_ord_lt;
-            return pp_ord_eq;
-}
-
 static pp_cmp
     do_cmp = pp_make_cmp (
-        do_ord_arg,
         do_ord
 );
 
@@ -188,6 +169,31 @@ void
                 off
             );
 }
+
+pp_ord_t
+    pp_str_ord
+        (pp_str* self, const char* arg, u64_t len)              {
+            if (pp_trait_of(self) != pp_str_t) return pp_ord_err;
+            if (!arg)                          return pp_ord_err;
+            u8_t* pos = pp_str_ptr(self);
+
+            for (u64_t i = 0 ; i < len ; ++i)        {
+                if (pos[i] > arg[i]) return pp_ord_gt;
+                if (pos[i] < arg[i]) return pp_ord_lt;
+                if (arg[i] == '\0')  return pp_ord_gt;
+            }
+
+            if (arg[len] != '\0') return pp_ord_lt;
+            return pp_ord_eq;
+}
+
+bool_t pp_str_gt_eq(pp_str* self, const char* arg, u64_t len) { pp_ord_t ord = pp_str_ord(self, arg, len); return ord == pp_ord_gt || ord == pp_ord_eq; }
+bool_t pp_str_lt_eq(pp_str* self, const char* arg, u64_t len) { pp_ord_t ord = pp_str_ord(self, arg, len); return ord == pp_ord_lt || ord == pp_ord_eq; }
+
+bool_t pp_str_gt(pp_str* self, const char* arg, u64_t len) { return pp_str_ord(self, arg, len) == pp_ord_gt; }
+bool_t pp_str_lt(pp_str* self, const char* arg, u64_t len) { return pp_str_ord(self, arg, len) == pp_ord_lt; }
+bool_t pp_str_eq(pp_str* self, const char* arg, u64_t len) { return pp_str_ord(self, arg, len) == pp_ord_eq; }
+bool_t pp_str_ne(pp_str* self, const char* arg, u64_t len) { return pp_str_ord(self, arg, len) != pp_ord_eq; }
 
 void
     pp_str_prep_front
