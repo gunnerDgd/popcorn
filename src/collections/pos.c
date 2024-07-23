@@ -74,7 +74,7 @@ static pp_obj_trait
         null_t        ,
         do_del        ,
         sizeof(pp_pos),
-    null_t
+        &do_ops
 );
 
 pp_obj_trait* pp_pos_t = &do_obj;
