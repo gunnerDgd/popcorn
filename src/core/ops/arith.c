@@ -2,131 +2,132 @@
 #include "../obj.h"
 
 struct pp_obj* 
-    pp_add(struct pp_obj* par, any_t par_arg)                     {
-        pp_obj*       add    = par       ; if (!add)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = add->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
+    pp_add(struct pp_obj* self, any_t arg)   {
+        pp_obj_ops *ops = null_t;
+        pp_arith   *ari = null_t;
 
-        if (!pp_ops->arith)      return null_t;
-        if (!pp_ops->arith->add) return null_t;
-        return pp_ops->arith->add(add, arg);
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; ari = ops->arith;
+
+        if (!ari->add) return null_t;
+        return ari->add(self, arg);
 }
 
 struct pp_obj* 
-    pp_add_eq(struct pp_obj* par, any_t par_arg)                  {
-        pp_obj*       add    = par       ; if (!add)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = add->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
+    pp_add_eq(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_arith   *ari = null_t;
 
-        if (!pp_ops->arith)         return null_t;
-        if (!pp_ops->arith->add_eq) return null_t;
-        pp_ops->arith->add_eq(add, arg);
-        return add;
-}
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; ari = ops->arith;
+        if (!ari->add_eq)       return null_t;
 
-
-struct pp_obj* 
-    pp_sub(struct pp_obj* par, any_t par_arg)                     {
-        pp_obj*       sub    = par       ; if (!sub)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = sub->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
-
-        if (!pp_ops->arith)      return null_t;
-        if (!pp_ops->arith->sub) return null_t;
-        return pp_ops->arith->sub(sub, arg);
-}
-
-struct pp_obj* 
-    pp_sub_eq(struct pp_obj* par, any_t par_arg)                  {
-        pp_obj*       sub    = par       ; if (!sub)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = sub->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
-        
-        if (!pp_ops->arith)         return null_t;
-        if (!pp_ops->arith->sub_eq) return null_t;
-        pp_ops->arith->sub_eq(sub, arg);
-        return sub;
+        ari->add_eq(self, arg);
+        return self;
 }
 
 
 struct pp_obj* 
-    pp_mul(struct pp_obj* par, any_t par_arg)                     {
-        pp_obj*       mul    = par       ; if (!mul)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = mul->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
-        
-        if (!pp_ops->arith)      return null_t;
-        if (!pp_ops->arith->mul) return null_t;
-        return pp_ops->arith->mul(mul, arg);
+    pp_sub(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_arith   *ari = null_t;
+
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; ari = ops->arith;
+
+        if (!ari->sub) return null_t;
+        return ari->sub(self, arg);
 }
 
 struct pp_obj* 
-    pp_mul_eq(struct pp_obj* par, any_t par_arg)                  {
-        pp_obj*       mul    = par       ; if (!mul)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = mul->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
-        
-        if (!pp_ops->arith)         return null_t;
-        if (!pp_ops->arith->mul_eq) return null_t;
-        pp_ops->arith->mul_eq(mul, arg);
-        return mul;
-}
+    pp_sub_eq(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_arith   *ari = null_t;
 
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; ari = ops->arith;
+        if (!ari->sub_eq)       return null_t;
 
-struct pp_obj* 
-    pp_div(struct pp_obj* par, any_t par_arg)                     {
-        pp_obj*       div    = par       ; if (!div)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = div->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
-        if (!pp_ops->arith)      return null_t;
-        if (!pp_ops->arith->div) return null_t;
-        return pp_ops->arith->div(div, arg);
-}
-
-struct pp_obj* 
-    pp_div_eq(struct pp_obj* par, any_t par_arg)                  {
-        pp_obj*       div    = par       ; if (!div)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = div->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
-        
-        if (!pp_ops->arith)         return null_t;
-        if (!pp_ops->arith->div_eq) return null_t;
-        pp_ops->arith->div_eq(div, arg);
-        return div;
+        ari->sub_eq(self, arg);
+        return self;
 }
 
 
 struct pp_obj* 
-    pp_mod(struct pp_obj* par, any_t par_arg)                     {
-        pp_obj*       mod    = par       ; if (!mod)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = mod->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
-        
-        if (!pp_ops->arith)      return false_t;
-        if (!pp_ops->arith->mod) return false_t;
-        return pp_ops->arith->mod(mod, arg);
+    pp_mul(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_arith   *ari = null_t;
+
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; ari = ops->arith;
+
+        if (!ari->mul) return null_t;
+        return ari->mul(self, arg);
 }
 
 struct pp_obj* 
-    pp_mod_eq(struct pp_obj* par, any_t par_arg)                  {
-        pp_obj*       mod    = par       ; if (!mod)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = mod->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
-        
-        if (!pp_ops->arith)         return false_t;
-        if (!pp_ops->arith->mod_eq) return false_t;
-        pp_ops->arith->mod_eq(mod, arg);
-        return mod;
+    pp_mul_eq(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_arith   *ari = null_t;
+
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; ari = ops->arith;
+        if (!ari->mul_eq)       return null_t;
+
+        ari->mul_eq(self, arg);
+        return self;
+}
+
+
+struct pp_obj* 
+    pp_div(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_arith   *ari = null_t;
+
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; ari = ops->arith;
+
+        if (!ari->div) return null_t;
+        return ari->div(self, arg);
+}
+
+struct pp_obj* 
+    pp_div_eq(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_arith   *ari = null_t;
+
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; ari = ops->arith;
+        if (!ari->div_eq)       return null_t;
+
+        ari->div_eq(self, arg);
+        return self;
+}
+
+
+struct pp_obj* 
+    pp_mod(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_arith   *ari = null_t;
+
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; ari = ops->arith;
+
+        if (!ari->mod) return null_t;
+        return ari->mod(self, arg);
+}
+
+struct pp_obj* 
+    pp_mod_eq(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_arith   *ari = null_t;
+
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; ari = ops->arith;
+        if (!ari->mod_eq)       return null_t;
+
+        ari->mod_eq(self, arg);
+        return self;
 }
 
 #ifdef PRESET_LINUX
