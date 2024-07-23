@@ -2,91 +2,93 @@
 #include "../obj.h"
 
 struct pp_obj* 
-    pp_bit_and(struct pp_obj* par, any_t par_arg)                     {
-        pp_obj*       and    = par       ; if (!and)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = and->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
+    pp_bit_and(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_bit     *bit = null_t;
 
-        if (!pp_ops->bit)      return null_t;
-        if (!pp_ops->bit->and) return null_t;
-        return pp_ops->bit->and(and, arg);
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; bit = ops->bit;
+
+        if (!bit->and) return null_t;
+        return bit->and(self, arg);
 }
 
 struct pp_obj* 
-    pp_bit_and_eq(struct pp_obj* par, any_t par_arg)                  {
-        pp_obj*       and    = par       ; if (!and)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = and->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
+    pp_bit_and_eq(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_bit     *bit = null_t;
 
-        if (!pp_ops->bit)         return null_t;
-        if (!pp_ops->bit->and_eq) return null_t;
-        pp_ops->bit->and(and, arg);
-        return and;
-}
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; bit = ops->bit;
+        if (!bit->and_eq)       return null_t;
 
-
-struct pp_obj* 
-    pp_bit_or(struct pp_obj* par, any_t par_arg)                      {
-        pp_obj*       or     = par       ; if (!or)     return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = or->trait ; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
-
-        if (!pp_ops->bit)     return null_t;
-        if (!pp_ops->bit->or) return null_t;
-        return pp_ops->bit->or(or, arg);
-}
-
-struct pp_obj* 
-    pp_bit_or_eq(struct pp_obj* par, any_t par_arg)                   {
-        pp_obj*       or     = par       ; if (!or)     return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = or->trait ; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
-        
-        if (!pp_ops->bit)        return null_t;
-        if (!pp_ops->bit->or_eq) return null_t;
-        pp_ops->bit->or(or, arg);
-        return or;
+        bit->and_eq(self, arg);
+        return self;
 }
 
 
 struct pp_obj* 
-    pp_bit_xor(struct pp_obj* par, any_t par_arg)                     {
-        pp_obj*       xor    = par       ; if (!xor)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = xor->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
-        
-        if (!pp_ops->bit)      return null_t;
-        if (!pp_ops->bit->xor) return null_t;
-        return pp_ops->bit->xor(xor, arg);
+    pp_bit_or(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_bit     *bit = null_t;
+
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; bit = ops->bit;
+
+        if (!bit->or) return null_t;
+        return bit->or(self, arg);
 }
 
 struct pp_obj* 
-    pp_bit_xor_eq(struct pp_obj* par, any_t par_arg)                  {
-        pp_obj*       xor    = par       ; if (!xor)    return null_t;
-        any_t         arg    = par_arg   ; if (!arg)    return null_t;
-        pp_obj_trait *trait  = xor->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
-        
-        if (!pp_ops->bit)         return null_t;
-        if (!pp_ops->bit->xor_eq) return null_t;
-        pp_ops->bit->xor_eq(xor, arg);
-        return xor;
+    pp_bit_or_eq(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_bit     *bit = null_t;
+
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; bit = ops->bit;
+        if (!bit->or_eq)        return null_t;
+
+        bit->or_eq(self, arg);
+        return self;
 }
 
 
 struct pp_obj* 
-    pp_bit_not(struct pp_obj* par)                                    {
-        pp_obj*       not    = par       ; if (!not)    return null_t;
-        pp_obj_trait *trait  = not->trait; if (!trait)  return null_t;
-        pp_obj_ops   *pp_ops = trait->ops; if (!pp_ops) return null_t;
-        if (!pp_ops->bit)      return null_t;
-        if (!pp_ops->bit->not) return null_t;
-        return pp_ops->bit->not(not);
+    pp_bit_xor(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_bit     *bit = null_t;
+
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; bit = ops->bit;
+
+        if (!bit->xor) return null_t;
+        return bit->xor(self, arg);
+}
+
+struct pp_obj* 
+    pp_bit_xor_eq(struct pp_obj* self, any_t arg) {
+        pp_obj_ops *ops = null_t;
+        pp_bit     *bit = null_t;
+
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; bit = ops->bit;
+        if (!bit->xor_eq)       return null_t;
+
+        bit->xor_eq(self, arg);
+        return self;
+}
+
+
+struct pp_obj* 
+    pp_bit_not(struct pp_obj* self) {
+        pp_obj_ops *ops = null_t;
+        pp_bit     *bit = null_t;
+
+        if (!pp_trait_of(self)) return null_t; ops = self->trait->ops;
+        if (!ops)               return null_t; bit = ops->bit;
+
+        if (!bit->not) return null_t;
+        return bit->not(self);
 }
 
 #ifdef PRESET_LINUX
