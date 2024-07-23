@@ -113,5 +113,6 @@ EXPORT_SYMBOL(pp_as_u8);
 EXPORT_SYMBOL(pp_as_u16);
 EXPORT_SYMBOL(pp_as_u32);
 EXPORT_SYMBOL(pp_as_u64);
+EXPORT_SYMBOL(pp_as_any);
 EXPORT_SYMBOL(pp_as);
 #endif
