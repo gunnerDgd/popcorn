@@ -53,9 +53,9 @@ pp_obj_trait *pp_scq_t = &do_obj;
 
 bool_t
     pp_scq_empty
-        (pp_scq* self)                                       {
-            if (pp_trait_of(self) != pp_scq_t) return false_t;
-            if (self->sqe == self->cqe) return true_t;
+        (pp_scq* self)                                      {
+            if (pp_trait_of(self) != pp_scq_t) return true_t;
+            if (self->sqe == self->cqe)        return true_t;
             return false_t;
 }
 
