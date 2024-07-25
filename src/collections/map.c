@@ -48,24 +48,6 @@ pp_pos*
     pp_map_push
         (pp_map* self, any_t push)                          {
             if (pp_trait_of(self) != pp_map_t) return null_t;
-
-            pp_list_for (&self->map, pos)                                    {
-                pp_ord_t ord = self->cmp->ord(push, pp_as_any((pp_obj*) pos));
-                if (ord == pp_ord_err) return null_t;
-                if (ord == pp_ord_eq)  return null_t;
-                if (ord == pp_ord_gt)  continue;
-
-                pp_pos *cur = (pp_pos*) pp_obj_new (
-                    self->mem,
-                    pp_pos_t ,
-                    1        ,
-                    push
-                );
-
-                if (pp_trait_of(cur) != pp_pos_t) return null_t;
-                return pp_next_as(cur, pos);
-            }
-
             return pp_list_push_back(&self->map, push);
 }
 
