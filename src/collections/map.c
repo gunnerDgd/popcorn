@@ -69,6 +69,7 @@ void
             pp_pos *pop = pp_map_find(self, key);
 
             if (pp_trait_of(pop) != pp_pos_t) return;
+            if (pop == pp_map_end(self))      return;
             pp_del(pop);
 }
 
