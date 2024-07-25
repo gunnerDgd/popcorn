@@ -53,7 +53,6 @@ pp_pos*
     pp_list_push_back
         (pp_list* self, any_t push)                          {
             if (pp_trait_of(self) != pp_list_t) return null_t;
-            if (!push)                          return null_t;
             pp_pos *ret = (pp_pos*) pp_obj_new (
                 self->mem,
                 pp_pos_t ,
@@ -71,7 +70,6 @@ pp_pos*
     pp_list_push_front
         (pp_list* self, any_t push)                          {
             if (pp_trait_of(self) != pp_list_t) return null_t;
-            if (!push)                          return null_t;
             pp_pos *ret = (pp_pos*) pp_obj_new (
                 self->mem,
                 pp_pos_t ,
@@ -97,8 +95,8 @@ pp_pos*
 
 pp_pos*
     pp_list_move_front
-        (pp_list* self, any_t* push)                    {
-            pp_pos* ret = pp_list_push_front(self, push);
+        (pp_list* self, any_t* push)                     {
+            pp_pos* ret = pp_list_push_front(self, *push);
 
             if (pp_trait_of(ret) != pp_pos_t) return null_t;
             *push = null_t;
@@ -142,7 +140,7 @@ pp_pos*
     pp_list_begin
         (pp_list* self)                                      {
             if (pp_trait_of(self) != pp_list_t) return null_t;
-            return self->begin.next;
+            return pp_next(&self->begin);
 }
 
 pp_pos*
