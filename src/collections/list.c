@@ -19,9 +19,9 @@ static bool_t
 
 static bool_t
     do_clone
-        (pp_list* self, pp_list* clone)                                    {
-            if (!pp_make_at(&self->begin, pp_pos) from(0))   return false_t;
-            if (!pp_make_at(&self->end  , pp_pos) from(0))   return false_t;
+        (pp_list* self, pp_list* clone)                                  {
+            if (!pp_make_at(&self->begin, pp_pos) from(0)) return false_t;
+            if (!pp_make_at(&self->end  , pp_pos) from(0)) return false_t;
 
             if (!pp_next_as(&self->begin, &clone->end))   return false_t;
             if (!pp_prev_as(&self->end  , &clone->begin)) return false_t;
@@ -33,8 +33,10 @@ static bool_t
 
 static void
     do_del
-        (pp_list* self)                                           {
-            for ( ; !pp_list_empty(self) ; pp_list_pop_back(self));
+        (pp_list* self)                                      {
+            if (pp_trait_of(&self->begin) != pp_pos_t) return;
+            if (pp_trait_of(&self->end)   != pp_pos_t) return;
+            for( ; !pp_list_empty(self) ; pp_list_pop_back(self));
 }
 
 static pp_obj_trait
@@ -112,6 +114,7 @@ any_t
             pp_pos *pos = pp_next  (&self->begin);
             any_t   ret = pp_as_any((pp_obj*)pos);
 
+            if (pos == &self->end) return null_t;
             pp_del(pos);
             return ret;
 }
@@ -125,6 +128,7 @@ any_t
             pp_pos *pos = pp_prev  (&self->end);
             pp_obj *ret = pp_as_any((pp_obj*)pos);
 
+            if (pos == &self->begin) return null_t;
             pp_del(pos);
             return ret;
 }

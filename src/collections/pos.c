@@ -62,9 +62,12 @@ static bool_t
 
 static void
     do_del
-        (pp_pos* self)                                   {
-            if (self->prev) self->prev->next = self->next;
-            if (self->next) self->next->prev = self->prev;
+        (pp_pos* self)               {
+            pp_pos *prev = self->prev;
+            pp_pos *next = self->next;
+
+            if (pp_trait_of(prev) == pp_pos_t) prev->next = self->next;
+            if (pp_trait_of(next) == pp_pos_t) next->prev = self->prev;
 }
 
 static pp_obj_trait
